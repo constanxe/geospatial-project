@@ -4,7 +4,7 @@ title: Project Overview
 ---
 
 {{< summary >}}
-## Background:
+## Background
 The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges. This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students. 
 
 {{< /summary >}}
