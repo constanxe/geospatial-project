@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Categories - IS415 Team 9</title>
+    <title>System Architecture and Overview - IS415 Team 9</title>
     <link rel="stylesheet" href="/css/crab.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0">
     <meta charset="utf-8">
@@ -39,7 +39,7 @@
             
             </li>
           
-          <li><a href="/c-architecture/">Application System </a>
+          <li><a href="/c-architecture/" class="current">Application System </a>
             
             </li>
           
@@ -58,12 +58,17 @@
       <div id="content">
 
         <div id="article">
-	  <h1>Categories</h1>
+	  <h1>System Architecture and Overview</h1>
 
-
-  
-  
-
+<p><img src="/img/architecture.png" alt="Application System Architecture and Overview"></p>
+<p>The main files that drive the Shiny app dashboard are as follows:</p>
+<ul>
+<li>Server.R will do the back-end rendering of the maps and information</li>
+<li>UI.R will showcase the functionality outputs</li>
+<li>Global.R lets us load the relevant libraries for the server and the UI</li>
+</ul>
+<p>In between, we use the datasets to perform various forms of analysis. The core functionalities of our application is the accessibility models to see the duration and/or distance and localised geographical statistics that lets us identify the cold spot and hot spot areas.</p>
+<p>Users will be able to interact with our models by filtering the schools they want to look at or their residential area, and we will also provide tooltips to show additional information that may be useful for their decision-making.</p>
 
 
         </div>

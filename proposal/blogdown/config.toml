@@ -1,20 +1,35 @@
 languageCode = "en-us"
-title = "[insert project title]"
+title = "IS415 Team 9"
 theme = "crab"
 baseurl = "https://example.com"
 
 [params]
-description = "IS415 Team 9 Project Proposal"
-logoimage = "images/logo.png"
-# logoimage = "images/blank.jpg"
+description = "Project Proposal"
+logoimage = "img/logo.png"
+# logoimage = "img/blank.jpg"
 
 
 [[menu.main]]
 weight = 1
-name = "Home"
+name = "Overview"
 url = "/"
 
 [[menu.main]]
 weight = 2
-name = "Another item"
-url = "/another/"
+name = "Project Reviews"
+url = "/a-reviews/"
+
+[[menu.main]]
+weight = 3
+name = "Application System"
+url = "/c-architecture/"
+
+[[menu.main]]
+weight = 4
+name = "Timeline"
+url = "/e-timeline/"
+
+[[menu.main]]
+weight = 5
+name = "References"
+url = "/f-references/"

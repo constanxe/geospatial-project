@@ -1,18 +1,70 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on [insert project title]</title>
+    <title>Project Overview on IS415 Team 9</title>
     <link>/</link>
-    <description>Recent content in Home on [insert project title]</description>
+    <description>Recent content in Project Overview on IS415 Team 9</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Another page</title>
-      <link>/another/</link>
+      <title>Application Storyboard</title>
+      <link>/d-storyboard/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/another/</guid>
-      <description>Sub-header Just another demo page.</description>
+      <guid>/d-storyboard/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Approach</title>
+      <link>/b-approach/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/b-approach/</guid>
+      <description>In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application. We will also add in other functionalities not covered.
+Getis and Ord’s G-Statistics
+ Involves deriving adaptive proximity spatial weight matrix The Gi statistics will be computed and mapped for identification of the statistically significant hot spot and cold spot areas for where either high or low values (respectively) cluster spatially This method produced 1 map and is chosen over Local Moran’s I which requires us to compare the I value and p-value maps to come to a conclusion.</description>
+    </item>
+    
+    <item>
+      <title>References</title>
+      <link>/f-references/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/f-references/</guid>
+      <description>Lianne Chia (2018). MOE to relocate Yusof Ishak Secondary from Bukit Batok to Punggol https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654
+Karen Tee (2020). Commentary: Look beyond state-of-the-art campuses for what matters in education https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726
+Pierre Polzin, José Borges, António Coelho (2014). An extended kernel density two-step floating catchment area method to analyze access to health care https://journals-sagepub-com.libproxy.smu.edu.sg/doi/pdf/10.1068/b120050p
+Evelyn Lim (2019). Is there a Space for SAS® Viya® in Healthcare?
+Tan Peng Chong, Brendo Austin, Rebecca Goh (2019).</description>
+    </item>
+    
+    <item>
+      <title>Reviews of Past Projects</title>
+      <link>/a-reviews/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/a-reviews/</guid>
+      <description>An extended kernel density two-step floating catchment area method to analyze access to health care (link) This study looks into the improved version of two-step floating catchment area (2SFCA) method and the kernel density 2SFCA (KD2SFCA) method. The method was applied to assess the accessibility of the Portuguese hospital health care sector to see how well it performed as compared to the normal 2SFCA method. It was concluded that the KD2SFCA was able to better identify the accessibility of healthcare for the population.</description>
+    </item>
+    
+    <item>
+      <title>System Architecture and Overview</title>
+      <link>/c-architecture/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/c-architecture/</guid>
+      <description>The main files that drive the Shiny app dashboard are as follows:
+ Server.R will do the back-end rendering of the maps and information UI.R will showcase the functionality outputs Global.R lets us load the relevant libraries for the server and the UI  In between, we use the datasets to perform various forms of analysis. The core functionalities of our application is the accessibility models to see the duration and/or distance and localised geographical statistics that lets us identify the cold spot and hot spot areas.</description>
+    </item>
+    
+    <item>
+      <title>Timeline</title>
+      <link>/e-timeline/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/e-timeline/</guid>
+      <description>The team&amp;rsquo;s tentative schedule and allocation of work are as follows.</description>
     </item>
     
   </channel>

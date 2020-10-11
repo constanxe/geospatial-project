@@ -3,7 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/another/</loc>
+    <loc>/d-storyboard/</loc>
+  </url>
+  
+  <url>
+    <loc>/b-approach/</loc>
   </url>
   
   <url>
@@ -15,7 +19,23 @@
   </url>
   
   <url>
+    <loc>/f-references/</loc>
+  </url>
+  
+  <url>
+    <loc>/a-reviews/</loc>
+  </url>
+  
+  <url>
+    <loc>/c-architecture/</loc>
+  </url>
+  
+  <url>
     <loc>/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/e-timeline/</loc>
   </url>
   
 </urlset>
