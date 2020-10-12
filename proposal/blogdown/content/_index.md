@@ -4,10 +4,14 @@ title: Project Overview
 ---
 
 ## Background
-The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges. This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students. 
+The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges. 
+
+This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students. 
 
 ## Project Objectives
-In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students. Namely, we wish to cover the following areas:
+In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students. 
+
+Namely, we wish to cover the following areas:
 
 - Visualise hot spots representing residential housings’ clusters 
 - Visualise modelling results of potential models 

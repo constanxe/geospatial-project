@@ -3,7 +3,7 @@ draft: false
 title: Project Approach
 ---
 
-In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application. We will also add in other functionalities not covered. 
+In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application as reviewed in the previous literature review section. We will also add in other functionalities not covered. 
 
 Getis and Ord’s G-Statistics
 

@@ -3,13 +3,15 @@ draft: false
 title: Reviews of Past Projects
 ---
 
-## BURP [(link)](https://wiki.smu.edu.sg/1819t2is415/BURP_Project_Details)
-This project looked into the impact of accessibility for families in residential housing after school mergers in Singapore. They calculated the distance of HDB flats to schools and used kernel density of HDBs as part of their algorithms. Isochrone maps were also used to showcase the results. We also tried out their application and evaluated them as follows.
+## Balancing Urban Residential Plannings (BURP) [(link)](https://wiki.smu.edu.sg/1819t2is415/BURP_Project_Details)
+This project looked into the impact of accessibility for families in residential housing after school mergers in Singapore.
+
+They calculated the distance of HDB flats to schools and used kernel density of HDBs as part of their algorithms. Isochrone maps were also used to showcase the results. We also tried out their application and evaluated them as follows.
 
 Pros
 
 - Logical to take public transport into account for accessibility
-- Accessibility well displayed by travel time with public transport and Hansen - Accessibility (based on duration or distance)
+- Accessibility well displayed by travel time with public transport and Hansen Accessibility (based on duration or distance)
 - Kernel density is useful to see if HDB clusters are near a school 
 
 Cons
@@ -17,7 +19,7 @@ Cons
 - Unable to view the accessibility to schools given an address or location
 - Only able to select 1 school at a time
 - Only took residential HDB into account
-- Selecting another analysis method will uncheck the current checkbox. This is confusing for the user. A dropdown will be more intuitive as users will know that they are looking at only 1 model at a time.
+- Selecting another analysis method will uncheck the current checkbox. This is confusing for the user. A dropdown will be more intuitive as users will know that they are looking at only 1 model at a time
 
 The team will work on addressing these cons, and implementing the future work mentioned for identifying ideal locations for schools.
 

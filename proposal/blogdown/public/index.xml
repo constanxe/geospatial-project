@@ -12,7 +12,8 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://brave-bhaskara-fc4519.netlify.app/d-storyboard/</guid>
-      <description>In our dashboard, we will have a Map and About tab. Users can find out more information about the application and how to use it in the About tab. In the map tab, they can apply various filters to see the results they want. Namely, they can choose the following:
+      <description>In our dashboard, we will have a Map and About tab. The following screenshots show a prototype of the Map tab.
+In the map tab, they can apply various filters to see the results they want. Namely, they can choose the following:
  Region to see the schools in that area at one glance School(s) with multi-select enabled in the dropdown function Type of analysis, which can be one of the following options:  Hot &amp;amp; Cold Spot Areas (Getis-Ord Gi*) Distance (Hansen Accessibility) Kernel Density (KD2SFCA)   Type of points the user wants to do the analysis on.</description>
     </item>
     
@@ -32,7 +33,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://brave-bhaskara-fc4519.netlify.app/b-approach/</guid>
-      <description>In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application. We will also add in other functionalities not covered.
+      <description>In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application as reviewed in the previous literature review section. We will also add in other functionalities not covered.
 Getis and Ord’s G-Statistics
  Involves deriving adaptive proximity spatial weight matrix The Gi statistics will be computed and mapped for identification of the statistically significant hot spot and cold spot areas for where either high or low values (respectively) cluster spatially This method produced 1 map and is chosen over Local Moran’s I which requires us to compare the I value and p-value maps to come to a conclusion.</description>
     </item>
@@ -56,9 +57,10 @@ Tan Peng Chong, Brendo Austin, Rebecca Goh (2019).</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://brave-bhaskara-fc4519.netlify.app/a-reviews/</guid>
-      <description>BURP (link) This project looked into the impact of accessibility for families in residential housing after school mergers in Singapore. They calculated the distance of HDB flats to schools and used kernel density of HDBs as part of their algorithms. Isochrone maps were also used to showcase the results. We also tried out their application and evaluated them as follows.
+      <description>Balancing Urban Residential Plannings (BURP) (link) This project looked into the impact of accessibility for families in residential housing after school mergers in Singapore.
+They calculated the distance of HDB flats to schools and used kernel density of HDBs as part of their algorithms. Isochrone maps were also used to showcase the results. We also tried out their application and evaluated them as follows.
 Pros
- Logical to take public transport into account for accessibility Accessibility well displayed by travel time with public transport and Hansen - Accessibility (based on duration or distance) Kernel density is useful to see if HDB clusters are near a school  Cons</description>
+ Logical to take public transport into account for accessibility Accessibility well displayed by travel time with public transport and Hansen Accessibility (based on duration or distance) Kernel density is useful to see if HDB clusters are near a school  Cons</description>
     </item>
     
     <item>
