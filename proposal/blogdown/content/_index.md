@@ -8,6 +8,7 @@ The Ministry of Education (MOE) of Singapore has called for the amalgamation and
 
 ## Project Objectives
 In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students. Namely, we wish to cover the following areas:
+
 - Visualise hot spots representing residential housings’ clusters 
 - Visualise modelling results of potential models 
     - Hansen potential accessibility model
