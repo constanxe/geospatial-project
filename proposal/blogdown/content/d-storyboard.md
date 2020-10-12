@@ -8,6 +8,8 @@ In our dashboard, we will have a Map and About tab. The following screenshots sh
 ![Storyboard](/img/storyboard-main.png)
 ![Storyboard](/img/storyboard-dropdown.png)
 
+> Acknowledgement: Adapted from [BURP](https://wiki.smu.edu.sg/1819t2is415/BURP_Project_Details)
+
 In the map tab, they can apply various filters to see the results they want. Namely, they can choose the following:
 
 - Region to see the schools in that area at one glance
