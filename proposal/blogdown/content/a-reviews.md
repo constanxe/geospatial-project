@@ -26,5 +26,6 @@ Cons
 - Unable to view the accessibility to schools given an address or location
 - Only able to select 1 school at a time
 - Only took residential HDB into account
+- Selecting another analysis method will uncheck the current checkbox. This is confusing for the user. A dropdown will be more intuitive as users will know that they are looking at only 1 model at a time.
 
 Future works were also mentioned in the report. Our team will be seeing how we can implement the functionalities of identifying ideal locations for schools and allowing users to search a specific HDB block and show the nearest top 10 schools. This could be all types of schools to allow for better decision-making as there could be more than one child in the family.

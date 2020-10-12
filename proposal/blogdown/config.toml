@@ -26,10 +26,15 @@ url = "/c-architecture/"
 
 [[menu.main]]
 weight = 4
+name = "Storyboard"
+url = "/d-storyboard/"
+
+[[menu.main]]
+weight = 5
 name = "Timeline"
 url = "/e-timeline/"
 
 [[menu.main]]
-weight = 5
+weight = 6
 name = "References"
 url = "/f-references/"
