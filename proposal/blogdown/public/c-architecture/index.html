@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>System Architecture and Overview - IS415 Team 9</title>
-    <link rel="stylesheet" href="https://brave-bhaskara-fc4519.netlify.app/css/crab.css">
+    <title>Application System Architecture &amp; Overview - Merge&#39;R&#39;Us Proposal</title>
+    <link rel="stylesheet" href="/css/crab.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=3.0">
     <meta charset="utf-8">
     <meta name="generator" content="Hugo 0.76.2" />
@@ -18,12 +18,12 @@
 
         <div id="site-logo">
           
-            <img src="https://brave-bhaskara-fc4519.netlify.app/img/logo.png">
+            <img src="/img/logo.png">
           
         </div>
 
-	<div id="site-title"><a href="https://brave-bhaskara-fc4519.netlify.app/">IS415 Team 9</a></div>
-	<div id="site-slogan">Project Proposal</div>
+	<div id="site-title"><a href="/">Merge&#39;R&#39;Us Proposal</a></div>
+	<div id="site-slogan">IS415 Project Team 9</div>
 
       </div>
 
@@ -35,11 +35,19 @@
             
             </li>
           
-          <li><a href="/a-reviews/">Project Reviews </a>
+          <li><a href="/a-reviews/">Reviews </a>
+            
+            </li>
+          
+          <li><a href="/b-approach/">Approach </a>
             
             </li>
           
           <li><a href="/c-architecture/" class="current">Application System </a>
+            
+            </li>
+          
+          <li><a href="/d-storyboard/">Application Storyboard </a>
             
             </li>
           
@@ -51,6 +59,10 @@
             
             </li>
           
+          <li><a href="/g-contact/">Contact </a>
+            
+            </li>
+          
         </ul>
       </nav>
 
@@ -58,17 +70,15 @@
       <div id="content">
 
         <div id="article">
-	  <h1>System Architecture and Overview</h1>
+	  <h1>Application System Architecture &amp; Overview</h1>
 
-<p><img src="/img/architecture.png" alt="Application System Architecture and Overview"></p>
-<p>The main files that drive the Shiny app dashboard are as follows:</p>
+<p><img src="/img/architecture-overview.png" alt="Application System Architecture and Overview"></p>
+<p>The main files driving the Shiny app dashboard that the user interacts with are as follows:</p>
 <ul>
-<li>Server.R will do the back-end rendering of the maps and information</li>
-<li>UI.R will showcase the functionality outputs</li>
-<li>Global.R lets us load the relevant libraries for the server and the UI</li>
+<li>UI.R is supported by the server for rendering information, and will showcase the functionality outputs on the maps. Users can further interact with the models by filtering the schools they want to look at, and there will be point markings, tooltips and legends provided to show additional information that may be useful.</li>
+<li>Server.R will do the back-end work, generating the information from the models. The core functionalities of our application is the accessibility models to see the duration and/or distance and localised geographical statistics that lets us identify the cold spot and hot spot areas.</li>
+<li>Global.R lets us load the relevant libraries and datasets for the server and the UI, which allow us to perform various forms of analysis.</li>
 </ul>
-<p>In between, we use the datasets to perform various forms of analysis. The core functionalities of our application is the accessibility models to see the duration and/or distance and localised geographical statistics that lets us identify the cold spot and hot spot areas.</p>
-<p>Users will be able to interact with our models by filtering the schools they want to look at or their residential area, and we will also provide tooltips to show additional information that may be useful for their decision-making.</p>
 
 
         </div>
@@ -76,7 +86,7 @@
       </div>
 
       <div id="footer">
-        Copyright 2020 
+        Copyright © 2020 
       </div>
 
     </div>

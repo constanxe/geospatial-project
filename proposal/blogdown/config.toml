@@ -1,12 +1,11 @@
 languageCode = "en-us"
-title = "IS415 Team 9"
+title = "Merge'R'Us Proposal"
 theme = "crab"
 baseurl = "https://brave-bhaskara-fc4519.netlify.app/"
 
 [params]
-description = "Project Proposal"
+description = "IS415 Project Team 9"
 logoimage = "img/logo.png"
-# logoimage = "img/blank.jpg"
 
 
 [[menu.main]]
@@ -16,25 +15,35 @@ url = "/"
 
 [[menu.main]]
 weight = 2
-name = "Project Reviews"
+name = "Reviews"
 url = "/a-reviews/"
 
 [[menu.main]]
 weight = 3
+name = "Approach"
+url = "/b-approach/"
+
+[[menu.main]]
+weight = 4
 name = "Application System"
 url = "/c-architecture/"
 
 [[menu.main]]
-weight = 4
-name = "Storyboard"
+weight = 5
+name = "Application Storyboard"
 url = "/d-storyboard/"
 
 [[menu.main]]
-weight = 5
+weight = 6
 name = "Timeline"
 url = "/e-timeline/"
 
 [[menu.main]]
-weight = 6
+weight = 7
 name = "References"
 url = "/f-references/"
+
+[[menu.main]]
+weight = 8
+name = "Contact"
+url = "/g-contact/"

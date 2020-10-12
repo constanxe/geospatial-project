@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on IS415 Team 9</title>
-    <link>https://brave-bhaskara-fc4519.netlify.app/categories/</link>
-    <description>Recent content in Categories on IS415 Team 9</description>
+    <title>Categories on Merge&#39;R&#39;Us Proposal</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on Merge&#39;R&#39;Us Proposal</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language><atom:link href="https://brave-bhaskara-fc4519.netlify.app/categories/index.xml" rel="self" type="application/rss+xml" />
+    <language>en-us</language><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

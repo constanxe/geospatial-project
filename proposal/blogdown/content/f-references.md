@@ -12,4 +12,4 @@ Pierre Polzin, José Borges, António Coelho (2014). An extended kernel density 
 
 Evelyn Lim (2019). Is there a Space for SAS® Viya® in Healthcare?
 
-Tan Peng Chong, Brendo Austin, Rebecca Goh (2019). https://wiki.smu.edu.sg/1819t2is415/BURP_Project_Details
+Tan Peng Chong, Brendo Austin, Rebecca Goh (2019). BURP (Balancing Urban Residential Plannings): Visualising the Public Schools Accessibility to Residential Housings. https://wiki.smu.edu.sg/1819t2is415/BURP_Project_Details

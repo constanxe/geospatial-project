@@ -1,6 +1,6 @@
 ---
 draft: false
-title: Approach
+title: Project Approach
 ---
 
 In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application. We will also add in other functionalities not covered. 

@@ -3,35 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/b-approach/</loc>
+    <loc>/d-storyboard/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/categories/</loc>
+    <loc>/c-architecture/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/</loc>
+    <loc>/categories/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/f-references/</loc>
+    <loc>/b-approach/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/a-reviews/</loc>
+    <loc>/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/c-architecture/</loc>
+    <loc>/f-references/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/tags/</loc>
+    <loc>/a-reviews/</loc>
   </url>
   
   <url>
-    <loc>https://brave-bhaskara-fc4519.netlify.app/e-timeline/</loc>
+    <loc>/tags/</loc>
+  </url>
+  
+  <url>
+    <loc>/g-contact/</loc>
+  </url>
+  
+  <url>
+    <loc>/e-timeline/</loc>
   </url>
   
 </urlset>
