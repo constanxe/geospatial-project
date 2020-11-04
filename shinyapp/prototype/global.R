@@ -1,5 +1,5 @@
 # R Packages
-packages = c('shiny', 'tidyverse', 'sp', 'sf', 'rgdal', 'spdep', 'tmap', 'DT')
+packages = c('shiny', 'shinydashboard', 'shinyWidgets', 'tidyverse', 'sp', 'sf', 'rgdal', 'spdep', 'tmap', 'DT')
 for (p in packages){
   if(!require(p, character.only = T)){ 
     install.packages(p)
@@ -16,9 +16,9 @@ dp_a_hdb = paste(dp_prefix_a, "hdb-property-information.csv", sep="")
 dp_a_zip = paste(dp_prefix_a, "sg_zipcode_mapper.csv", sep="")
 
 # Data variables
-data <- read.csv(dp_a_sch)
-data <- read.csv(dp_a_hdb)
-data <- read.csv(dp_a_zip)
+data_sch <- read.csv(dp_a_sch)
+data_hdb <- read.csv(dp_a_hdb)
+data_zip <- read.csv(dp_a_zip)
 
 sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
 

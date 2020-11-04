@@ -1,4 +1,6 @@
 function(input, output) {
+    output$schoolsTable <- renderTable(data_sch)
+
     output$mapPlot <- renderPlot({
         sp::plot(mpsz,
                  col="#cceae7",
