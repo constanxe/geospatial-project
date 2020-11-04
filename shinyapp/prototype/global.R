@@ -1,5 +1,5 @@
 # R Packages
-packages = c('shiny', 'shinythemes', 'shinyWidgets', 'tidyverse', 'sp', 'sf', 'rgdal', 'spdep', 'tmap', 'DT')
+packages = c('shiny', 'shinydashboard', 'shinyWidgets', 'tidyverse', 'sp', 'sf', 'rgdal', 'spdep', 'tmap', 'DT')
 for (p in packages){
   if(!require(p, character.only = T)){ 
     install.packages(p)
