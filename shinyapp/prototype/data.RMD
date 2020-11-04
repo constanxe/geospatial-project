@@ -1,0 +1,93 @@
+---
+title: "data"
+author: "Jasmine Toh"
+date: "11/4/2020"
+output: html_document
+---
+
+
+Setup:
+```{r setup, include<-FALSE}
+knitr::opts_chunk$set(echo <- TRUE)
+packages = c('tidyverse','leaflet', 'knitr','stringr','httr','geojsonio', 'sp', 'dplyr', 'SpatialAcc', 'rgeos', 'spdplyr', 'KernSmooth', 'raster',"reshape2") 
+for (p in packages){
+  if(!require(p, character.only = T)){ 
+    install.packages(p)
+  }
+  library(p,character.only = T) 
+}
+
+memory.limit(size=56000)
+
+# Data Paths
+dp_prefix_a = "../data/aspatial/" 
+dp_prefix_g = "../data/geospatial" 
+
+dp_a_sch = paste(dp_prefix_a, "jc.csv", sep="")
+dp_a_hdb = paste(dp_prefix_a, "hdb-property-information.csv", sep="")
+dp_a_zip = paste(dp_prefix_a, "sg_zipcode_mapper.csv", sep="")
+
+# Data variables
+jc_data <- read.csv(dp_a_sch)
+hdb_data <- read.csv(dp_a_hdb)
+zip_data <- read.csv(dp_a_zip)
+
+sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
+
+mpsz <- as(sf_mpsz, "Spatial")
+
+jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
+jc<- jc_data%>% 
+  dplyr::select('SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME')
+
+
+hdb <- zip_data%>%
+  dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+
+
+
+crsobj = CRS("+init=EPSG:3414")
+coordinates(jc)<-~LONGITUDE+LATITUDE
+proj4string(jc) = crsobj
+
+coordinates(hdb)<-~LONGITUDE+LATITUDE
+proj4string(hdb) = crsobj
+```
+
+
+JC distance matrix
+```{r}
+jc_SF <- st_as_sf(jc) 
+
+jc_Proj <- spTransform(jc,"+init=epsg:3414")
+
+#Computing distance matrix
+jc_dist <- spDists(jc_Proj)
+
+#Converting distance matrix into distance pair list
+jc_distPair <- melt(jc_dist)
+head(jc_distPair, 10)
+
+#Converting unit of measurement from metres into km
+jc_distPair$value <- jc_distPair$value / 1000
+head(jc_distPair, 10)
+```
+
+
+Housing distance matrix
+```{r}
+hdb_sf <- st_as_sf(hdb) 
+
+hdb_Proj <- spTransform(hdb,"+init=epsg:3414")
+
+#Computing distance matrix
+hdb_dist <- spDists(hdb_Proj)
+
+#Converting distance matrix into distance pair list
+hdb_distPair <- melt(hdb_dist)
+
+#Converting unit of measurement from metres into km
+hdb_distPair$value <- hdb_distPair$value / 1000
+```
+
+
