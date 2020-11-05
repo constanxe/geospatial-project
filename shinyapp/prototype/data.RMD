@@ -9,7 +9,7 @@ output: html_document
 Setup:
 ```{r setup, include<-FALSE}
 knitr::opts_chunk$set(echo <- TRUE)
-packages = c('tidyverse','leaflet', 'knitr','stringr','httr','geojsonio', 'sp', 'dplyr', 'SpatialAcc', 'rgeos', 'spdplyr', 'KernSmooth', 'raster',"reshape2") 
+packages = c('tidyverse','leaflet', 'knitr','stringr','httr','geojsonio', 'sp', 'dplyr', 'SpatialAcc', 'rgeos', 'spdplyr', 'KernSmooth', 'raster',"reshape2", "sf") 
 for (p in packages){
   if(!require(p, character.only = T)){ 
     install.packages(p)
@@ -22,6 +22,8 @@ memory.limit(size=56000)
 # Data Paths
 dp_prefix_a = "../data/aspatial/" 
 dp_prefix_g = "../data/geospatial" 
+dp_prefix_j = "../data/geojson/" 
+dp_prefix_m = "../data/matrix/" 
 
 dp_a_sch = paste(dp_prefix_a, "jc.csv", sep="")
 dp_a_hdb = paste(dp_prefix_a, "hdb-property-information.csv", sep="")
@@ -38,7 +40,7 @@ mpsz <- as(sf_mpsz, "Spatial")
 
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc<- jc_data%>% 
-  dplyr::select('SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME')
+  dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME')
 
 
 hdb <- zip_data%>%
@@ -55,41 +57,6 @@ proj4string(hdb) = crsobj
 ```
 
 
-JC distance matrix
-```{r}
-jc_SF <- st_as_sf(jc) 
-
-jc_Proj <- spTransform(jc,"+init=epsg:3414")
-
-#Computing distance matrix
-jc_dist <- spDists(jc_Proj)
-
-#Converting distance matrix into distance pair list
-jc_distPair <- melt(jc_dist)
-head(jc_distPair, 10)
-
-#Converting unit of measurement from metres into km
-jc_distPair$value <- jc_distPair$value / 1000
-head(jc_distPair, 10)
-```
-
-
-Housing distance matrix
-```{r}
-hdb_sf <- st_as_sf(hdb) 
-
-hdb_Proj <- spTransform(hdb,"+init=epsg:3414")
-
-#Computing distance matrix
-hdb_dist <- spDists(hdb_Proj)
-
-#Converting distance matrix into distance pair list
-hdb_distPair <- melt(hdb_dist)
-
-#Converting unit of measurement from metres into km
-hdb_distPair$value <- hdb_distPair$value / 1000
-```
-
 
 ```{r}
 library(httr)
@@ -100,8 +67,8 @@ current <- GET(
   query = list(
     fromPlace = paste(lat,lng,sep = ","), # latlong of place
     mode = "WALK,TRANSIT", # modes we want the route planner to use
-    date = "07-10-2018",
-    time= "08:00am",
+    date = "05-11-2020",
+    time= "07:00am",
     maxWalkDistance = 1600, # in metres
     walkReluctance = 5,
     minTransferTime = 60, # in secs
@@ -113,12 +80,9 @@ current <- GET(
 )
 
 current <- content(current, as = "text", encoding = "UTF-8")
-write(current, file = paste("C:/geojson/",filename,".geojson"))
+write(current, file = paste(dp_prefix_j,filename,".geojson"))
 }
 
-get_geojson(1.36173580440684,
-  103.990348825503,
-  "Changi-Terminal-1")
 ```
 
 
@@ -126,7 +90,7 @@ get_geojson(1.36173580440684,
 library(tidyverse)
 library(leaflet)
 
-iso <- geojsonio::geojson_read("C:../data/Changi-Terminal-1 .geojson",
+iso <- geojsonio::geojson_read("C:/geojson/ Changi-Terminal-1 .geojson",
   what = "sp")
 
 pal=c('cyan','gold','tomato','red')
@@ -144,3 +108,30 @@ leaflet(iso) %>%
             opacity = 0.6,
             title="Travel Time with Public Transport")
 ```
+
+
+isochrone generation for all JC 
+saves the isochrone generation for each JC as .rds in data/geojson/
+Only run this code chunk if you want to generate the .rds files 
+```{r}
+#isochrone generation for all school - WARNING IO intensive, may take to an hour to run
+for (i in 1:10){
+  lsch = jc@data[i,'SCHOOL']
+  print(lsch)
+  lat = jc@coords[i,2]
+  long = jc@coords[i,1]
+  print(lat)
+  print(long)
+
+ iso = get_geojson(lat, long, jc@data[i,'SCHOOL'])
+ sp = geojsonio::geojson_read(iso, what = "sp")
+ proj4string(sp) = proj4string(hdb)
+ res = colSums(gContains(sp, hdb, byid = TRUE))
+ print(res)
+ res = tbl_df(res)
+ colnames(res) = 'blocks'
+ sp@data = bind_cols(sp@data, res)
+ saveRDS(sp, file = paste0(dp_prefix_j, '/', lsch, '.rds'))
+}
+```
+
