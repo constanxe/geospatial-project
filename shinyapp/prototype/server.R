@@ -1,5 +1,5 @@
 function(input, output) {
-    output$schoolsTable <- renderTable(data_sch)
+    output$jcTable <- renderTable(jc)
 
     output$mapPlot <- renderPlot({
         sp::plot(mpsz,

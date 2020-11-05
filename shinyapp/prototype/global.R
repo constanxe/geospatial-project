@@ -1,5 +1,28 @@
 # R Packages
-packages = c('shiny', 'shinydashboard', 'shinyWidgets', 'tidyverse', 'sp', 'sf', 'rgdal', 'spdep', 'tmap', 'DT')
+packages = c('shiny', 
+             'shinydashboard', 
+             'shinyWidgets', 
+             'DT', 
+             'leaflet',
+             'tidyverse',
+             'knitr',
+             'stringr',
+             'httr',
+             'geojsonio', 
+             'sp', 
+             'dplyr', 
+             'SpatialAcc', 
+             'rgeos', 
+             'spdplyr', 
+             'KernSmooth', 
+             'raster',
+             'reshape2', 
+             'sf',
+             'rgdal',
+             'spdep',
+             'tmap'
+             ) 
+
 for (p in packages){
   if(!require(p, character.only = T)){ 
     install.packages(p)
@@ -7,19 +30,47 @@ for (p in packages){
   library(p,character.only = T) 
 }
 
-# Data Paths
-dp_prefix_a = "../data/aspatial/" 
-dp_prefix_g = "../data/geospatial" 
+memory.limit(size=56000)
 
-dp_a_sch = paste(dp_prefix_a, "general-information-of-schools.csv", sep="")
-dp_a_hdb = paste(dp_prefix_a, "hdb-property-information.csv", sep="")
-dp_a_zip = paste(dp_prefix_a, "sg_zipcode_mapper.csv", sep="")
+
+# Data Paths
+
+dp_g = "../data/geospatial" 
+dp_a_prefix = "../data/aspatial/" 
+dp_j_prefix = "../data/geojson/" 
+dp_m_prefix = "../data/matrix/" 
+
+dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
+dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
+dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
+
 
 # Data variables
-data_sch <- read.csv(dp_a_sch)
-data_hdb <- read.csv(dp_a_hdb)
-data_zip <- read.csv(dp_a_zip)
+
+jc_data <- read.csv(dp_a_jc)
+hdb_data <- read.csv(dp_a_hdb)
+zip_data <- read.csv(dp_a_zip)
 
 sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
-
 mpsz <- as(sf_mpsz, "Spatial")
+
+# Data Wrangling
+
+## Select
+
+jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
+jc <- jc_data%>% 
+  dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME')
+
+hdb <- zip_data%>%
+  dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+
+
+## CRS
+
+crsobj = CRS("+init=EPSG:3414")
+coordinates(jc)<-~LONGITUDE+LATITUDE
+proj4string(jc) = crsobj
+
+coordinates(hdb)<-~LONGITUDE+LATITUDE
+proj4string(hdb) = crsobj
