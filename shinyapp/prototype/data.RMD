@@ -52,7 +52,7 @@ memory.limit(size=56000)
 dp_g = "../data/geospatial" 
 dp_a_prefix = "../data/aspatial/" 
 dp_j_prefix = "../data/geojson/" 
-dp_m_prefix = "../data/matrix/" 
+dp_m_prefix = "../data/distancematrix/" 
 
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
@@ -148,7 +148,6 @@ isochrone generation for all JC
 saves the isochrone generation for each JC as .rds in data/geojson/
 Only run this code chunk if you want to generate the .rds files 
 ```{r}
-#isochrone generation for all school - WARNING IO intensive, may take to an hour to run
 for (i in 1:10){
   lsch = jc@data[i,'SCHOOL']
   print(lsch)
@@ -168,4 +167,72 @@ for (i in 1:10){
  saveRDS(sp, file = paste0(dp_prefix_j, '/', lsch, '.rds'))
 }
 ```
+
+
+Get_dist function to get the data information of a trip with the fastest route.
+generate_dist function to generate the distance matrix and duration from all the residential data to that school.
+```{r}
+#Getting the data of a trip
+get_dist = function(fromLat, fromLong, toLat, toLong){
+    current <- GET(
+      "http://localhost:8080/otp/routers/current/isochrone",
+      query = list(
+        fromPlace = paste(fromLat,fromLong,sep = ","), # latlong of place
+        toPlace = paste(toLat,toLong,sep = ","),
+        mode = "WALK,TRANSIT", # modes we want the route planner to use
+        date = "05-11-2020",
+        time= "07:00am",
+        maxWalkDistance = 1600, # in metres
+        cutoffSec = 900,
+        cutoffSec = 1800,
+        cutoffSec = 2700,
+        cutoffSec = 3600
+      )
+    )
+
+    if (length(content(current)[["plan"]][["itineraries"]][[1]]) == 0){
+      return(NULL)
+    }else{
+      return(content(current)[["plan"]][["itineraries"]][[1]])
+    }
+    
+}
+#Generating the dist and duration from all residential HDB and storing it for each school
+generate_dist <-function(hdb, destLat, destLong, schName){
+  result = data.frame(matrix(ncol = 6, nrow= 0))
+  colnames(result) = c('address', 'destination', 'latitude', 'longitude', 'duration', 'distance')
+  
+  for(i in 1: length(hdb@coords[,1])){
+    lat = as.double(hdb@coords[i,]['LATITUDE'])
+    long = as.double(hdb@coords[i,]['LONGITUDE'])
+    address = hdb@data[i,]$ADDRESS
+      info = get_dist(lat, long, destLat, destLong)
+      if (is.null(info)){
+        next()
+      }
+      total = 0
+      for (j in 1:length(info$legs)){
+        total = total + info$legs[[j]]$distance
+      }
+      
+      dist = total/1000 #convert to km
+      dur = info$duration/60
+      result[nrow(result)+1,] = list(address, schName, lat, long, dur, dist)
+      
+  }
+  return(result)
+}
+```
+
+Run this code to generate the .rds files (distancematrix)
+```{r}
+  x=1 #input x
+  schName = jc@data[x,"SCHOOL"]
+  print(schName)
+  schLat = jc@coords[x,2]
+  schLong =  jc@coords[x,1]
+  result=generate_dist(hdb, schLat, schLong, schName)
+  saveRDS(result, file = paste0(dp_prefix_m, schName, '.rds'))
+```
+
 
