@@ -53,6 +53,7 @@ dp_g = "../data/geospatial"
 dp_a_prefix = "../data/aspatial/" 
 dp_j_prefix = "../data/geojson/" 
 dp_m_prefix = "../data/distancematrix/" 
+dp_h_prefix = "../data/hansen/" 
 
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
@@ -172,7 +173,7 @@ generate_dist function to generate the distance matrix and duration from all the
 #Getting the data of a trip
 get_dist = function(fromLat, fromLong, toLat, toLong){
     current <- GET(
-      "http://localhost:8080/otp/routers/current/isochrone",
+      "http://localhost:8080/otp/routers/default/plan",
       query = list(
         fromPlace = paste(fromLat,fromLong,sep = ","), # latlong of place
         toPlace = paste(toLat,toLong,sep = ","),
@@ -215,6 +216,7 @@ generate_dist <-function(hdb, destLat, destLong, schName){
       dist = total/1000 #convert to km
       dur = info$duration/60
       result[nrow(result)+1,] = list(address, schName, lat, long, dur, dist)
+      print(result)
       
   }
   return(result)
@@ -223,7 +225,7 @@ generate_dist <-function(hdb, destLat, destLong, schName){
 
 Run this code to generate the .rds files (distancematrix)
 ```{r}
-  x=19 #input x
+  x=1 #input x
   schName = jc@data[x,"SCHOOL"]
   print(schName)
   schLat = jc@coords[x,2]
@@ -231,5 +233,14 @@ Run this code to generate the .rds files (distancematrix)
   result=generate_dist(hdb, schLat, schLong, schName)
   saveRDS(result, file = paste0(dp_m_prefix, schName, '.rds'))
 ```
+
+
+
+
+
+
+
+
+
 
 
