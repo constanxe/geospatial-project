@@ -235,6 +235,41 @@ Run this code to generate the .rds files (distancematrix)
 ```
 
 
+Hansen function
+```{r}
+apply_hansen = function(res){
+  result = res %>% mutate(demand =100)
+  durationMatrix = result %>% dplyr::select('duration')
+  acc_hansen <- data.frame(ac(result$demand,
+               c(10), durationMatrix,
+               power = 0.01, family = "Hansen"))
+  result_duration = result
+  result_duration$durationHansen = acc_hansen[,1]
+  result_duration$durationHansen[is.na(result_duration$durationHansen)] = 0
+  
+  
+  distanceMatrix = result %>% dplyr::select('distance')
+  acc_hansen <- data.frame(ac(result$demand,
+               c(10), distanceMatrix,
+               power = 0.01, family = "Hansen"))
+  result_final = result_duration
+  result_final$distanceHansen = acc_hansen[,1]
+  result_final$distanceHansen[is.na(result_final$distanceHansen)] = 0
+  return (result_final)
+}
+```
+
+Hansen Generation for each school distance matrix
+```{r}
+for (x in 1:19){
+  schName = jc@data[x,'SCHOOL']
+  print(schName)
+  res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
+  result_acc = apply_hansen(res)
+  saveRDS(result_acc, paste0(dp_h_prefix, '/',schName,'.rds'))
+}
+```
+
 
 
 
