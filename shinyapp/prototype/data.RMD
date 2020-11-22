@@ -241,8 +241,10 @@ apply_hansen = function(res){
   result = res %>% mutate(demand =100)
   durationMatrix = result %>% dplyr::select('duration')
   acc_hansen <- data.frame(ac(result$demand,
-               c(10), durationMatrix,
-               power = 0.01, family = "Hansen"))
+                              c(10), 
+                              durationMatrix,
+                              power = 2, 
+                              family = "Hansen"))
   result_duration = result
   result_duration$durationHansen = acc_hansen[,1]
   result_duration$durationHansen[is.na(result_duration$durationHansen)] = 0
@@ -250,8 +252,10 @@ apply_hansen = function(res){
   
   distanceMatrix = result %>% dplyr::select('distance')
   acc_hansen <- data.frame(ac(result$demand,
-               c(10), distanceMatrix,
-               power = 0.01, family = "Hansen"))
+                              c(10), 
+                              distanceMatrix,
+                              power =2, 
+                              family = "Hansen"))
   result_final = result_duration
   result_final$distanceHansen = acc_hansen[,1]
   result_final$distanceHansen[is.na(result_final$distanceHansen)] = 0
@@ -269,6 +273,8 @@ for (x in 1:19){
   saveRDS(result_acc, paste0(dp_h_prefix, '/',schName,'.rds'))
 }
 ```
+
+
 
 
 
