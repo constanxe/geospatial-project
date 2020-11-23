@@ -89,6 +89,7 @@ coordinates(hdb)<-~LONGITUDE+LATITUDE
 proj4string(hdb) = crsobj
 ```
 
+
 # Isochrone generation for all JC 
 
 function to get geojson
@@ -114,7 +115,8 @@ current <- GET(
 )
 
 current <- content(current, as = "text", encoding = "UTF-8")
-write(current, file = paste(dp_prefix_j,filename,".geojson"))
+write(current, file = paste0(dp_j_prefix, lsch, '.geojson'))
+
 }
 
 ```
@@ -148,23 +150,23 @@ leaflet(iso) %>%
 saves the isochrone generation for each JC as .rds in data/geojson/
 Only run this code chunk if you want to generate the .rds files 
 ```{r}
-for (i in 1:10){
+for (i in 1:19){
   lsch = jc@data[i,'SCHOOL']
   print(lsch)
   lat = jc@coords[i,2]
   long = jc@coords[i,1]
   print(lat)
   print(long)
-
- iso = get_geojson(lat, long, jc@data[i,'SCHOOL'])
- sp = geojsonio::geojson_read(iso, what = "sp")
- proj4string(sp) = proj4string(hdb)
- res = colSums(gContains(sp, hdb, byid = TRUE))
- print(res)
- res = tbl_df(res)
- colnames(res) = 'blocks'
- sp@data = bind_cols(sp@data, res)
- saveRDS(sp, file = paste0(dp_prefix_j, '/', lsch, '.rds'))
+  
+  iso = get_geojson(lat, long, lsch)
+  sp = geojsonio::geojson_read(paste0(dp_j_prefix, lsch, '.geojson'), what = "sp")
+  proj4string(sp) = proj4string(hdb)
+  res = colSums(gContains(sp, hdb, byid = TRUE))
+  print(res)
+  res = tbl_df(res)
+  colnames(res) = 'blocks'
+  sp@data = bind_cols(sp@data, res)
+  saveRDS(sp, file = paste0(dp_j_prefix, lsch, '.rds'))
 }
 ```
 
@@ -319,9 +321,6 @@ for (x in 1:19){
   saveRDS(result_acc, paste0(dp_s_prefix, '/',schName,'.rds'))
 }
 ```
-
-
-
 
 
 
