@@ -54,6 +54,7 @@ dp_a_prefix = "../data/aspatial/"
 dp_j_prefix = "../data/geojson/" 
 dp_m_prefix = "../data/distancematrix/" 
 dp_h_prefix = "../data/hansen/" 
+dp_s_prefix = "../data/sam/" 
 
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
@@ -88,8 +89,9 @@ coordinates(hdb)<-~LONGITUDE+LATITUDE
 proj4string(hdb) = crsobj
 ```
 
+# Isochrone generation for all JC 
 
-
+function to get geojson
 ```{r}
 library(httr)
 get_geojson<-function(lat,lng,filename){
@@ -142,7 +144,7 @@ leaflet(iso) %>%
 ```
 
 
-isochrone generation for all JC 
+
 saves the isochrone generation for each JC as .rds in data/geojson/
 Only run this code chunk if you want to generate the .rds files 
 ```{r}
@@ -167,8 +169,9 @@ for (i in 1:10){
 ```
 
 
+# Generate distance matrix
 Get_dist function to get the data information of a trip with the fastest route.
-generate_dist function to generate the distance matrix and duration from all the residential data to that school.
+generate_dist function to generate the distance matrix and duration from all the residential data to each school.
 ```{r}
 #Getting the data of a trip
 get_dist = function(fromLat, fromLong, toLat, toLong){
@@ -235,6 +238,8 @@ Run this code to generate the .rds files (distancematrix)
 ```
 
 
+# Measure accessibility with Hansen
+
 Hansen function
 ```{r}
 apply_hansen = function(res){
@@ -275,10 +280,45 @@ for (x in 1:19){
 ```
 
 
+# Measure accessibility with SAM
+SAM function
+```{r}
+apply_sam = function(res){
+  result = res %>% mutate(demand =100)
+  durationMatrix = result %>% dplyr::select('duration')
+  acc_sam <- data.frame(ac(result$demand,
+                              c(10), 
+                              durationMatrix,
+                              power = 2, 
+                              family = "SAM"))
+  result_duration = result
+  result_duration$durationsam = acc_sam[,1]
+  result_duration$durationsam[is.na(result_duration$durationsam)] = 0
+  
+  
+  distanceMatrix = result %>% dplyr::select('distance')
+  acc_sam <- data.frame(ac(result$demand,
+                              c(10), 
+                              distanceMatrix,
+                              power =2, 
+                              family = "SAM"))
+  result_final = result_duration
+  result_final$distancesam = acc_sam[,1]
+  result_final$distancesam[is.na(result_final$distancesam)] = 0
+  return (result_final)
+}
+```
 
-
-
-
+SAM Generation for each school distance matrix
+```{r}
+for (x in 1:19){
+  schName = jc@data[x,'SCHOOL']
+  print(schName)
+  res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
+  result_acc = apply_sam(res)
+  saveRDS(result_acc, paste0(dp_s_prefix, '/',schName,'.rds'))
+}
+```
 
 
 
