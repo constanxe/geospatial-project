@@ -51,8 +51,8 @@ jc_data <- read.csv(dp_a_jc)
 hdb_data <- read.csv(dp_a_hdb)
 zip_data <- read.csv(dp_a_zip)
 
-sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
-mpsz <- as(sf_mpsz, "Spatial")
+#sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
+#mpsz <- as(sf_mpsz, "Spatial")
 
 # Data Wrangling
 
@@ -60,7 +60,7 @@ mpsz <- as(sf_mpsz, "Spatial")
 
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
-  dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME')
+  dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS')
 
 hdb <- zip_data%>%
   dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
