@@ -16,39 +16,15 @@ function(input, output) {
         return(iso)
     })
     
-    
-    output$jcTable <- renderTable(jc)
-
-    output$mapPlot <- renderPlot({
-        sp::plot(mpsz,
-                 col="#cceae7",
-                 border = NA)
-    })
-
-    output$tmapPlot <- renderTmap({
-    tm_shape(mpsz) +
-                tm_fill() +
-                tm_borders(lwd = 0.1,
-                        alpha = 1)
-    })
-    
-
-    
-    
-    
-    
-    output$row <- renderPrint({
-        schName = jc@data$SCHOOL[[curr_sch_id()]]
-        #schName2 = jc@data$SCHOOL[[curr_sch_id()]]
-        print(schName);
-        #schName2
-    })
+    output$jcTable <- renderDT(
+      jc@data, options = list(lengthChange = FALSE)
+    )
     
     
     # look at the input analysis and add the layer for the selected analysis
     observeEvent(input$analysis, {
-        proxy <- leafletProxy("tmapPlot")
-        if (input$analysis=='Isochrone'){
+        proxy <- leafletProxy("mapPlot")
+        if (input$analysis=='Duration (Isochrone)'){
             schName = jc@data$SCHOOL[[curr_sch_id()]]
             proxy %>% addMapPane("isolayer", zIndex = 410) %>% setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
                 addProviderTiles(providers$CartoDB.DarkMatter,
@@ -65,7 +41,7 @@ function(input, output) {
     
     # look at the selected display and add the layer in if checked
     observeEvent(input$display, {
-        proxy <- leafletProxy("tmapPlot")
+        proxy <- leafletProxy("mapPlot")
         schName = jc@data$SCHOOL[[curr_sch_id()]]
         if (!is.null(input$display) && input$display =='Show HDB points'){
             proxy %>%  addMapPane("hdblayer", zIndex = 420) %>% 
@@ -102,10 +78,10 @@ function(input, output) {
             zlevel = zoomlevel()
         }
         
-        proxy <- leafletProxy("tmapPlot")
+        proxy <- leafletProxy("mapPlot")
         schName = jc@data$SCHOOL[[curr_sch_id()]]
         
-        if (input$analysis=='Isochrone'){
+        if (input$analysis=='Duration (Isochrone)'){
             proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>% setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
                 addProviderTiles(providers$CartoDB.DarkMatter,
                                  options = providerTileOptions(opacity = 0.8))%>% 
@@ -134,9 +110,9 @@ function(input, output) {
     #for the legend
     observe({
         schName = jc@data$SCHOOL[[curr_sch_id()]]
-        proxy <- leafletProxy("tmapPlot")
+        proxy <- leafletProxy("mapPlot")
         proxy %>% clearControls()
-        if (input$analysis=='Isochrone'){
+        if (input$analysis=='Duration (Isochrone)'){
             count = iso()@data$blocks
             proxy %>% addLegend(position="topright",colors=rev(c("lightskyblue","greenyellow","gold","orange","tomato")),
                                 labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')),
@@ -160,8 +136,8 @@ function(input, output) {
     
     
     
-    # save the display into tmapPlot to be call from UI.R
-    output$tmapPlot <- renderLeaflet({
+    # save the display into mapPlot to be call from UI.R
+    output$mapPlot <- renderLeaflet({
         leaflet() %>%
             setView( lng = 103.8198, lat = 1.3521, zoom = 12) %>%
             setMaxBounds( lng1 = 103.4057919091

@@ -5,30 +5,24 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';"))),
     
     dashboardSidebar(
-         selectizeInput("region", "Region", c("North", "South", "East", "West"),
-                        multiple = TRUE, options = list(
-                            'plugins' = list('remove_button'),
-                            'create' = TRUE,
-                            'persist' = FALSE)
-         ),
-         selectizeInput("jc", "Junior College(s):", choices = jc@data$SCHOOL,
-                        selected = "EUNOIA JUNIOR COLLEGE", multiple = TRUE, options = list(
-                            'plugins' = list('remove_button'),
-                            'create' = TRUE,
-                            'persist' = FALSE,
-                            'maxItems' = 2)
-         ),
-        selectInput("analysis", "Analysis:", c("Isochrone", "Hot & Cold Spot Areas (Gi*)", "Distance (Hansen Accessibility)", "Spatial Accessibility Measure (SAM)")),
+        selectizeInput("region", "Region(s):", c("North", "South", "East", "West"),
+                    multiple = TRUE, options = list(
+                        'plugins' = list('remove_button'),
+                        'create' = TRUE,
+                        'persist' = FALSE)
+        ),
+        selectInput("jc", "Junior College:", jc@data$SCHOOL,
+                        selected = "EUNOIA JUNIOR COLLEGE"),
+        selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
+                                               "Distance & Duration (Hansen Accessibility)", 
+                                               "Distance & Duration (Spatial Accessibility Measure)")),
         checkboxGroupInput("display", "Display:", c("Show school points", "Show HDB points"))
     ),
     
     dashboardBody(
         navbarPage("Information", collapsible=TRUE,
-            tabPanel("Interactive Map", tmapOutput("tmapPlot"), width = "100%", height = "100%"),
-            tabPanel("Static Map", plotOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("JC Details", tableOutput("jcTable")),
-            tabPanel(verbatimTextOutput('row'),
-                     title = 'temp: see schs selected')
+            tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
+            tabPanel("JC Details", DTOutput("jcTable"))
         )
     )
 
