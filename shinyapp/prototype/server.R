@@ -4,11 +4,12 @@ function(input, output) {
         input$map_zoom
     })
     
+    # look at current school selected
     curr_sch_id = reactive({
         which(jc@data$SCHOOL == input$jc[1], arr.ind=TRUE)
     })
 
-    
+    # read the rds file of the isochrone of the school selected
     iso = reactive({
         schName = jc@data$SCHOOL[[curr_sch_id()]]
         iso = readRDS(file=paste0(dp_j_prefix, schName,'.rds'))
@@ -44,6 +45,7 @@ function(input, output) {
     })
     
     
+    # look at the input analysis and add the layer for the selected analysis
     observeEvent(input$analysis, {
         proxy <- leafletProxy("tmapPlot")
         if (input$analysis=='Isochrone'){
@@ -61,6 +63,7 @@ function(input, output) {
     })
     
     
+    # look at the selected display and add the layer in if checked
     observeEvent(input$display, {
         proxy <- leafletProxy("tmapPlot")
         schName = jc@data$SCHOOL[[curr_sch_id()]]
@@ -72,7 +75,6 @@ function(input, output) {
                                   popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
                                   data = hdb@data$ADDRESS, group = 'hdblayer')
         }
-        
         else {
           proxy %>% clearGroup('hdblayer')
         }
@@ -85,14 +87,13 @@ function(input, output) {
                            data = jc@data$ADDRESS,
                            group = 'schlayer', icon = schIcon)
         }
-        
         else{
             proxy %>% clearGroup('schlayer')
         }
     })
     
     
-    
+    # look at the selected jc and the various selected items and add the layers in
     observeEvent(input$jc, {
         
         if( is.null(zoomlevel())){
@@ -159,7 +160,7 @@ function(input, output) {
     
     
     
-    
+    # save the display into tmapPlot to be call from UI.R
     output$tmapPlot <- renderLeaflet({
         leaflet() %>%
             setView( lng = 103.8198, lat = 1.3521, zoom = 12) %>%
