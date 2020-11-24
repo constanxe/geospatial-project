@@ -17,7 +17,8 @@ function(input, output) {
     })
     
     output$jcTable <- renderDT(
-      jc@data, options = list(lengthChange = FALSE)
+      jc@data %>% dplyr::select(-X, -Y),
+      options = list(lengthChange = FALSE)
     )
     
     
@@ -128,11 +129,6 @@ function(input, output) {
 
         
     })
-    
-    
-    
-    
-    
     
     
     

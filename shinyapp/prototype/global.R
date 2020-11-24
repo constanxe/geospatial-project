@@ -51,9 +51,6 @@ jc_data <- read.csv(dp_a_jc)
 hdb_data <- read.csv(dp_a_hdb)
 zip_data <- read.csv(dp_a_zip)
 
-#sf_mpsz = st_read(dsn = dp_prefix_g, layer = "MP14_SUBZONE_WEB_PL")
-#mpsz <- as(sf_mpsz, "Spatial")
-
 # Data Wrangling
 
 ## Select
