@@ -72,16 +72,22 @@ function(input, output) {
                                   popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
                                   data = hdb@data$ADDRESS, group = 'hdblayer')
         }
-        else if (!is.null(input$display) && input$display =='Show school points'){
+        
+        else {
+          proxy %>% clearGroup('hdblayer')
+        }
+        
+        
+        if (!is.null(input$display) && input$display =='Show school points'){
             proxy %>%  addMapPane("schlayer", zIndex = 420) %>% 
-                addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
+                addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
                            popup = jc@data$ADDRESS, options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(),
                            data = jc@data$ADDRESS,
                            group = 'schlayer', icon = schIcon)
         }
         
         else{
-            proxy %>% clearGroup('hdblayer') %>% clearGroup('schlayer')
+            proxy %>% clearGroup('schlayer')
         }
     })
     
@@ -107,6 +113,7 @@ function(input, output) {
                             fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer' )
                 
         }
+        
         
         proxy %>% clearGroup('targetlayer') %>% addMapPane("targetlayer", zIndex = 430) %>%
             addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
