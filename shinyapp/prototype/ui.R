@@ -13,8 +13,10 @@ dashboardPage(title=PAGE_TITLE,
         ),
         selectInput("jc", "Junior College:", jc@data$SCHOOL),
         selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
-                                               "Distance & Duration (Hansen Accessibility)", 
-                                               "Distance & Duration (Spatial Accessibility Measure)")),
+                                               "Distance (Hansen Accessibility)", 
+                                               "Duration (Hansen Accessibility)", 
+                                               "Distance (Spatial Accessibility Measure)",
+                                               "Duration (Spatial Accessibility Measure)")),
         checkboxGroupInput("display", "Display:", c("Show school points", "Show HDB points"))
     ),
     

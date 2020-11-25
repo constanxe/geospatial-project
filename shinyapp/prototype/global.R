@@ -38,7 +38,9 @@ memory.limit(size=56000)
 dp_g = "../data/geospatial" 
 dp_a_prefix = "../data/aspatial/" 
 dp_j_prefix = "../data/geojson/" 
-dp_m_prefix = "../data/matrix/" 
+dp_m_prefix = "../data/distancematrix/" 
+dp_h_prefix = "../data/hansen/" 
+dp_s_prefix = "../data/sam/" 
 
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")

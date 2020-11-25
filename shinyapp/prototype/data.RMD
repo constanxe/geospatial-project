@@ -158,7 +158,7 @@ for (i in 1:19){
   print(lat)
   print(long)
   
-  iso = get_geojson(lat, long, lsch)
+  get_geojson(lat, long, lsch)
   sp = geojsonio::geojson_read(paste0(dp_j_prefix, lsch, '.geojson'), what = "sp")
   proj4string(sp) = proj4string(hdb)
   res = colSums(gContains(sp, hdb, byid = TRUE))
@@ -277,7 +277,14 @@ for (x in 1:19){
   print(schName)
   res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
   result_acc = apply_hansen(res)
-  saveRDS(result_acc, paste0(dp_h_prefix, '/',schName,'.rds'))
+  
+  result_acc_sf <- st_as_sf(result_acc, 
+  coords = c('longitude', 'latitude'),
+  crs = "+init=epsg:3414")
+
+  result_acc_sp <- sf:::as_Spatial(result_acc_sf)
+  
+  saveRDS(result_acc_sp, paste0(dp_h_prefix, '/',schName,'.rds'))
 }
 ```
 
@@ -294,8 +301,8 @@ apply_sam = function(res){
                               power = 2, 
                               family = "SAM"))
   result_duration = result
-  result_duration$durationsam = acc_sam[,1]
-  result_duration$durationsam[is.na(result_duration$durationsam)] = 0
+  result_duration$durationSam = acc_sam[,1]
+  result_duration$durationSam[is.na(result_duration$durationSam)] = 0
   
   
   distanceMatrix = result %>% dplyr::select('distance')
@@ -305,8 +312,8 @@ apply_sam = function(res){
                               power =2, 
                               family = "SAM"))
   result_final = result_duration
-  result_final$distancesam = acc_sam[,1]
-  result_final$distancesam[is.na(result_final$distancesam)] = 0
+  result_final$distanceSam = acc_sam[,1]
+  result_final$distanceSam[is.na(result_final$distanceSam)] = 0
   return (result_final)
 }
 ```
@@ -318,7 +325,14 @@ for (x in 1:19){
   print(schName)
   res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
   result_acc = apply_sam(res)
-  saveRDS(result_acc, paste0(dp_s_prefix, '/',schName,'.rds'))
+  
+  result_acc_sf <- st_as_sf(result_acc, 
+  coords = c('longitude', 'latitude'),
+  crs = "+init=epsg:3414")
+
+  result_acc_sp <- sf:::as_Spatial(result_acc_sf)
+  
+  saveRDS(result_acc_sp, paste0(dp_s_prefix, '/',schName,'.rds'))
 }
 ```
 
