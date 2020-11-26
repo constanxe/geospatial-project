@@ -48,7 +48,7 @@ dashboardPage(title=PAGE_TITLE,
                                                "Duration (Hansen)", 
                                                "Distance (SAM)",
                                                "Duration (SAM)")),
-        searchInput("postal", "Postal Code:"),
+        searchInput("postal", "Postal Code:", btnSearch = icon("search")),
         checkboxGroupInput("display", "Display:", c("Show school points", "Show HDB points"))
     ),
     

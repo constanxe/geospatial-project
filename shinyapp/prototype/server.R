@@ -38,7 +38,10 @@ function(input, output, session) {
     hide_hdb = reactive({
       !('Show HDB points' %in% input$display)
     })
-
+   
+    show_postal = reactive({
+      !is.null(input$postal)
+    })
     
     # save the display into tabs to be call from UI.R
     output$mapPlot <- renderLeaflet({
@@ -146,18 +149,42 @@ function(input, output, session) {
     )
     
    
+    observeEvent(input$postal,{
+      
+      proxy <- leafletProxy("mapPlot")
+      proxy %>% clearGroup('hdbptlayer')  
+      if (show_postal()){
+        select_hdb <- hdb %>% dplyr::filter(POSTAL==input$postal)
+        proxy %>%  addMapPane("hdbptlayer", zIndex = 420) %>% 
+          addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
+                    
+                   popup = select_hdb@data$ADDRESS,
+                   options = popupOptions(closeButton = FALSE),
+                   data = select_hdb@data$ADDRESS,
+                   group = 'hdbptlayer')
+          
+        
+       
+        
+        
+       
+        
+      } else if (show_postal()) {
+        proxy %>% clearGroup('hdblayer')  
+      }
+    })
     
     # look at the selected display and add the layer in if checked
     observeEvent(input$display, {
         proxy <- leafletProxy("mapPlot")
 
         if (show_hdb()){
-            proxy %>%  addMapPane("hdblayer", zIndex = 420) %>% 
-                addCircleMarkers( lng = hdb@coords[,1], lat = hdb@coords[,2], 
-                                  opacity = 1, fillOpacity = 1, fillColor = '#E4CD05',color = '#000', 
-                                  stroke=TRUE, weight = 0.5, radius= 2, options = pathOptions(pane = "hdblayer"),
-                                  popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
-                                  data = hdb@data$ADDRESS, group = 'hdblayer')
+          proxy %>%  addMapPane("hdblayer", zIndex = 420) %>% 
+            addCircleMarkers( lng = hdb@coords[,1], lat = hdb@coords[,2], 
+                              opacity = 1, fillOpacity = 1, fillColor = '#E4CD05',color = '#000', 
+                              stroke=TRUE, weight = 0.5, radius= 2, options = pathOptions(pane = "hdblayer"),
+                              popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
+                              data = hdb@data$ADDRESS, group = 'hdblayer')
         } else if (hide_hdb()) {
             proxy %>% clearGroup('hdblayer')  
         }
