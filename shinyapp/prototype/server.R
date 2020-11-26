@@ -47,7 +47,13 @@ function(input, output, session) {
     
     
     output$jcTable <- renderDT(
-      jc@data %>% dplyr::select(-X, -Y),
+      if(length(input$region)==0){
+        jc@data %>% dplyr::select(-X, -Y)
+      }else{
+        jc@data %>% 
+          dplyr::filter(REGION %in% toupper(input$region)) %>% 
+          dplyr::select(-X, -Y)
+      },
       options = list(lengthChange = FALSE)
     )
     
