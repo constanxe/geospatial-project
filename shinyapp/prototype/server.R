@@ -1,4 +1,4 @@
-function(input, output) {
+function(input, output, session) {
     
     zoomlevel = reactive({
         input$map_zoom
@@ -51,11 +51,10 @@ function(input, output) {
       options = list(lengthChange = FALSE)
     )
     
-    
     output$row <- renderPrint({
-      print()
+
     })
-    
+
     
     # look at the input analysis and add the layer for the selected analysis
     observeEvent(input$analysis, {
@@ -126,6 +125,15 @@ function(input, output) {
     })
     
     
+    observeEvent(input$region,
+      updateSelectInput(session, "jc",
+                        label = "Junior College",
+                        choices =  jc@data$SCHOOL[jc@data$REGION %in% toupper(input$region)]
+      )
+    )
+    
+   
+    
     # look at the selected display and add the layer in if checked
     observeEvent(input$display, {
         proxy <- leafletProxy("mapPlot")
@@ -153,7 +161,10 @@ function(input, output) {
         }
 
     })
+
     
+    
+  
     
     # look at the selected jc and the various selected items and add the layers in
     observeEvent(input$jc, {
