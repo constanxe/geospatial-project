@@ -32,9 +32,14 @@ for (p in packages){
 
 memory.limit(size=56000)
 
+# UI
+schIcon <- makeIcon(
+  iconUrl = "schIcon.png",
+  iconWidth = 20, iconHeight = 30,
+  iconAnchorX = 10, iconAnchorY = 30,
+)
 
-# Data Paths
-
+# Folder Paths
 dp_g = "../data/geospatial" 
 dp_a_prefix = "../data/aspatial/" 
 dp_j_prefix = "../data/geojson/" 
@@ -42,21 +47,18 @@ dp_m_prefix = "../data/distancematrix/"
 dp_h_prefix = "../data/hansen/" 
 dp_s_prefix = "../data/sam/" 
 
+# Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
 dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 
 
 # Data variables
-
 jc_data <- read.csv(dp_a_jc)
 hdb_data <- read.csv(dp_a_hdb)
 zip_data <- read.csv(dp_a_zip)
 
 # Data Wrangling
-
-## Select
-
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
   dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
@@ -65,9 +67,9 @@ hdb <- zip_data%>%
   dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
 
 
-## CRS
-
+# CRS
 crsobj = CRS("+init=EPSG:3414")
+
 coordinates(jc)<-~LONGITUDE+LATITUDE
 proj4string(jc) = crsobj
 

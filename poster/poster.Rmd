@@ -14,7 +14,7 @@ column_numbers: 3
 logoright_name: https&#58;//logos-download.com/wp-content/uploads/2016/12/Singapore_Management_University_logo_SMU.png
 logoleft_name: https&#58;//brave-bhaskara-fc4519.netlify.app/img/logo.png
 output: 
-  posterdown::posterdown_pdf:
+  posterdown::posterdown_html:
     self_contained: false
 bibliography: packages.bib
 ---
