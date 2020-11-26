@@ -276,7 +276,14 @@ for (x in 1:19){
   schName = jc@data[x,'SCHOOL']
   print(schName)
   res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
+  res<- res%>%
+    mutate(duration=duration/1000) %>%
+    mutate(distance=distance/1000)
+  
   result_acc = apply_hansen(res)
+  
+  result_acc <- result_acc %>% 
+    mutate(hansenDistLabel = paste(sep = "<br>",round(distanceHansen,4),address), hansenDuraLabel = paste(sep = "<br>",round(durationHansen,4),address))
   
   result_acc_sf <- st_as_sf(result_acc, 
   coords = c('longitude', 'latitude'),
@@ -324,6 +331,11 @@ for (x in 1:19){
   schName = jc@data[x,'SCHOOL']
   print(schName)
   res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
+  
+  res<- res%>%
+    mutate(duration=duration/10) %>%
+    mutate(distance=distance/10)
+  
   result_acc = apply_sam(res)
   
   result_acc_sf <- st_as_sf(result_acc, 
@@ -335,6 +347,5 @@ for (x in 1:19){
   saveRDS(result_acc_sp, paste0(dp_s_prefix, '/',schName,'.rds'))
 }
 ```
-
 
 
