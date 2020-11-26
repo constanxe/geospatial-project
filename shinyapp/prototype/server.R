@@ -29,11 +29,32 @@ function(input, output) {
       sam = readRDS(file=paste0(dp_s_prefix, schName,'.rds'))
       return(sam)
     })
+
+    
+    yessch = reactive({
+      !is.null(input$display) && 'Show school points' %in% input$display
+    })
+    nosch = reactive({
+      !('Show school points' %in% input$display)
+    })
+    
+    yeshdb = reactive({
+      !is.null(input$display) && 'Show HDB points' %in% input$display
+    })
+    nohdb = reactive({
+      !('Show HDB points' %in% input$display)
+    })
+    
     
     output$jcTable <- renderDT(
       jc@data %>% dplyr::select(-X, -Y),
       options = list(lengthChange = FALSE)
     )
+    
+    
+    output$row <- renderPrint({
+      print()
+    })
     
     
     # look at the input analysis and add the layer for the selected analysis
@@ -45,7 +66,6 @@ function(input, output) {
                 addPolygons(data =iso(), stroke = TRUE, weight=0.5,
                 smoothFactor = 1, color="black", options = pathOptions(pane = "isolayer"),
                 fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer' )
-                
         }else{
             proxy %>% clearGroup('isolayer') 
         }
@@ -110,27 +130,28 @@ function(input, output) {
     observeEvent(input$display, {
         proxy <- leafletProxy("mapPlot")
         schName = jc@data$SCHOOL[[curr_sch_id()]]
-        if (!is.null(input$display) && input$display =='Show HDB points'){
+
+        if (yeshdb()){
             proxy %>%  addMapPane("hdblayer", zIndex = 420) %>% 
                 addCircleMarkers( lng = hdb@coords[,1], lat = hdb@coords[,2], 
                                   opacity = 1, fillOpacity = 1, fillColor = '#E4CD05',color = '#000', 
                                   stroke=TRUE, weight = 0.5, radius= 2, options = pathOptions(pane = "hdblayer"),
                                   popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
                                   data = hdb@data$ADDRESS, group = 'hdblayer')
+        } else if (nohdb()) {
+            proxy %>% clearGroup('hdblayer')  
         }
-        else if (!is.null(input$display) && input$display =='Show school points'){
+        
+        if (yessch()){
             proxy %>%  addMapPane("schlayer", zIndex = 420) %>% 
                 addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
                            popup = jc@data$ADDRESS, options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(),
                            data = jc@data$ADDRESS,
                            group = 'schlayer', icon = schIcon)
+        } else if (nosch()) {
+            proxy %>% clearGroup('schlayer')
         }
-        else if (input$display !='Show HDB points'){
-            proxy %>% clearGroup('hdblayer')  
-        }
-        else if (input$display != 'Show school points'){
-          proxy %>% clearGroup('schlayer')
-        }
+
     })
     
     
@@ -261,18 +282,21 @@ function(input, output) {
                                title=paste0("SAM Accessibility on DURATION from HDBs to", schName, ' (high to low)'))
         }
         
-        if(!is.null(input$display) && input$display=='Show HDB points'){
-            proxy %>%  addLegend(position="topright",colors=rev(c('#E4CD05')),
+        if (yeshdb()){
+          proxy %>%  addLegend(position="topright",colors=rev(c('#E4CD05')),
                                  labels=rev(c("HDB")),
                                  opacity = 0.8)
+        } else if (nohdb()) {
+            proxy %>% clearGroup('hdblayer')
         }
         
-        if(!is.null(input$display) && input$display=='Show school points'){
+        if (yessch()){
           proxy %>%  addLegend(position="topright",colors=rev(c('red')),
                                labels=rev(c("school")),
                                opacity = 0.8)
+        } else if (nosch()) {
+          proxy %>% clearGroup('schlayer')
         }
-
 
     })
     
