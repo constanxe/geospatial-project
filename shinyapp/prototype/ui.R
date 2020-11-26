@@ -5,7 +5,7 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';"))),
     
     dashboardSidebar(
-        selectizeInput("region", "Region(s):", c("North", "South", "East", "West"),
+        selectizeInput("region", "Region(s):", c("North", "North-East", "East", "West", "Central"),
                     multiple = TRUE, options = list(
                         'plugins' = list('remove_button'),
                         'create' = TRUE,
@@ -23,7 +23,8 @@ dashboardPage(title=PAGE_TITLE,
     dashboardBody(
         navbarPage("Information", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("JC Details", DTOutput("jcTable"))
+            tabPanel("JC Details", DTOutput("jcTable")),
+            tabPanel(verbatimTextOutput('row'), title="temp")
         )
     )
 

@@ -44,7 +44,7 @@ At the same time, the rather recent lavish national expenditure on the building 
 Moreover, this topic is close to home as we have members whose JC was merged. Hence, we wish to visualise the and analyse the impact, and perhaps allow insight to be derived on the ideal locations of schools. 
 
 
-# Reviews of Past Projects
+# Related Work
 
 An existing application we reviewed was Balancing Urban Residential Plannings (BURP) [@burp]. This project looked into the impact of accessibility for families in residential housing after school mergers in Singapore. They calculated the distance of HDB flats to schools and used kernel density of HDBs as part of their algorithms. Isochrone maps were also used to showcase the results. We also tried out their application and evaluated them as follows.
 
@@ -60,14 +60,14 @@ Another study [@sas] had the aim of assessing if the locations of current (and u
 
 The next study [@kernel] looks into the improved version of two-step floating catchment area (2SFCA) method and the kernel density 2SFCA (KD2SFCA) method. The method was applied to assess the accessibility of the Portuguese hospital health care sector to see how well it performed as compared to the normal 2SFCA method. It was concluded that the KD2SFCA was able to better identify the accessibility of healthcare for the population. 
 
-# Project Approach
+# Methods
+techniques and algorithms
 
 In our project, we will implement the methodologies covered by the case study, while also learning from the BURP application as reviewed in the previous literature review section. We will also add in other functionalities not covered. 
 
 Firstly, using Hansen’s Accessibility Index, we can measure accessibility of an estate area based on the number of schools, weighted by the travel time required. More time needed means less attractive.
 
-
-# Application System Architecture & Overview
+Application System Architecture & Overview
 
 ![Application System Architecture and Overview](img/architecture-overview.png)
 
@@ -79,6 +79,7 @@ UI.R is supported by the server for rendering information, and will showcase the
 Server.R will do the back-end work, generating the information from the models. The core functionalities of our application is the accessibility models to see the duration and/or distance and localised geographical statistics that lets us identify the cold spot and hot spot areas.
 
 Global.R lets us load the relevant libraries and datasets for the server and the UI, which allow us to perform various forms of analysis.
+
 
 # Application Storyboard
 
@@ -95,6 +96,16 @@ In the map tab, they can apply various filters to see the results they want. Nam
 - Preferences to show accessibility points and/or legend, and the map type  
 
 Users can also find out more information about the application and how to use it in the About tab. 
+
+# Results
+
+discover new understanding from the data
+
+# Discussion
+What has the audience learned from your work? What new insights or practices has your system enabled? A full blown user study is not expected, but informal observations of use that help evaluate your system are encouraged.
+
+# Future Work
+A description of how your system could be extended or refined
 
 
 # References
