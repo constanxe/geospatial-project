@@ -8,7 +8,7 @@ function(input, output, session) {
     # look at current school selected
     curr_sch_id = reactive({
         which(
-          rapportools::tocamel(tolower(jc@data$SCHOOL), upper=TRUE, sep=" ") == input$jc, arr.ind=TRUE)
+          jc@data$SCHOOL == input$jc, arr.ind=TRUE)
     })
     curr_sch_name = reactive({
         jc@data$SCHOOL[[curr_sch_id()]]
@@ -16,13 +16,13 @@ function(input, output, session) {
 
     # read the rds file of the school selected for the specified analysis type
     iso = reactive({
-        readRDS(file=paste0(dp_j_prefix, curr_sch_name(),'.rds'))
+        readRDS(file=paste0(dp_j_prefix, toupper(curr_sch_name()),'.rds'))
     })
     hansen = reactive({
-      readRDS(file=paste0(dp_h_prefix, curr_sch_name(),'.rds'))
+      readRDS(file=paste0(dp_h_prefix, toupper(curr_sch_name()),'.rds'))
     })
     sam = reactive({
-      readRDS(file=paste0(dp_s_prefix, curr_sch_name(),'.rds'))
+      readRDS(file=paste0(dp_s_prefix, toupper(curr_sch_name()),'.rds'))
     })
 
     # conditions for show points checkboxes
@@ -43,14 +43,15 @@ function(input, output, session) {
       !is.null(input$postal)
     })
     
+    sch_all_region = reactive({
+      is.null(input$region)
+    })
+    
     # save the display into tabs to be call from UI.R
     output$mapPlot <- renderLeaflet({
       leaflet() %>%
         setView( lng = 103.8198, lat = 1.3521, zoom = 12) %>%
-        setMaxBounds( lng1 = 103.4057919091
-                      , lat1 = 1.1648902351
-                      , lng2 = 104.2321161335
-                      , lat2 = 1.601881499) %>%
+        setMaxBounds(103.4057919091, 1.1648902351, 104.2321161335, 1.601881499) %>%
         addProviderTiles(providers$CartoDB.DarkMatter,
                          options = providerTileOptions(opacity = 0.8))%>%
         htmlwidgets::onRender("
@@ -70,7 +71,7 @@ function(input, output, session) {
       options = list(lengthChange = FALSE)
     )
     output$temp <- renderPrint({
-      print("")
+      print(input$region)
     })
 
     
@@ -140,15 +141,23 @@ function(input, output, session) {
         
     })
     
-    
-    observeEvent(input$region,
-      updateSelectInput(session, "jc",
-                        label = "Junior College",
-                        choices =  jc@data$SCHOOL[jc@data$REGION %in% toupper(input$region)]
-      )
-    )
+    # update select input based on user's input on region
+    observeEvent(input$region,{
+      if (sch_all_region()){
+        updateSelectInput(session, "jc",
+                          label = "Junior College",
+                          choices =  jc@data$SCHOOL)
+      }
+      else {
+        updateSelectInput(session, "jc",
+                          label = "Junior College",
+                          choices =  jc@data$SCHOOL[jc@data$REGION %in% toupper(input$region)])
+      }
+      
+    })
     
    
+    # display hdb popup based on user's searchinput
     observeEvent(input$postal,{
       
       proxy <- leafletProxy("mapPlot")
@@ -157,21 +166,11 @@ function(input, output, session) {
         select_hdb <- hdb %>% dplyr::filter(POSTAL==input$postal)
         proxy %>%  addMapPane("hdbptlayer", zIndex = 420) %>% 
           addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
-                    
                    popup = select_hdb@data$ADDRESS,
                    options = popupOptions(closeButton = FALSE),
                    data = select_hdb@data$ADDRESS,
                    group = 'hdbptlayer')
-          
-        
-       
-        
-        
-       
-        
-      } else if (show_postal()) {
-        proxy %>% clearGroup('hdblayer')  
-      }
+      } 
     })
     
     # look at the selected display and add the layer in if checked

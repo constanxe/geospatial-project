@@ -42,7 +42,7 @@ dashboardPage(title=PAGE_TITLE,
                         'create' = TRUE,
                         'persist' = FALSE)
         ),
-        selectInput("jc", "Junior College:", rapportools::tocamel(tolower(jc@data$SCHOOL), upper=TRUE, sep=" ")),
+        selectInput("jc", "Junior College:", jc@data$SCHOOL),
         selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
                                                "Distance (Hansen)", 
                                                "Duration (Hansen)", 
