@@ -181,8 +181,8 @@ function(input, output) {
             domain = hansen()@data$distanceHansen
           )
           proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
-            addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, weight= 5, color = pal(hansen()@data$distanceHansen), 
-                       stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+            addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
+                       stroke = TRUE, fillOpacity = 0.8, label = paste(sep=" ",hansen()@data$distanceHansen, hansen@data$address),
                        group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
         }
         
@@ -203,8 +203,6 @@ function(input, output) {
             domain = sam()@data$distanceSam
           )
           proxy %>% clearGroup('samdistlayer') %>% addMapPane('samdistlayer', zIndex = 412) %>%
-            addProviderTiles(providers$CartoDB.DarkMatter,
-                             options = providerTileOptions(opacity = 0.8))%>% 
             addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, weight= 5, color = pal(sam()@data$distanceSam), 
                        stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
                        group = 'samdistlayer', options = pathOptions(pane = "samdistlayer")) 
@@ -255,7 +253,7 @@ function(input, output) {
           colorpal <- colorBin("Blues", vals,  reverse = TRUE)
           proxy %>%  addLegend(position="topright", pal = colorpal, values = vals,
                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                               title=paste0("Hansen Accessibility on DISTANCE from HDBs to", schName, ' (high to low)'))
+                               title=paste0("Hansen Accessibility on DISTANCE from HDBs to ", schName, ' (high to low)'))
         }
         
         if(input$analysis == 'Duration (Hansen Accessibility)'){
@@ -263,7 +261,7 @@ function(input, output) {
           colorpal <- colorBin("Purples", vals,  reverse = TRUE)
           proxy %>%  addLegend(position="topright", pal = colorpal, values = vals,
                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                               title=paste0("Hansen Accessibility on DURATION from HDBs to", schName, ' (high to low)'))
+                               title=paste0("Hansen Accessibility on DURATION from HDBs to ", schName, ' (high to low)'))
         }
         
         if(input$analysis == 'Distance (Spatial Accessibility Measure)'){
@@ -271,7 +269,7 @@ function(input, output) {
           colorpal <- colorBin("Blues", vals,  reverse = TRUE)
           proxy %>%  addLegend(position="topright", pal = colorpal, values = vals,
                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                               title=paste0("SAM Accessibility on DISTANCE from HDBs to", schName, ' (high to low)'))
+                               title=paste0("SAM Accessibility on DISTANCE from HDBs to ", schName, ' (high to low)'))
         }
         
         if(input$analysis == 'Duration (Spatial Accessibility Measure)'){
@@ -279,7 +277,7 @@ function(input, output) {
           colorpal <- colorBin("Purples", vals,  reverse = TRUE)
           proxy %>%  addLegend(position="topright", pal = colorpal, values = vals,
                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                               title=paste0("SAM Accessibility on DURATION from HDBs to", schName, ' (high to low)'))
+                               title=paste0("SAM Accessibility on DURATION from HDBs to ", schName, ' (high to low)'))
         }
         
         if (yeshdb()){
