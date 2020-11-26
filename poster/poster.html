@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+
+
+
+<title>Merge’R’Us; Visualising Accessibility of Junior Colleges</title>
+
+<script src="poster_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="poster_files/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+<script src="poster_files/anchor-sections-1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */</style>
+
+<style>
+@page {
+size: 45in 38in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0;
+font-size: 45px;
+width: 45in;
+height: 38in;
+padding: 0;
+text-align: justify;
+font-family: Palatino;
+}
+.poster_wrap {
+width: 45in;
+height: 38in;
+padding: 0cm;
+}
+.title_container {
+width: 45in;
+height: calc(38in * 0.15);
+overflow: hidden;
+background-color: #0b4545;
+border: 0 solid #0b4545;
+}
+.logo_left {
+float: left;
+width: 10%;
+height: 100%;
+background-color: #0b4545;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.logo_right {
+float: right;
+width: 10%;
+height: 100%;
+background-color: #0b4545;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.poster_title {
+text-align: center;
+position: relative;
+float: left;
+width: 80%;
+height: 100%;
+color: #FFFFFF;
+top: 50%;
+transform: translateY(-50%);
+-webkit-transform: translateY(-50%);
+}
+#title {
+font-family: Palatino;
+}
+/* unvisited link */
+a:link {
+color: #cc0000;
+}
+.mybreak {
+  break-before: column;
+}
+/* visited link */
+a:visited {
+color: #cc0000;
+}
+
+/* mouse over link */
+a:hover {
+color: #cc0000;
+}
+
+/* selected link */
+a:active {
+color: #cc0000;
+}
+.poster_body {
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+-webkit-column-rule-width: 1mm;
+-moz-column-rule-width: 1mm;
+column-rule-width: 1mm;
+-webkit-column-rule-style: dashed;
+-moz-column-rule-style: dashed;
+column-rule-style: dashed;
+-webkit-column-rule-color: #0b4545;
+-moz-column-rule-color: #0b4545;
+column-rule-color: #0b4545;
+column-gap: 1em;
+padding-left: 0.5em;
+padding-right: 0.5em;
+height: 100%;
+color: #000000
+background-color: #ffffff;
+}
+.poster_title h1 {
+font-size: 75pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+.poster_body_wrap{
+width: calc(45in + 0 + 0);
+height: calc(38in * 0.83);
+padding-top: calc(38in * 0.005);
+padding-bottom: calc(38in * 0.01);
+background-color: #ffffff;
+}
+.poster_title h3 {
+color: #ffffff;
+font-size: 50pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+.poster_title h3 > sup {
+  font-size: 35pt;
+  margin-left: 0.02em;
+}
+.poster_title h5 {
+color: #FFFFFF;
+font-size: 35pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+img {
+margin-top: 2cm;
+margin-bottom: 0;
+}
+.section {
+  padding: 0.2em;
+}
+.poster_body h1 {
+text-align: center;
+color: #FFFFFF;
+font-size: 65pt;
+border: 2mm solid #0b4545;
+background-color: #0b4545;
+border-radius: 4mm 0mm;
+margin-top: 2mm;
+margin-bottom: 2mm;
+font-weight: normal;
+}
+.poster_body h2 {
+color: #000000;
+font-size: 40pt;
+padding-left: 4mm;
+font-weight: normal;
+}
+.span {
+width: 200%;
+}
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
+padding: 4mm;
+width: 75%;
+/* align-items: center; */
+margin: auto;
+padding-left: 2cm;
+}
+code.sourceCode.r{
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+.caption {
+font-size: 25pt;
+}
+.table caption {
+font-size: 25pt;
+padding-bottom: 3mm;
+
+}
+code {
+font-size: 1em;
+font-family: monospace;
+background-color: #00808024;
+color: #0b4545;
+padding: 1.2mm;
+border-radius: 2mm;
+}
+.poster_title code {
+font-size: 1em;
+}
+table {
+font-size: 40px;
+margin: auto;
+border-top: 3px solid #666;
+border-bottom: 3px solid #666;
+}
+table thead th {
+border-bottom: 3px solid #ddd;
+}
+td {
+padding: 8px;
+}
+th {
+padding: 15px;
+}
+caption {
+margin-bottom: 10px;
+}
+.poster_body p {
+margin-right: 4mm;
+margin-left: 4mm;
+margin-top: 6mm;
+margin-bottom: 10mm;
+}
+.poster_body ol {
+margin-right: 4mm;
+margin-left: 4mm;
+}
+#ul {
+margin-right: 4mm;
+margin-left: 4mm;
+}
+.references p {
+font-size: 20pt;
+}
+.orcid img {
+  width: 1em;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+<div class="title_container">
+<!-- Left Logo  -->
+<div class="logo_left">
+<img src= 'https://brave-bhaskara-fc4519.netlify.app/img/logo.png' style="width: 80%">
+</div>
+<!-- Poster Title -->
+<div class= "poster_title">
+<h1 id="title">Merge’R’Us; Visualising Accessibility of Junior Colleges</h1>
+<h3 id="author">Constance Tan<sup>1</sup>, Fiona Wee<sup>1</sup>, Jasmine Toh<sup>1</sup></h3><br>
+<h5 id="affiliation"><sup>1</sup> School of Information Systems, Singapore Management University</h5>
+</div>
+<!-- Right Logo  -->
+<div class="logo_right">
+<img src=https://logos-download.com/wp-content/uploads/2016/12/Singapore_Management_University_logo_SMU.png style="width: 80%">
+</div>
+</div>
+
+<div class='poster_body_wrap'>
+<div class='poster_body'>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges.</p>
+<p>This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students.</p>
+<div id="project-objectives" class="section level2">
+<h2><strong>Project Objectives</strong></h2>
+<p>In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students.</p>
+<p>Mainly, we wish to create an isochrone map and visualise the modelling results of Hansen accessibility model and Spatial Accessibility Measure.</p>
+<p>We will then analyse and interpret the output. We are also interested in identifying the affected residential areas which require more attention and comment on potential amalgamation by doing evaluations and stating the challenges.</p>
+</div>
+<div id="project-motivation" class="section level2">
+<h2><strong>Project Motivation</strong></h2>
+<p>Many families have been impacted in terms of accessibility due to the policy, with some moving houses or being inconvenienced. We wish to explore the extent of this as well as identify the areas impacted. Did the decisions meet its aim, or did it do more harm than good? We are curious about this, and regardless, if any area was impacted adversely, it would be good for measures to be implemented by the government to assist the families affected.</p>
+<p>While the initial announcement was a few years back, this situation remains prevalent. There are still future plans for relocation, for example Yusof Ishak Secondary School from an area where demand for school places is falling to Punggol in 2021 to meet the growing demand <span class="citation">(Chia 2018)</span>. While this is grounded, we wonder about the sustainability of moving schools everytime the demand falls. As the downward trend in Singapore’s population growth continues, there might be more of such cases to come, which is a cause for concern.</p>
+<p>At the same time, the rather recent lavish national expenditure on the building of the new Eunoia JC raised many eyebrows. Many questioned if the move was called for in light of the closures and mergers of the other schools <span class="citation">(Tee 2020)</span>, and this is an interesting issue that we can look into on the side.</p>
+<p>Moreover, this topic is close to home as we have members whose JC was merged. Hence, we wish to visualise the and analyse the impact, and perhaps allow insight to be derived on the ideal locations of schools.</p>
+</div>
+</div>
+<div id="methods" class="section level1">
+<h1>Methods</h1>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<p>You can reference tables like so: Table <a href="#tab:mytable">1</a>.</p>
+<table>
+<caption>
+<span id="tab:mytable">Table 1: </span>Table caption.
+</caption>
+<thead>
+<tr>
+<th style="text-align:center;">
+Sepal.Length
+</th>
+<th style="text-align:center;">
+Sepal.Width
+</th>
+<th style="text-align:center;">
+Petal.Length
+</th>
+<th style="text-align:center;">
+Petal.Width
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+5.1
+</td>
+<td style="text-align:center;">
+3.5
+</td>
+<td style="text-align:center;">
+1.4
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.9
+</td>
+<td style="text-align:center;">
+3.0
+</td>
+<td style="text-align:center;">
+1.4
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.7
+</td>
+<td style="text-align:center;">
+3.2
+</td>
+<td style="text-align:center;">
+1.3
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.6
+</td>
+<td style="text-align:center;">
+3.1
+</td>
+<td style="text-align:center;">
+1.5
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5.0
+</td>
+<td style="text-align:center;">
+3.6
+</td>
+<td style="text-align:center;">
+1.4
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5.4
+</td>
+<td style="text-align:center;">
+3.9
+</td>
+<td style="text-align:center;">
+1.7
+</td>
+<td style="text-align:center;">
+0.4
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.6
+</td>
+<td style="text-align:center;">
+3.4
+</td>
+<td style="text-align:center;">
+1.4
+</td>
+<td style="text-align:center;">
+0.3
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+5.0
+</td>
+<td style="text-align:center;">
+3.4
+</td>
+<td style="text-align:center;">
+1.5
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.4
+</td>
+<td style="text-align:center;">
+2.9
+</td>
+<td style="text-align:center;">
+1.4
+</td>
+<td style="text-align:center;">
+0.2
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+4.9
+</td>
+<td style="text-align:center;">
+3.1
+</td>
+<td style="text-align:center;">
+1.5
+</td>
+<td style="text-align:center;">
+0.1
+</td>
+</tr>
+</tbody>
+</table>
+<p>Or with figures: Figure <a href="#fig:standard-plot">1</a>, or Figure <a href="#fig:morefigs">2</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:standard-plot"></span>
+<img src="poster_files/figure-html/standard-plot-1.png" alt="Great figure!" width="80%" />
+<p class="caption">
+Figure 1: Great figure!
+</p>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>data &lt;-<span class="st"> </span>iris</span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">plot</span>(<span class="dt">x =</span> data<span class="op">$</span>Sepal.Length, </span>
+<span id="cb1-4"><a href="#cb1-4"></a>     <span class="dt">y =</span> data<span class="op">$</span>Sepal.Width, </span>
+<span id="cb1-5"><a href="#cb1-5"></a>     <span class="dt">col =</span> data<span class="op">$</span>Species,</span>
+<span id="cb1-6"><a href="#cb1-6"></a>     <span class="dt">pch =</span> <span class="dv">19</span>, </span>
+<span id="cb1-7"><a href="#cb1-7"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Sepal Length (cm)&quot;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Sepal Width (cm)&quot;</span>)</span></code></pre></div>
+<div class="figure"><span id="fig:morefigs"></span>
+<img src="poster_files/figure-html/morefigs-1.png" alt="Amazing, right?!" width="80%" />
+<p class="caption">
+Figure 2: Amazing, right?!
+</p>
+</div>
+</div>
+<div id="next-steps" class="section level1">
+<h1>Next Steps</h1>
+</div>
+<div id="conclusion" class="section level1">
+<h1>Conclusion</h1>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-relocation">
+<p>Chia, Lianne. 2018. “MOE to Relocate Yusof Ishak Secondary from Bukit Batok to Punggol.” <a href="https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654">https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654</a>.</p>
+</div>
+<div id="ref-commentary">
+<p>Tee, Karen. 2020. “Look Beyond State-of-the-Art Campuses for What Matters in Education.” <a href="https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726">https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726</a>.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+
+
+</body>
+</html>
