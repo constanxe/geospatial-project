@@ -182,7 +182,7 @@ function(input, output) {
           )
           proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
             addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
-                       stroke = TRUE, fillOpacity = 0.8, label = paste(sep=" ",hansen()@data$distanceHansen, hansen@data$address),
+                       stroke = TRUE, fillOpacity = 0.8, 
                        group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
         }
         
