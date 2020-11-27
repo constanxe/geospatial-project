@@ -64,6 +64,14 @@ dashboardPage(title=PAGE_TITLE,
     dashboardBody(
         navbarPage("Explore", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
+            tabPanel("Assessibility Measures", 
+                     fluidRow(
+                        box(title="Hansen Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
+                            plotOutput("hansenPlot")),
+                        ),
+                        box(title="SAM Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
+                            plotOutput("samPlot"))
+             ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
             tabPanel(verbatimTextOutput('temp'), title="temp")))

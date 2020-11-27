@@ -70,6 +70,13 @@ function(input, output, session) {
         hdb@data %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
     })
     
+    output$hansenPlot <- renderPlot({
+      
+    })
+    output$samPlot <- renderPlot({
+      
+    })
+    
     output$temp <- renderPrint({
         print("")
     })
