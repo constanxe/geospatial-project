@@ -321,3 +321,38 @@ for (x in 1:19){
     saveRDS(result_acc_sp, paste0(dp_s_prefix,schName,'.rds'))
 }
 ```
+
+
+
+
+For 1 school
+```{r}
+read_rds <- function(prefix) { 
+        readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+    }
+  
+hansen = read_rds(dp_h_prefix)
+
+boxplot(hansen@data$durationHansen, x_lab="school", y_lab="Hansen Duration")
+boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
+```
+
+
+(HELPPP!!!) For many regions
+```{r}
+read_rds <- function(prefix) { 
+        readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+    }
+  
+hansen = read_rds(dp_h_prefix)
+
+mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+mpsz_svy21 <- st_transform(mpsz, 3414)
+
+hansen <- st_transform(hansen, 3414)
+hansen <- st_join(hansen, mpsz_svy21, join = st_intersects)
+
+boxplot(hansen@data$durationHansen, x_lab="school", y_lab="Hansen Duration")
+boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
+```
+
