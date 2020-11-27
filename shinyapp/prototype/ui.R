@@ -1,32 +1,33 @@
 PAGE_TITLE <- "Junior Colleges near you"
-NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: middle;"
-PROVIDERS <- names(providers)
+NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: top;"
 
 notifications <- dropdownMenu(type = "notifications", badgeStatus="primary", icon=icon("info-circle"),
                               notificationItem(icon=icon("info-circle"), status="primary",
-                                               text = tags$div("Choosing the region allows you",
+                                               text = tags$div(tags$b("Analysis types:"),
                                                                tags$br(),
-                                                               "to narrow down your search for",
-                                                               style=NOTI_ITEM_STYLE)
-                              ),
+                                                               
+                                                               tags$u("Isochrone:"), 
+                                                               " time it takes to travel",
+                                                               tags$br(),
+
+                                                               tags$u("Accessibility measures:"), 
+                                                               " Hansen/SAM",
+                                                               tags$br(),
+                                                               "in terms of distance or time to travel",
+                                                               
+                                                               style=NOTI_ITEM_STYLE)),
                               notificationItem(icon=icon("info-circle"), status="primary",
-                                               text = tags$div("Isochrone",
+                                               text = tags$div(tags$b("Accessibility measures:"),
                                                                tags$br(),
-                                                               "",
-                                                               style=NOTI_ITEM_STYLE)
-                              ),
-                              notificationItem(icon=icon("info-circle"), status="primary",
-                                               text = tags$div("Hansen Accessibility",
+                                                               
+                                                               tags$u("Hansen:"),
+                                                               " ins",
                                                                tags$br(),
-                                                               "",
-                                                               style=NOTI_ITEM_STYLE)
-                              ),
-                              notificationItem(icon=icon("info-circle"), status="primary",
-                                               text = tags$div("Spatial Accessibility Measure (SAM)",
-                                                               tags$br(),
-                                                               "",
-                                                               style=NOTI_ITEM_STYLE)
-                              )
+                                                               
+                                                               tags$u("SAM:"),
+                                                               " Spatial Accessibility Measure..",
+                                                               
+                                                               style=NOTI_ITEM_STYLE))
 )
 
 
@@ -37,8 +38,8 @@ dashboardPage(title=PAGE_TITLE,
     
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'JCs in Region(s) Details'",
-            selectizeInput("region", "Region(s):", unique(jc@data$REGION),
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'JCs Details'",
+            selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             'plugins' = list('remove_button'),
                             'create' = TRUE,
@@ -57,16 +58,13 @@ dashboardPage(title=PAGE_TITLE,
             conditionalPanel(
                 condition = "input.hdbpts.includes('Show chosen HDB point')",
                 searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
-            selectInput("maptype", "Map Type:", PROVIDERS))
+            selectInput("maptype", "Map Type:", names(providers)))
     ),
     
     dashboardBody(
-        navbarPage("Information", id="tabs", collapsible=TRUE,
+        navbarPage("Explore", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("JCs in Region(s) Details", DTOutput("jcTable")),
+            tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
-            tabPanel(verbatimTextOutput('temp'), title="temp")
-        )
-    )
-
+            tabPanel(verbatimTextOutput('temp'), title="temp")))
 )

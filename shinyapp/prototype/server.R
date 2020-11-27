@@ -23,9 +23,6 @@ function(input, output, session) {
 
     
     # conditions for show options
-    sch_all_region = reactive({
-        is_null(input$region) 
-    })
     show_all_sch = reactive({
         !is.null(input$schs) && 
         ('Show all school points' %in% input$schs)
@@ -39,12 +36,12 @@ function(input, output, session) {
         ('Show chosen HDB point' %in% input$hdbpts)
     })
 
+    
     # change map type to what user selected
     observeEvent(input$maptype,{
       proxy <- leafletProxy("mapPlot") %>%
         addMapPane("maptypelayer", zIndex = 410) %>%
-        addProviderTiles(input$maptype,
-                         options = providerTileOptions(opacity = 0.8))
+        addProviderTiles(input$maptype, options = providerTileOptions(opacity = 0.8))
     })
     
 
@@ -77,87 +74,16 @@ function(input, output, session) {
         print("")
     })
 
-    # look at the input analysis and add the layer for the selected analysis
-    observeEvent(input$analysis, {
-        proxy <- leafletProxy("mapPlot")
-        if (input$analysis=='Duration (Isochrone)') {
-            proxy %>% addMapPane("isolayer", zIndex = 410) %>%
-                addPolygons(data =iso(), stroke = TRUE, weight=0.5,
-                            smoothFactor = 1, color="black", options = pathOptions(pane = "isolayer"),
-                            fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer')
-        } else {
-            proxy %>% clearGroup('isolayer') 
-        }
-     
-        if (input$analysis=='Distance (Hansen)') {
-            pal <- colorFactor(
-                palette = 'Blues',
-                domain = hansen()@data$distanceHansen
-            )
-            proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDistLabel']], htmltools::HTML),
-                           group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
-        } else {
-            proxy %>% clearGroup('hansendistlayer')
-        }
 
-        if (input$analysis=='Duration (Hansen)') {
-            pal <- colorFactor(
-                palette = 'Purples',
-                domain = hansen()@data$durationHansen
-            )
-            proxy %>% clearGroup('hansenduralayer') %>% addMapPane('hansenduralayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, color = pal(hansen()@data$durationHansen), 
-                          stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDuraLabel']], htmltools::HTML),
-                          group = 'hansenduralayer', options = pathOptions(pane = "hansenduralayer")) 
+    # update selectinput based on user's region selection input
+    observeEvent(input$region, {
+        if (length(input$region) > 0) {
+            updateSelectInput(session, "jc", "Junior College", jc@data$SCHOOL[jc@data$REGION %in% input$region])
         } else {
-            proxy %>% clearGroup('hansenduralayer')
-        }
-        
-        if (input$analysis=='Distance (SAM)') {
-            pal <- colorFactor(
-                palette = 'Blues',
-                domain = sam()@data$distanceSam
-            )
-            proxy %>% clearGroup('samdistlayer') %>% addMapPane('samdistlayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, color = pal(sam()@data$distanceSam), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDistLabel']], htmltools::HTML),
-                           group = 'samdistlayer', options = pathOptions(pane = "samdistlayer")) 
-        } else {
-            proxy %>% clearGroup('samdistlayer')
-        }
-        
-        if (input$analysis=='Duration (SAM)') {
-            pal <- colorFactor(
-                palette = 'Purples',
-                domain = sam()@data$durationSam
-            )
-            proxy %>% clearGroup('samduralayer') %>% addMapPane('samduralayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, color = pal(sam()@data$durationSam), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDuraLabel']], htmltools::HTML),
-                           group = 'samduralayer', options = pathOptions(pane = "samduralayer")) 
-        } else {
-            proxy %>% clearGroup('samduralayer')
+            updateSelectInput(session, "jc", "Junior College", jc@data$SCHOOL)
         }
     })
     
-    # update selectinput based on user's region selection input
-    observeEvent(input$region, {
-        
-        if(length(input$region) > 0) {
-            updateSelectInput(session, "jc",
-                              label = "Junior College",
-                              choices = jc@data$SCHOOL[jc@data$REGION %in% input$region])
-        }
-        else if(sch_all_region()) {
-          updateSelectInput(session, "jc",
-                            label = "Junior College",
-                            choices = jc@data$SCHOOL)
-        }
-    })
-        
-
     # display all school points if checkbox is ticked
     observeEvent(input$schs, {
         proxy <- leafletProxy("mapPlot")
@@ -165,9 +91,8 @@ function(input, output, session) {
         if (show_all_sch()) {
             proxy %>% addMapPane("schlayer", zIndex = 420) %>% 
                 addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
-                           popup = jc@data$ADDRESS, options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(),
-                           data = jc@data$ADDRESS,
-                           group = 'schlayer', icon = schIcon)
+                           options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(),
+                           data = jc@data$ADDRESS, popup = jc@data$ADDRESS, group = 'schlayer', icon = schIcon)
         } else {
             proxy %>% clearGroup('schlayer')
         }
@@ -183,12 +108,11 @@ function(input, output, session) {
         proxy <- leafletProxy("mapPlot")
         
         if (show_all_hdb()) {
-            proxy %>%    addMapPane("hdblayer", zIndex = 420) %>% 
+            proxy %>% addMapPane("hdblayer", zIndex = 420) %>% 
                 addCircleMarkers(lng = hdb@coords[,1], lat = hdb@coords[,2], 
-                                 opacity = 1, fillOpacity = 1, fillColor = '#E4CD05',color = '#000', 
-                                 stroke=TRUE, weight = 0.5, radius= 2, options = pathOptions(pane = "hdblayer"),
-                                 popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
-                                 data = hdb@data$ADDRESS, group = 'hdblayer')
+                                 opacity = 0.5, fillOpacity = 0.5, fillColor = '#E4CD05', color = '#000', weight = 0.5, radius= 2,
+                                 data = hdb@data$ADDRESS, popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
+                                 group = 'hdblayer', options = pathOptions(pane = "hdblayer"))
         } else {
             proxy %>% clearGroup('hdblayer')
         }
@@ -207,16 +131,53 @@ function(input, output, session) {
         select_hdb <- hdb[hdb@data$POSTAL==input$postal, ]
         proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
           addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
-                    popup = select_hdb@data$ADDRESS,
-                    options = popupOptions(closeButton = FALSE),
-                    data = select_hdb@data$ADDRESS,
-                    group = 'hdbptlayer')
+                    data = select_hdb@data$ADDRESS, popup = select_hdb@data$ADDRESS,
+                    group = 'hdbptlayer', options = popupOptions(closeButton = FALSE))
       } else {
         proxy %>% clearGroup('hdbptlayer')
       }
     })
     
-    
+
+    # look at the input analysis and add the layer for the selected analysis
+    observeEvent(input$analysis, {
+        proxy <- leafletProxy("mapPlot")
+
+        if (input$analysis=='Duration (Isochrone)') {
+            layer <- "isolayer"
+
+            proxy %>% addMapPane(layer, zIndex = 410) %>%
+                addPolygons(fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
+                            data =iso(), group = layer, options = pathOptions(pane = layer))
+        } else {
+            proxy %>% clearGroup('isolayer') 
+        }
+     
+        if (input$analysis=='Distance (Hansen)') {
+            assessibility_measures_analysis_map(proxy, hansen(), "hansendistlayer", "distanceHansen", "hansenDistLabel", "Blues")
+        } else {
+            proxy %>% clearGroup('hansendistlayer')
+        }
+
+        if (input$analysis=='Duration (Hansen)') {
+            assessibility_measures_analysis_map(proxy, hansen(), "hansenduralayer", "durationHansen", "hansenDuraLabel", "Purples")
+        } else {
+            proxy %>% clearGroup('hansenduralayer')
+        }
+        
+        if (input$analysis=='Distance (SAM)') {
+            assessibility_measures_analysis_map(proxy, sam(), "samdistlayer", "distanceSam", "samDistLabel", "Blues")
+        } else {
+            proxy %>% clearGroup('samdistlayer')
+        }
+        
+        if (input$analysis=='Duration (SAM)') {
+            assessibility_measures_analysis_map(proxy, sam(), "samduralayer", "durationSam", "samDuraLabel", "Purples")
+        } else {
+            proxy %>% clearGroup('samduralayer')
+        }
+    })
+
     # look at the selected jc and the various selected items and add the layers in
     observeEvent(input$jc, {
         
@@ -230,55 +191,23 @@ function(input, output, session) {
         
         if (input$analysis=='Duration (Isochrone)') {
             proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>%
-                addPolygons(data =iso(), stroke = TRUE, weight=0.5,
-                            smoothFactor = 1, color="black", options = pathOptions(pane = "isolayer"),
-                            fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer' )
+                addPolygons(fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
+                            data =iso(), group = 'isolayer', options = pathOptions(pane = "isolayer"))
         }
-        
+
         if (input$analysis=='Distance (Hansen)') {
-            pal <- colorFactor(
-                palette = 'Blues',
-                domain = hansen()@data$distanceHansen
-            )
-            proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDistLabel']], htmltools::HTML),
-                           group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
+            assessibility_measures_analysis_map(proxy, hansen(), "hansendistlayer", "distanceHansen", "hansenDistLabel", "Blues")
         }
-        
         if (input$analysis=='Duration (Hansen)') {
-            pal <- colorFactor(
-                palette = 'Purples',
-                domain = hansen()@data$durationHansen
-            )
-            proxy %>% clearGroup('hansenduralayer') %>% addMapPane('hansenduralayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, color = pal(hansen()@data$durationHansen), 
-                          stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDuraLabel']], htmltools::HTML),
-                           group = 'hansenduralayer', options = pathOptions(pane = "hansenduralayer")) 
+            assessibility_measures_analysis_map(proxy, hansen(), "hansenduralayer", "durationHansen", "hansenDuraLabel", "Purples")
         }
-        
         if (input$analysis=='Distance (SAM)') {
-            pal <- colorFactor(
-                palette = 'Blues',
-                domain = sam()@data$distanceSam
-            )
-            proxy %>% clearGroup('samdistlayer') %>% addMapPane('samdistlayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, color = pal(sam()@data$distanceSam), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDistLabel']], htmltools::HTML),
-                           group = 'samdistlayer', options = pathOptions(pane = "samdistlayer")) 
+            assessibility_measures_analysis_map(proxy, sam(), "samdistlayer", "distanceSam", "samDistLabel", "Blues")
         }
-        
         if (input$analysis=='Duration (SAM)') {
-            pal <- colorFactor(
-                palette = 'Purples',
-                domain = sam()@data$durationSam
-            )
-            proxy %>% clearGroup('samduralayer') %>% addMapPane('samduralayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, color = pal(sam()@data$durationSam), 
-                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDuraLabel']], htmltools::HTML),
-                           group = 'samduralayer', options = pathOptions(pane = "samduralayer")) 
+            assessibility_measures_analysis_map(proxy, sam(), "samduralayer", "durationSam", "samDuraLabel", "Purples")
         }
-        
+
         proxy %>% clearGroup('targetlayer') %>% addMapPane("targetlayer", zIndex = 430) %>%
             addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
                        popup = curr_sch_name(), options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(), 
@@ -286,63 +215,59 @@ function(input, output, session) {
             flyTo(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], zlevel)
     })
     
-    
+    # function for the above
+    assessibility_measures_analysis_map <- function(proxy, rds, layer, column, lab, color) {
+        domain <- rds@data[[column]]
+        pal <- colorFactor(color, domain)
+        proxy %>% addMapPane(layer, zIndex = 412) %>%
+            addCircles(lng = rds@coords[,1], lat = rds@coords[,2], 
+                        radius = sqrt(domain)*10, color = pal(domain), 
+                        fillOpacity = 0.8, label = lapply(rds@data[[lab]], htmltools::HTML),
+                        group = layer, options = pathOptions(pane = layer)) 
+    }
+
+    # function for the below
+    assessibility_measures_analysis_legend <- function(proxy, rds, column, lab, color) {
+        domain <- rds@data[[column]]
+        colorpal <- colorBin(color, domain, reverse = TRUE)
+        proxy %>% addLegend(position="topright", pal = colorpal, values = domain, opacity = 0.8, 
+                            labFormat = labelFormat(transform = function(domain) sort(domain, decreasing = TRUE)),
+                            title=paste0(lab, curr_sch_name()))
+    }
+
     # add legends for all analysis and displays
     observe({
         proxy <- leafletProxy("mapPlot")
         proxy %>% clearControls()
+
         if (input$analysis=='Duration (Isochrone)') {
             count = iso()@data$blocks
             proxy %>% addLegend(position="topright", colors=rev(c("lightskyblue","greenyellow","gold","orange","tomato")),
-                                labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')),
-                                opacity = 0.8,
-                                title=paste0("Travel time from public transport to ", curr_sch_name(), ' :'))
+                                labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')), opacity = 0.8,
+                                title=paste0("Duration from ", curr_sch_name()))
         }
         
         if (input$analysis == 'Distance (Hansen)') {
-            vals = hansen()@data$distanceHansen
-            colorpal <- colorBin("Blues", vals, reverse = TRUE)
-            proxy %>% addLegend(position="topright", pal = colorpal, values = vals,
-                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                                title=paste0("Hansen on DISTANCE from HDBs to ", curr_sch_name(), ' (high to low)'))
+            assessibility_measures_analysis_legend(proxy, hansen(), "distanceHansen", "Distance using Hansen from ", "Blues")
         }
-        
         if (input$analysis == 'Duration (Hansen)') {
-            vals = hansen()@data$durationHansen
-            colorpal <- colorBin("Purples", vals, reverse = TRUE)
-            proxy %>% addLegend(position="topright", pal = colorpal, values = vals,
-                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                                title=paste0("Hansen on DURATION from HDBs to ", curr_sch_name(), ' (high to low)'))
+            assessibility_measures_analysis_legend(proxy, hansen(), "durationHansen", "Duration using Hansen from ", "Purples")
         }
-        
         if (input$analysis == 'Distance (SAM)') {
-            vals = sam()@data$distanceSam
-            colorpal <- colorBin("Blues", vals, reverse = TRUE)
-            proxy %>% addLegend(position="topright", pal = colorpal, values = vals,
-                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                                title=paste0("SAM Accessibility on DISTANCE from HDBs to ", curr_sch_name(), ' (high to low)'))
+            assessibility_measures_analysis_legend(proxy, sam(), "distanceSam", "Distance using SAM from ", "Blues")
         }
-        
         if (input$analysis == 'Duration (SAM)') {
-            vals = sam()@data$durationSam
-            colorpal <- colorBin("Purples", vals, reverse = TRUE)
-            proxy %>% addLegend(position="topright", pal = colorpal, values = vals,
-                                opacity = 0.8, labFormat = labelFormat(transform = function(vals) sort(vals, decreasing = TRUE)),
-                                title=paste0("SAM Accessibility on DURATION from HDBs to ", curr_sch_name(), ' (high to low)'))
+            assessibility_measures_analysis_legend(proxy, hansen(), "durationSam", "Duration using SAM from ", "Purples")
         }
         
         if (show_all_hdb()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('#E4CD05')),
-                                labels=rev(c("HDB")),
-                                opacity = 0.8)
+            proxy %>% addLegend(position="topright", colors=rev(c('#E4CD05')), labels=rev(c("HDB")), opacity = 0.8)
         } else {
             proxy %>% clearGroup('hdblayer')
         }
         
         if (show_all_sch()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('red')),
-                                labels=rev(c("school")),
-                                opacity = 0.8)
+            proxy %>% addLegend(position="topright", colors=rev(c('black')), labels=rev(c("school")), opacity = 0.8)
         } else {
             proxy %>% clearGroup('schlayer')
         }

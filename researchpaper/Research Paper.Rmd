@@ -7,10 +7,10 @@ author:
     affiliation: School of Information Systems, Singapore Management University
   - name: Fiona Wee 
     email: fiona.wee.2018@sis.smu.edu.sg
-    affiliation: School of Information Systems,         Singapore Management University
+    affiliation: School of Information Systems, Singapore Management University
   - name: Jasmine Toh
     email: jasmine.toh.2018@sis.smu.edu.sg
-    affiliation: School of Information Systems,  Singapore Management University
+    affiliation: School of Information Systems, Singapore Management University
 abstract: |
   To investigate the effect of the mergers of some Junior Colleges on accessibility to students, the team created a Shiny application using R to aid in the visualisation of the distance and duration of areas from various schools.
 

@@ -7,11 +7,8 @@ packages = c('shiny',
              'tidyverse',
              'knitr',
              'sp', 
-             'dplyr', 
-             'rgdal',
-             'spdep',
              'tmap'
-             ) 
+            )
 
 for (p in packages){
     if(!require(p, character.only = T)){ 
@@ -23,7 +20,6 @@ for (p in packages){
 memory.limit(size=56000)
 
 # Folder Paths
-dp_g = "../data/geospatial" 
 dp_a_prefix = "../data/aspatial/" 
 dp_j_prefix = "../data/geojson/" 
 dp_m_prefix = "../data/distancematrix/" 
@@ -42,12 +38,10 @@ zip_data <- read.csv(dp_a_zip)
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
     dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
-
 jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
 jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
 jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
 jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
-
 
 hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
