@@ -21,9 +21,10 @@ function(input, output, session) {
     hansen = reactive( read_rds(dp_h_prefix) )
     sam = reactive( read_rds(dp_s_prefix) )
 
+    
     # conditions for show options
     sch_all_region = reactive({
-        is.null(input$region) 
+        is_null(input$region) 
     })
     show_all_sch = reactive({
         !is.null(input$schs) && 
@@ -38,15 +39,21 @@ function(input, output, session) {
         ('Show chosen HDB point' %in% input$hdbpts)
     })
 
+    # change map type to what user selected
+    observeEvent(input$maptype,{
+      proxy <- leafletProxy("mapPlot") %>%
+        addMapPane("maptypelayer", zIndex = 410) %>%
+        addProviderTiles(input$maptype,
+                         options = providerTileOptions(opacity = 0.8))
+    })
+    
 
     # save the display into tabs to be called from UI.R
 
     output$mapPlot <- renderLeaflet({
         leaflet() %>%
-            setView(lng = 103.8198, lat = 1.3521, zoom = 12) %>%
-            setMaxBounds(lng1 = 103.4057919091, lat1 = 1.1648902351, lng2 = 104.2321161335, lat2 = 1.601881499) %>%
-            addProviderTiles(providers$CartoDB.DarkMatter,
-                             options = providerTileOptions(opacity = 0.8))
+          setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
+          setMaxBounds(lng1 = 103.4057919091, lat1 = 1.1648902351, lng2 = 104.2321161335, lat2 = 1.601881499)
     })
     
     output$jcTable <- renderDT(
@@ -70,12 +77,11 @@ function(input, output, session) {
         print("")
     })
 
-
     # look at the input analysis and add the layer for the selected analysis
     observeEvent(input$analysis, {
         proxy <- leafletProxy("mapPlot")
         if (input$analysis=='Duration (Isochrone)') {
-            proxy %>% addMapPane("isolayer", zIndex = 410) %>% setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
+            proxy %>% addMapPane("isolayer", zIndex = 410) %>%
                 addPolygons(data =iso(), stroke = TRUE, weight=0.5,
                             smoothFactor = 1, color="black", options = pathOptions(pane = "isolayer"),
                             fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer')
@@ -89,8 +95,8 @@ function(input, output, session) {
                 domain = hansen()@data$distanceHansen
             )
             proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, weight= 5, color = pal(hansen()@data$distanceHansen), 
-                           stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDistLabel']], htmltools::HTML),
                            group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
         } else {
             proxy %>% clearGroup('hansendistlayer')
@@ -102,8 +108,8 @@ function(input, output, session) {
                 domain = hansen()@data$durationHansen
             )
             proxy %>% clearGroup('hansenduralayer') %>% addMapPane('hansenduralayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, weight= 5, color = pal(hansen()@data$durationHansen), 
-                          stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, color = pal(hansen()@data$durationHansen), 
+                          stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDuraLabel']], htmltools::HTML),
                           group = 'hansenduralayer', options = pathOptions(pane = "hansenduralayer")) 
         } else {
             proxy %>% clearGroup('hansenduralayer')
@@ -115,8 +121,8 @@ function(input, output, session) {
                 domain = sam()@data$distanceSam
             )
             proxy %>% clearGroup('samdistlayer') %>% addMapPane('samdistlayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, weight= 5, color = pal(sam()@data$distanceSam), 
-                           stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, color = pal(sam()@data$distanceSam), 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDistLabel']], htmltools::HTML),
                            group = 'samdistlayer', options = pathOptions(pane = "samdistlayer")) 
         } else {
             proxy %>% clearGroup('samdistlayer')
@@ -125,11 +131,11 @@ function(input, output, session) {
         if (input$analysis=='Duration (SAM)') {
             pal <- colorFactor(
                 palette = 'Purples',
-                domain = sam()@data$durationHansen
+                domain = sam()@data$durationSam
             )
             proxy %>% clearGroup('samduralayer') %>% addMapPane('samduralayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, weight= 5, color = pal(sam()@data$durationSam), 
-                           stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, color = pal(sam()@data$durationSam), 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDuraLabel']], htmltools::HTML),
                            group = 'samduralayer', options = pathOptions(pane = "samduralayer")) 
         } else {
             proxy %>% clearGroup('samduralayer')
@@ -138,34 +144,21 @@ function(input, output, session) {
     
     # update selectinput based on user's region selection input
     observeEvent(input$region, {
-        if (sch_all_region()) {
-            updateSelectInput(session, "jc",
-                              label = "Junior College",
-                              choices = jc@data$SCHOOL)
-        } else {
+        
+        if(length(input$region) > 0) {
             updateSelectInput(session, "jc",
                               label = "Junior College",
                               choices = jc@data$SCHOOL[jc@data$REGION %in% input$region])
         }
-    })
-        
-    # display hdb popup based on user's searchinput (look at the selected display and add the layer in if checked)
-    observeEvent(input$postal, {
-        proxy <- leafletProxy("mapPlot")
-        
-        if (show_postal()) {
-            select_hdb <- hdb[hdb@data$POSTAL==input$postal, ]
-            proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
-            addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
-                      popup = select_hdb@data$ADDRESS,
-                      options = popupOptions(closeButton = FALSE),
-                      data = select_hdb@data$ADDRESS,
-                      group = 'hdbptlayer')
-        } else {
-            proxy %>% clearGroup('hdbptlayer')
+        else if(sch_all_region()) {
+          updateSelectInput(session, "jc",
+                            label = "Junior College",
+                            choices = jc@data$SCHOOL)
         }
     })
-    
+        
+
+    # display all school points if checkbox is ticked
     observeEvent(input$schs, {
         proxy <- leafletProxy("mapPlot")
         
@@ -185,6 +178,7 @@ function(input, output, session) {
         }
     })
     
+    # display all hdb points if checkbox is ticked
     observeEvent(input$hdbpts, {
         proxy <- leafletProxy("mapPlot")
         
@@ -205,12 +199,29 @@ function(input, output, session) {
         }
     })
     
+    # display hdb popup based on user's searchinput (look at the selected display and add the layer in if checked)
+    observeEvent(input$postal, {
+      proxy <- leafletProxy("mapPlot")
+      
+      if (show_postal()) {
+        select_hdb <- hdb[hdb@data$POSTAL==input$postal, ]
+        proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
+          addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
+                    popup = select_hdb@data$ADDRESS,
+                    options = popupOptions(closeButton = FALSE),
+                    data = select_hdb@data$ADDRESS,
+                    group = 'hdbptlayer')
+      } else {
+        proxy %>% clearGroup('hdbptlayer')
+      }
+    })
+    
     
     # look at the selected jc and the various selected items and add the layers in
     observeEvent(input$jc, {
         
         if (is.null(zoom_level())) {
-            zlevel = 12
+            zlevel = 11
         } else {
             zlevel = zoom_level()
         }
@@ -218,7 +229,7 @@ function(input, output, session) {
         proxy <- leafletProxy("mapPlot")
         
         if (input$analysis=='Duration (Isochrone)') {
-            proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>% setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
+            proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>%
                 addPolygons(data =iso(), stroke = TRUE, weight=0.5,
                             smoothFactor = 1, color="black", options = pathOptions(pane = "isolayer"),
                             fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), group = 'isolayer' )
@@ -231,7 +242,7 @@ function(input, output, session) {
             )
             proxy %>% clearGroup('hansendistlayer') %>% addMapPane('hansendistlayer', zIndex = 412) %>%
                 addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$distanceHansen)*10, color = pal(hansen()@data$distanceHansen), 
-                           stroke = TRUE, fillOpacity = 0.8, 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDistLabel']], htmltools::HTML),
                            group = 'hansendistlayer', options = pathOptions(pane = "hansendistlayer")) 
         }
         
@@ -241,8 +252,8 @@ function(input, output, session) {
                 domain = hansen()@data$durationHansen
             )
             proxy %>% clearGroup('hansenduralayer') %>% addMapPane('hansenduralayer', zIndex = 412) %>%
-                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, weight= 5, color = pal(hansen()@data$durationHansen), 
-                          stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = hansen()@coords[,1], lat = hansen()@coords[,2], radius = sqrt(hansen()@data$durationHansen)*10, color = pal(hansen()@data$durationHansen), 
+                          stroke = TRUE, fillOpacity = 0.8, label = lapply(hansen()@data[['hansenDuraLabel']], htmltools::HTML),
                            group = 'hansenduralayer', options = pathOptions(pane = "hansenduralayer")) 
         }
         
@@ -252,8 +263,8 @@ function(input, output, session) {
                 domain = sam()@data$distanceSam
             )
             proxy %>% clearGroup('samdistlayer') %>% addMapPane('samdistlayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, weight= 5, color = pal(sam()@data$distanceSam), 
-                           stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$distanceSam)*10, color = pal(sam()@data$distanceSam), 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDistLabel']], htmltools::HTML),
                            group = 'samdistlayer', options = pathOptions(pane = "samdistlayer")) 
         }
         
@@ -263,8 +274,8 @@ function(input, output, session) {
                 domain = sam()@data$durationSam
             )
             proxy %>% clearGroup('samduralayer') %>% addMapPane('samduralayer', zIndex = 412) %>%
-                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, weight= 5, color = pal(sam()@data$durationSam), 
-                           stroke = TRUE, fillOpacity = 0.4, opacity = 0.8,
+                addCircles(lng = sam()@coords[,1], lat = sam()@coords[,2], radius = sqrt(sam()@data$durationSam)*10, color = pal(sam()@data$durationSam), 
+                           stroke = TRUE, fillOpacity = 0.8, label = lapply(sam()@data[['samDuraLabel']], htmltools::HTML),
                            group = 'samduralayer', options = pathOptions(pane = "samduralayer")) 
         }
         

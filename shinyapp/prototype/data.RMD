@@ -107,31 +107,6 @@ get_geojson<-function(lat,lng,filename){
 ```
 
 
-```{r}
-library(tidyverse)
-library(leaflet)
-
-iso <- geojsonio::geojson_read("C:/geojson/ Changi-Terminal-1 .geojson",
-    what = "sp")
-
-pal=c('cyan','gold','tomato','red')
-
-leaflet(iso) %>%
-        setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
-    addProviderTiles(providers$CartoDB.DarkMatter,
-                                     options = providerTileOptions(opacity = 0.8))%>%    
-    addPolygons(stroke = TRUE, weight=0.5,
-                            smoothFactor = 0.3, color="black",
-                            fillOpacity = 0.1,fillColor =pal ) %>%
-    addLegend(position="bottomleft",colors=rev(c("lightskyblue","greenyellow","gold","tomato")),
-                        labels=rev(c("60 min","45 min",
-                                         "30 min","15 min")),
-                        opacity = 0.6,
-                        title="Travel Time with Public Transport")
-```
-
-
-
 saves the isochrone generation for each JC as .rds in data/geojson/
 Only run this code chunk if you want to generate the .rds files 
 ```{r}
@@ -259,15 +234,23 @@ Hansen Generation for each school distance matrix
 for (x in 1:19){
     schName = jc@data[x,'SCHOOL']
     print(schName)
-    res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
-    res<- res%>%
-        mutate(duration=duration/1000) %>%
-        mutate(distance=distance/1000)
+    res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
     
     result_acc = apply_hansen(res)
     
+    result_acc<- result_acc%>%
+        mutate(durationHansen=durationHansen*10000) # for legend as it is too small to be meaningful
+    
+    result_acc$address <- rapportools::tocamel(tolower(result_acc$address), upper=TRUE, sep=" ")
     result_acc <- result_acc %>% 
-        mutate(hansenDistLabel = paste(sep = "<br>",round(distanceHansen,4),address), hansenDuraLabel = paste(sep = "<br>",round(durationHansen,4),address))
+        mutate(hansenDistLabel = paste(
+                "Distance Hansen Acessibility:","<b>",round(distanceHansen,4),
+                "</b><br/>","Address: ",address,
+                "</br>Distance to School: ","<b>",round(distance,4),"<b/> Kilometres"), 
+            hansenDuraLabel = paste(
+                "Duration Hansen Acessibility: ","<b>",round(durationHansen,4),
+                "</b><br/>Address:",address,
+                "</br>Duration to School: ","<b>",round(duration,4),"</b> Minutes"))
     
     result_acc_sf <- st_as_sf(result_acc, 
     coords = c('longitude', 'latitude'),
@@ -275,10 +258,9 @@ for (x in 1:19){
 
     result_acc_sp <- sf:::as_Spatial(result_acc_sf)
     
-    saveRDS(result_acc_sp, paste0(dp_h_prefix, '/',schName,'.rds'))
+    saveRDS(result_acc_sp, paste0(dp_h_prefix,schName,'.rds'))
 }
 ```
-
 
 # Measure accessibility with SAM
 SAM function
@@ -314,20 +296,30 @@ SAM Generation for each school distance matrix
 for (x in 1:19){
     schName = jc@data[x,'SCHOOL']
     print(schName)
-    res = readRDS(paste0(dp_m_prefix, '/',schName,'.rds'))
-    
-    res<- res%>%
-        mutate(duration=duration/10) %>%
-        mutate(distance=distance/10)
-    
+    res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
+
     result_acc = apply_sam(res)
     
+    result_acc<- result_acc%>%
+        mutate(durationSam=durationSam*1000) # for legend as it is too small to be meaningful
+    
+    result_acc$address <- rapportools::tocamel(tolower(result_acc$address), upper=TRUE, sep=" ")
+    result_acc <- result_acc %>% 
+        mutate(samDistLabel = paste(
+                "Distance SAM Acessibility:","<b>",round(distanceSam,4),
+                "</b><br/>","Address: ",address,
+                "</br>Distance to School: ","<b>",round(distance,4),"<b/> Kilometres"), 
+            samDuraLabel = paste(
+                "Duration SAM Acessibility: ","<b>",round(durationSam,4),
+                "</b><br/>Address:",address,
+                "</br>Duration to School: ","<b>",round(duration,4),"</b> Minutes"))
+
     result_acc_sf <- st_as_sf(result_acc, 
     coords = c('longitude', 'latitude'),
     crs = "+init=epsg:3414")
 
     result_acc_sp <- sf:::as_Spatial(result_acc_sf)
     
-    saveRDS(result_acc_sp, paste0(dp_s_prefix, '/',schName,'.rds'))
+    saveRDS(result_acc_sp, paste0(dp_s_prefix,schName,'.rds'))
 }
 ```

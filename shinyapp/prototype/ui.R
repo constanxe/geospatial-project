@@ -1,6 +1,6 @@
 PAGE_TITLE <- "Junior Colleges near you"
 NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: middle;"
-
+PROVIDERS <- names(providers)
 
 notifications <- dropdownMenu(type = "notifications", badgeStatus="primary", icon=icon("info-circle"),
                               notificationItem(icon=icon("info-circle"), status="primary",
@@ -56,7 +56,8 @@ dashboardPage(title=PAGE_TITLE,
             checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
             conditionalPanel(
                 condition = "input.hdbpts.includes('Show chosen HDB point')",
-                searchInput("postal", "Postal Code:", btnSearch = icon("search"))))
+                searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
+            selectInput("maptype", "Map Type:", PROVIDERS))
     ),
     
     dashboardBody(
