@@ -68,9 +68,8 @@ dashboardPage(title=PAGE_TITLE,
                      fluidRow(
                         box(title="Hansen Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
                             plotOutput("hansenPlot")),
-                        ),
                         box(title="SAM Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
-                            plotOutput("samPlot"))
+                            plotOutput("samPlot")))
              ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
