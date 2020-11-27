@@ -38,16 +38,15 @@ dashboardPage(title=PAGE_TITLE,
     
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'JCs Details'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures' || input.tabs == 'JCs Details'",
             selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             'plugins' = list('remove_button'),
                             'create' = TRUE,
-                            'persist' = FALSE))
-        ),
+                            'persist' = FALSE)),
+            selectInput("jc", "Junior College:", jc@data$SCHOOL)),
         conditionalPanel(
             condition = "input.tabs == 'Interactive Map'",
-            selectInput("jc", "Junior College:", jc@data$SCHOOL),
             selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
                                                    "Distance (Hansen)", 
                                                    "Duration (Hansen)", 
@@ -66,9 +65,9 @@ dashboardPage(title=PAGE_TITLE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
             tabPanel("Assessibility Measures", 
                      fluidRow(
-                        box(title="Hansen Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
+                        box(title="Hansen Boxplot", collapsible = TRUE,
                             plotOutput("hansenPlot")),
-                        box(title="SAM Boxplot", status = "primary", solidHeader = TRUE, collapsible = TRUE,
+                        box(title="SAM Boxplot", collapsible = TRUE,
                             plotOutput("samPlot")))
              ),
             tabPanel("JCs Details", DTOutput("jcTable")),
