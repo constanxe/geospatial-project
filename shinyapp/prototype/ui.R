@@ -36,29 +36,36 @@ dashboardPage(title=PAGE_TITLE,
                     notifications),
     
     dashboardSidebar(
-        selectizeInput("region", "Region(s):", c("North", "North-East", "East", "West", "Central"),
-                    multiple = TRUE, options = list(
-                        'plugins' = list('remove_button'),
-                        'create' = TRUE,
-                        'persist' = FALSE)
+        conditionalPanel(
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'JCs in Region(s) Details'",
+            selectizeInput("region", "Region(s):", unique(jc@data$REGION),
+                        multiple = TRUE, options = list(
+                            'plugins' = list('remove_button'),
+                            'create' = TRUE,
+                            'persist' = FALSE))
         ),
-        selectInput("jc", "Junior College:", jc@data$SCHOOL),
-        selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
-                                               "Distance (Hansen)", 
-                                               "Duration (Hansen)", 
-                                               "Distance (SAM)",
-                                               "Duration (SAM)")),
-        searchInput("postal", "Postal Code:", btnSearch = icon("search")),
-        checkboxGroupInput("display", "Display:", c("Show school points", "Show HDB points"))
+        conditionalPanel(
+            condition = "input.tabs == 'Interactive Map'",
+            selectInput("jc", "Junior College:", jc@data$SCHOOL),
+            selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
+                                                   "Distance (Hansen)", 
+                                                   "Duration (Hansen)", 
+                                                   "Distance (SAM)",
+                                                   "Duration (SAM)")),
+            checkboxGroupInput("schs", "Display school points:", c("Show all school points")),
+            checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
+            conditionalPanel(
+                condition = "input.hdbpts.includes('Show chosen HDB point')",
+                searchInput("postal", "Postal Code:", btnSearch = icon("search"))))
     ),
     
     dashboardBody(
-        navbarPage("Information", collapsible=TRUE,
+        navbarPage("Information", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("JC Details", DTOutput("jcTable")),
+            tabPanel("JCs in Region(s) Details", DTOutput("jcTable")),
+            tabPanel("HDBs Details", DTOutput("hdbTable")),
             tabPanel(verbatimTextOutput('temp'), title="temp")
         )
     )
 
 )
-
