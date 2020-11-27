@@ -50,13 +50,11 @@ dp_s_prefix = "../data/sam/"
 
 # Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
-dp_a_hdb = paste(dp_a_prefix, "hdb-property-information.csv", sep="")
 dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 
 
 # Data variables
 jc_data <- read.csv(dp_a_jc)
-hdb_data <- read.csv(dp_a_hdb)
 zip_data <- read.csv(dp_a_zip)
 
 # Data Wrangling
