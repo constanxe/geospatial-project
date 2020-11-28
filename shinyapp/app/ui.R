@@ -145,15 +145,26 @@ dashboardPage(title=PAGE_TITLE,
                      fluidRow(
                         box(title="Hansen Boxplot", collapsible = TRUE,
                             plotOutput("hansenDistancePlot")),
+                        box(title="Hansen p-value Boxplot", collapsible = TRUE,
+                            plotOutput("hansenDistancePvaluePlot")),
                         box(title="SAM Boxplot", collapsible = TRUE,
-                            plotOutput("samDistancePlot")))
+                            plotOutput("samDistancePlot")),
+                        box(title="SAM p-value Boxplot", collapsible = TRUE,
+                            plotOutput("samDistancePvaluePlot"))
+                     )
              ),
             tabPanel("Duration Assessibility Measures", 
                      fluidRow(
                          box(title="Hansen Boxplot", collapsible = TRUE,
                              plotOutput("hansenDurationPlot")),
+                         box(title="Hansen p-value Boxplot", collapsible = TRUE,
+                             plotOutput("hansenDurationPvaluePlot")),
                          box(title="SAM Boxplot", collapsible = TRUE,
-                             plotOutput("samDurationPlot")))
+                             plotOutput("samDurationPlot")),
+                     box(title="SAM p-value Boxplot", collapsible = TRUE,
+                         plotOutput("samDurationPvaluePlot"))
+                     )
+                     
             ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),

@@ -35,8 +35,33 @@ function(input, output, session) {
         !is.null(input$postal) && 
         ("Show chosen HDB point" %in% input$hdbpts)
     })
-
     
+    #get hansen mpsz
+    
+    get_hansen_mpsz <- function() { 
+      acc_Hansen <- tbl_df(hansen())
+      hdb_hansen<- left_join(hdb, acc_Hansen, by=c("ADDRESS"="address"))
+      
+      hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+      hansen_svy21 <- st_transform(hansen_sf, 3414)
+      
+      return(st_join(hansen_svy21, mpsz, join = st_intersects))
+    }
+     
+    
+      
+      #get sam mpsz
+   get_sam_mpsz <- function() { 
+      acc_sam <- tbl_df(sam())
+      hdb_sam<- left_join(hdb, acc_sam, by=c("ADDRESS"="address"))
+      
+      sam_sf <- st_as_sf(hdb_sam, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+      sam_svy21 <- st_transform(sam_sf, 3414)
+      return(st_join(sam_svy21, mpsz, join = st_intersects))
+      
+    }
+     
+
     # change map type to what user selected
     observeEvent(input$maptype,{
       proxy <- leafletProxy("mapPlot") %>%
@@ -70,15 +95,10 @@ function(input, output, session) {
         hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
     })
     
+    
+    #Hansen distance plot
     output$hansenDistancePlot <- renderPlot({
-      acc_Hansen <- tbl_df(hansen())
-      hdb_hansen<- left_join(hdb, acc_Hansen, by=c("ADDRESS"="address"))
-
-      hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
-      hansen_svy21 <- st_transform(hansen_sf, 3414)
-      
-      hansen_mpsz <- st_join(hansen_svy21, mpsz, join = st_intersects)
-      
+      hansen_mpsz<-get_hansen_mpsz()
       ggplot(data=hansen_mpsz, 
              aes(y =distanceHansen, 
                  x= REGION_N)) +
@@ -87,18 +107,24 @@ function(input, output, session) {
                    fun.y="mean", 
                    colour ="red", 
                    size=4)
-      
+    })
+    #Hansen distance plot (p-value)
+    output$hansenDistancePvaluePlot <- renderPlot({
+      hansen_mpsz<-get_hansen_mpsz()
+      hansen_mpsz$log_distanceHansen <- log(hansen_mpsz$distanceHansen)
+      ggbetweenstats(data = hansen_mpsz,
+                     x = REGION_N,
+                     y = log_distanceHansen,
+                     pairwise.comparisons = TRUE,
+                     p.adjust.method = "fdr",
+                     title = "Hansen's accessibility values by HDB location and by Region",
+                     caption = "Hansen's values"
+      )
       
     })
+    #Hansen duration plot
     output$hansenDurationPlot <- renderPlot({
-      acc_Hansen <- tbl_df(hansen())
-      hdb_hansen<- left_join(hdb, acc_Hansen, by=c("ADDRESS"="address"))
-      
-      hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
-      hansen_svy21 <- st_transform(hansen_sf, 3414)
-      
-      hansen_mpsz <- st_join(hansen_svy21, mpsz, join = st_intersects)
-      
+      hansen_mpsz<-get_hansen_mpsz()
       ggplot(data=hansen_mpsz, 
              aes(y =durationHansen, 
                  x= REGION_N)) +
@@ -107,18 +133,24 @@ function(input, output, session) {
                    fun.y="mean", 
                    colour ="red", 
                    size=4)
-      
+    })
+    #Hansen duration plot (p-value)
+    output$hansenDurationPvaluePlot <- renderPlot({
+      hansen_mpsz<-get_hansen_mpsz()
+      hansen_mpsz$log_durationHansen <- log(hansen_mpsz$durationHansen)
+      ggbetweenstats(data = hansen_mpsz,
+                     x = REGION_N,
+                     y = log_durationHansen,
+                     pairwise.comparisons = TRUE,
+                     p.adjust.method = "fdr",
+                     title = "Hansen's accessibility values by HDB location and by Region",
+                     caption = "Hansen's values"
+      )
       
     })
+    #sam distance plot
     output$samDistancePlot <- renderPlot({
-      acc_sam <- tbl_df(sam())
-      hdb_sam<- left_join(hdb, acc_sam, by=c("ADDRESS"="address"))
-      
-      sam_sf <- st_as_sf(hdb_sam, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
-      sam_svy21 <- st_transform(sam_sf, 3414)
-      
-      sam_mpsz <- st_join(sam_svy21, mpsz, join = st_intersects)
-      
+      sam_mpsz<-get_sam_mpsz()
       ggplot(data=sam_mpsz, 
              aes(y =distanceSam, 
                  x= REGION_N)) +
@@ -129,15 +161,23 @@ function(input, output, session) {
                    size=4)
       
     })
+    #sam distance plot (p-value)
+    output$samDistancePvaluePlot <- renderPlot({
+      sam_mpsz<-get_sam_mpsz()
+      sam_mpsz$log_distanceSam <- log(sam_mpsz$distanceSam)
+      ggbetweenstats(data = sam_mpsz,
+                     x = REGION_N,
+                     y = log_distanceSam,
+                     pairwise.comparisons = TRUE,
+                     p.adjust.method = "fdr",
+                     title = "Sam's accessibility values by HDB location and by Region",
+                     caption = "Sam's values"
+      )
+      
+    })
+    #sam duration plot
     output$samDurationPlot <- renderPlot({
-      acc_sam <- tbl_df(sam())
-      hdb_sam<- left_join(hdb, acc_sam, by=c("ADDRESS"="address"))
-      
-      sam_sf <- st_as_sf(hdb_sam, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
-      sam_svy21 <- st_transform(sam_sf, 3414)
-      
-      sam_mpsz <- st_join(sam_svy21, mpsz, join = st_intersects)
-      
+      sam_mpsz<-get_sam_mpsz()
       ggplot(data=sam_mpsz, 
              aes(y =durationSam, 
                  x= REGION_N)) +
@@ -149,10 +189,24 @@ function(input, output, session) {
       
     })
     
-    output$temp <- renderPrint({
-        print("")
+    #sam duration plot (p-value)
+    output$samDurationPvaluePlot <- renderPlot({
+      sam_mpsz<-get_sam_mpsz()
+      sam_mpsz$log_durationSam <- log(sam_mpsz$durationSam)
+      ggbetweenstats(data = sam_mpsz,
+                     x = REGION_N,
+                     y = log_durationSam,
+                     pairwise.comparisons = TRUE,
+                     p.adjust.method = "fdr",
+                     title = "Sam's accessibility values by HDB location and by Region",
+                     caption = "Sam's values"
+      )
+      
     })
 
+    output$temp <- renderPrint({
+      print("")
+    })
 
     # update selectinput based on user"s region selection input
     observeEvent(input$region, {

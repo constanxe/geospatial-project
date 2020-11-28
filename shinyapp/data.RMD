@@ -28,7 +28,8 @@ packages = c('shiny',
             'sf',
             'rgdal',
             'spdep',
-            'tmap'
+            'tmap',
+            'ggstatsplot'
             )
 
 for (p in packages){
@@ -402,6 +403,17 @@ ggplot(data=hansen_mpsz,
              size=4)
 ```
 
+```{r}
+hansen_mpsz$log_distanceHansen <- log(hansen_mpsz$distanceHansen)
+ggbetweenstats(data = hansen_mpsz,
+               x = REGION_N,
+               y = log_distanceHansen,
+               pairwise.comparisons = TRUE,
+               p.adjust.method = "fdr",
+  title = "Hansen's accessibility values by HDB location and by Region",
+  caption = "Hansen's values"
+)
+```
 
 
 

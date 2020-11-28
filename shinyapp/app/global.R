@@ -8,7 +8,8 @@ packages = c("shiny",
              "knitr",
              "sp", 
              "tmap",
-             "sf"
+             "sf",
+             "ggstatsplot"
             )
 
 for (p in packages){
