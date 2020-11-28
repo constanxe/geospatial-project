@@ -384,6 +384,8 @@ hansen_svy21 <- st_transform(hansen_sf, 3414)
 
 hansen_mpsz <- st_join(hansen_svy21, mpsz_svy21, join = st_intersects)
 hansen_mpsz
+
+hdb_df
 ```
 
 ```{r}

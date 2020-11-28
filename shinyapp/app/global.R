@@ -25,7 +25,7 @@ dp_j_prefix = "data/geojson/"
 dp_m_prefix = "data/distancematrix/" 
 dp_h_prefix = "data/hansen/" 
 dp_s_prefix = "data/sam/" 
-dp_g_prefix = "data/geospatial/" 
+dp_g_prefix = "data/geospatial" 
 
 # Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
@@ -75,7 +75,6 @@ hdb_df$X <- coordinates_val[,2]
 hdb_df$Y <- coordinates_val[,1]
 
 hdb<-hdb_df
-
 # UI
 schIcon <- makeIcon(
     iconUrl = "schIcon.png",
