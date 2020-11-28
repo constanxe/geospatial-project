@@ -132,18 +132,22 @@ dashboardPage(title=PAGE_TITLE,
                                         p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
               dashboardSidebar(
                   conditionalPanel(
-                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || input.tabs == 'JCs EDA'",
-                      selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
-                                     multiple = TRUE, options = list(
-                                         "plugins" = list("remove_button"),
-                                         "create" = TRUE,
-                                         "persist" = FALSE))),
-                  conditionalPanel(
-                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
-                      selectInput("jc", "Junior College:", jc@data$SCHOOL)),
-                  conditionalPanel(
                       condition = "input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
                       selectInput("metric", "Metric:", c("Distance", "Duration"))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'JCs EDA'",
+                      checkboxGroupInput("eda", "Display JC Distribution:", c("Show Overall JC Distribution", "Show Chosen JC Distribution"), c("Show Overall JC Distribution"))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || (input.tabs == 'JCs EDA' && input.eda.includes('Show Chosen JC Distribution'))",
+                      selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
+                                     multiple = TRUE, options = list(
+                                        "plugins" = list("remove_button"),
+                                        "create" = TRUE,
+                                        "persist" = FALSE))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || (input.tabs == 'JCs EDA' && input.eda.includes('Show Chosen JC Distribution'))",
+                      selectInput("jc", "Junior College:", jc@data$SCHOOL)),
+                  
                   conditionalPanel(
                       condition = "input.tabs == 'Interactive Map'",
                       selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
@@ -152,14 +156,11 @@ dashboardPage(title=PAGE_TITLE,
                                                              "Distance (SAM)",
                                                              "Duration (SAM)")),
                       checkboxGroupInput("schs", "Display JC points:", c("Show all JC points")),
-                      checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
+                      checkboxGroupInput("hdbpts", "Display HDB points:", c("Show all HDB points", "Show chosen HDB point")),
                       conditionalPanel(
                           condition = "input.hdbpts.includes('Show chosen HDB point')",
                           searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
-                      selectInput("maptype", "Map Theme:", names(providers))),
-                  conditionalPanel(
-                      condition = "input.tabs == 'JCs EDA'",
-                      checkboxInput("overall", "Show Overall Distribution"))
+                      selectInput("maptype", "Map Theme:", names(providers)))
               ),
               
               dashboardBody(
@@ -175,17 +176,18 @@ dashboardPage(title=PAGE_TITLE,
                                               plotOutput("samPlot")),
                                           box(title="SAM p-value Boxplot", collapsible = TRUE,
                                               plotOutput("samPvaluePlot"))
-                                      )
-                             ),
+                             )),
                              tabPanel("JCs EDA", 
                                       fluidRow(
-                                          box(title="", collapsible = TRUE, width=12,
-                                              plotlyOutput("schPlot")),
-                                          conditionalPanel(condition = "input.overall == 1"
-                                                           ,box(title="", collapsible = TRUE, width=12,
-                                                                plotOutput("overallPlot")))
-                                      )
-                             ),
+                                          conditionalPanel(
+                                              condition = "input.eda.includes('Show Overall JC Distribution')",
+                                              box(width=12,
+                                                  plotOutput("overallPlot"))),
+                                          conditionalPanel(
+                                              condition = "input.eda.includes('Show Chosen JC Distribution')",
+                                              box(width=12,
+                                                  plotlyOutput("schPlot")))
+                             )),
                              tabPanel("JCs Details", DTOutput("jcTable")),
                              tabPanel("HDBs Details", DTOutput("hdbTable")),
                              tabPanel(verbatimTextOutput("temp"), title="")))

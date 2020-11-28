@@ -58,8 +58,40 @@ function(input, output, session) {
       ("Show chosen HDB point" %in% input$hdbpts)
   })
   
-  to_listen <- reactive({
-    list(input$overall,input$metric)
+  eda_events <- reactive({
+    list(input$eda, input$metric)
+  })
+  
+  
+  
+  # save the display into tabs to be called from UI.R
+  
+  output$mapPlot <- renderLeaflet({
+    leaflet() %>%
+      setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
+      setMaxBounds(lng1 = 103.4057919091, lat1 = 1.1648902351, lng2 = 104.2321161335, lat2 = 1.601881499)
+  })
+  
+  output$jcTable <- renderDT(
+    {
+      jc_table_data <- jc@data %>% dplyr::select(-LONGITUDE, -LATITUDE)
+      
+      # if regions selected, filter to chosen ones; else taken as all selected
+      if (length(input$region) > 0) {
+        jc_table_data <- jc_table_data %>% dplyr::filter(REGION %in% input$region)
+      }
+      
+      jc_table_data
+    }, options = list(lengthChange = FALSE)
+  )
+  
+  output$hdbTable <- renderDT({
+    hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
+  })
+  
+  
+  output$temp <- renderPrint({
+    print("")
   })
   
   
@@ -131,46 +163,6 @@ function(input, output, session) {
     return(st_join(sam_svy21, mpsz, join = st_intersects))
     
   }
-  
-  
-  # change map type to what user selected
-  observeEvent(input$maptype,{
-    proxy <- leafletProxy("mapPlot") %>%
-      addMapPane("maptypelayer", zIndex = 410) %>%
-      addProviderTiles(input$maptype, options = providerTileOptions(opacity = 0.8))
-  })
-  
-  
-  # save the display into tabs to be called from UI.R
-  
-  output$mapPlot <- renderLeaflet({
-    leaflet() %>%
-      setView(lng = 103.8198, lat = 1.3521, zoom = 11) %>%
-      setMaxBounds(lng1 = 103.4057919091, lat1 = 1.1648902351, lng2 = 104.2321161335, lat2 = 1.601881499)
-  })
-  
-  output$jcTable <- renderDT(
-    {
-      jc_table_data <- jc@data %>% dplyr::select(-LONGITUDE, -LATITUDE)
-      
-      # if regions selected, filter to chosen ones; else taken as all selected
-      if (length(input$region) > 0) {
-        jc_table_data <- jc_table_data %>% dplyr::filter(REGION %in% input$region)
-      }
-      
-      jc_table_data
-    }, options = list(lengthChange = FALSE)
-  )
-  
-  output$hdbTable <- renderDT({
-    hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
-  })
-  
-  
-  output$temp <- renderPrint({
-    print("")
-  })
-  
   
   observeEvent(input$metric,{
     if (input$metric == "Distance"){
@@ -309,8 +301,8 @@ function(input, output, session) {
   })
   
   # show overall distribution boxplot for all schools
-  observeEvent(to_listen(), {
-    if(input$overall && input$metric == "Distance"){
+  observeEvent(eda_events(), {
+    if('Show Overall JC Distribution' %in% input$eda && input$metric == "Distance"){
       distances <- get_distances()
       output$overallPlot <- renderPlot({
         ggplot(data = distances, aes(x=distance, y=destination)) +
@@ -318,7 +310,7 @@ function(input, output, session) {
       })
     }
     
-    else if (input$overall && input$metric == "Duration") {
+    else if ('Show Overall JC Distribution' %in% input$eda && input$metric == "Duration") {
       durations <- get_durations()
       output$overallPlot <- renderPlot({
         ggplot(data = durations, aes(x=duration, y=destination)) +
@@ -393,6 +385,13 @@ function(input, output, session) {
     }
   })
   
+  # change map type to what user selected
+  observeEvent(input$maptype,{
+    proxy <- leafletProxy("mapPlot") %>%
+      addMapPane("maptypelayer", zIndex = 410) %>%
+      addProviderTiles(input$maptype, options = providerTileOptions(opacity = 0.8))
+  })
+
   
   # look at the input analysis and add the layer for the selected analysis
   observeEvent(input$analysis, {
