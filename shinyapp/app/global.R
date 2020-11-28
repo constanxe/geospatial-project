@@ -7,7 +7,8 @@ packages = c("shiny",
              "tidyverse",
              "knitr",
              "sp", 
-             "tmap"
+             "tmap",
+             "sf"
             )
 
 for (p in packages){
@@ -36,6 +37,9 @@ jc_data <- read.csv(dp_a_jc)
 zip_data <- read.csv(dp_a_zip)
 mpsz_data <- st_read(dp_g_prefix, layer = "MP14_SUBZONE_WEB_PL")
 
+mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
+mpsz <- st_transform(mpsz, 3414)
+
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data
@@ -44,10 +48,10 @@ jc <- jc_data%>%
 jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
 jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
 jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
-jc_sf <- st_as_sf(jc_df, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+jc_sf <- st_as_sf(jc, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
 jc_svy21 <- st_transform(jc_sf, 3414)
 
-jc_mpsz <- st_join(jc_svy21, mpsz_svy21, join = st_intersects)
+jc_mpsz <- st_join(jc_svy21, mpsz, join = st_intersects)
 
 jc_mpsz$REGION_N <- sub(" REGION", "", jc_mpsz$REGION_N)
 
@@ -64,12 +68,8 @@ hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
 hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
 
 
-mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
-mpsz <- st_transform(mpsz, 3414)
-
-
 # CRS
-jc <- spTransform(jc, CRS("+init=epsg:3414"))
+jc <- st_transform(jc, CRS("+init=epsg:3414"))
 jc <- sf:::as_Spatial(jc)
 
 coordinates(hdb) <-~ LONGITUDE + LATITUDE

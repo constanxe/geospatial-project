@@ -77,7 +77,7 @@ function(input, output, session) {
       hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
       hansen_svy21 <- st_transform(hansen_sf, 3414)
       
-      hansen_mpsz <- st_join(hansen_svy21, mpsz_svy21, join = st_intersects)
+      hansen_mpsz <- st_join(hansen_svy21, mpsz, join = st_intersects)
       
       ggplot(data=hansen_mpsz, 
              aes(y =distanceHansen, 
@@ -97,7 +97,7 @@ function(input, output, session) {
       sam_sf <- st_as_sf(hdb_sam, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
       sam_svy21 <- st_transform(sam_sf, 3414)
       
-      sam_mpsz <- st_join(sam_svy21, mpsz_svy21, join = st_intersects)
+      sam_mpsz <- st_join(sam_svy21, mpsz, join = st_intersects)
       
       ggplot(data=sam_mpsz, 
              aes(y =distanceSam, 
