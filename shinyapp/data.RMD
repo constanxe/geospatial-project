@@ -1,4 +1,4 @@
-<<<<<<< Updated upstream
+
 Setup:
 ```{r setup, include<-FALSE}
 knitr::opts_chunk$set(echo <- TRUE)
@@ -54,8 +54,8 @@ dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 
 # Data variables
-jc_data <- read.csv(dp_a_jc)
-zip_data <- read.csv(dp_a_zip)
+jc_data <- read_csv(dp_a_jc)
+zip_data <- read_csv(dp_a_zip)
 
 
 # Data Wrangling
@@ -374,13 +374,19 @@ hdb_df$Y <- coordinates_val[,2]
 hdb<-hdb_df
 
 
-hdb_df
+tolower(hdb_df$ADDRESS)
 acc_Hansen <- tbl_df(hansen)
 
-hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
+
+
+hdb$ADDRESS <- iconv(hdb$ADDRESS, 'UTF-8', 'ASCII')
+hdb <- zip_data %>%
+    dplyr::select("ADDRESS" = "address", "POSTAL"="postal", "LATITUDE" = "latitude", "LONGITUDE" = "longtitude", "ROAD_NAME" = "road_name")
+hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
+hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
 
 hdb_hansen<- left_join(hdb_df, acc_Hansen, by=c("ADDRESS"="address"))
-
+hdb_hansen
 tbl_df(hdb_hansen)
 hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
 hansen_svy21 <- st_transform(hansen_sf, 3414)

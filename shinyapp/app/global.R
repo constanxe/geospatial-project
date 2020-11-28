@@ -7,16 +7,15 @@ packages = c("shiny",
              "tidyverse",
              "knitr",
              "sp", 
+             "rgdal",
              "sf",
              "tmap",
              "ggstatsplot"
             )
 
 for (p in packages){
-    if(!require(p, character.only = T)){ 
-        install.packages(p)
-    }
     library(p, character.only = T) 
+    require(p,character.only = T)
 }
 
 # memory.limit(size=56000)
@@ -34,8 +33,8 @@ dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
 dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 
 # Data variables
-jc_data <- read.csv(dp_a_jc)
-zip_data <- read.csv(dp_a_zip)
+jc_data <- read_csv(dp_a_jc)
+zip_data <- read_csv(dp_a_zip)
 mpsz_data <- st_read(dp_g_prefix, layer = "MP14_SUBZONE_WEB_PL")
 
 mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c("X_ADDR", "Y_ADDR"), sf_column_name="geometry")
@@ -63,8 +62,10 @@ jc <- jc_mpsz
 
 jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
 
+
 hdb <- zip_data %>%
     dplyr::select("ADDRESS" = "address", "POSTAL"="postal", "LATITUDE" = "latitude", "LONGITUDE" = "longtitude", "ROAD_NAME" = "road_name")
+hdb$ADDRESS <- iconv(hdb$ADDRESS, 'UTF-8', 'ASCII')
 hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
 hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
 

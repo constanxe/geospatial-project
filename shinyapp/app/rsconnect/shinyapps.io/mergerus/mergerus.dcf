@@ -5,8 +5,8 @@ account: mergerus
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3314088
-bundleId: 3916249
+bundleId: 3916914
 url: https://mergerus.shinyapps.io/mergerus/
-when: 1606576626.27499
+when: 1606595332.20986
 asMultiple: FALSE
 asStatic: FALSE

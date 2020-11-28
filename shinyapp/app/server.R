@@ -1,3 +1,17 @@
+# R Packages
+library("shinydashboard")
+library("shiny")
+library("shinyWidgets")
+library("DT")
+library("leaflet")
+library("tidyverse")
+library("knitr")
+library("sp")
+library("sf")
+library("rgdal")
+library("tmap")
+library("ggstatsplot")
+
 function(input, output, session) {
 
     # JC school point markers

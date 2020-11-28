@@ -1,3 +1,17 @@
+# R Packages
+library("shinydashboard")
+library("shiny")
+library("shinyWidgets")
+library("DT")
+library("leaflet")
+library("tidyverse")
+library("knitr")
+library("sp")
+library("sf")
+library("rgdal")
+library("tmap")
+library("ggstatsplot")
+
 PAGE_TITLE <- "Merge'R'Us: JCs Near You"
 NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: top;"
 
