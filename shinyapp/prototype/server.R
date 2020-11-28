@@ -98,8 +98,8 @@ function(input, output, session) {
         if (show_all_sch()) {
             proxy %>% addMapPane("schlayer", zIndex = 420) %>% 
                 addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
-                           options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(),
-                           data = jc@data$ADDRESS, popup = jc@data$ADDRESS, group = 'schlayer', icon = schIcon)
+                           data = jc@data$ADDRESS, popup = jc@data$ADDRESS, icon = schIcon, group = 'schlayer', 
+                           options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions())
         } else {
             proxy %>% clearGroup('schlayer')
         }
@@ -118,8 +118,8 @@ function(input, output, session) {
             proxy %>% addMapPane("hdblayer", zIndex = 420) %>% 
                 addCircleMarkers(lng = hdb@coords[,1], lat = hdb@coords[,2], 
                                  opacity = 0.5, fillOpacity = 0.5, fillColor = '#E4CD05', color = '#000', weight = 0.5, radius= 2,
-                                 data = hdb@data$ADDRESS, popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, 
-                                 group = 'hdblayer', options = pathOptions(pane = "hdblayer"))
+                                 data = hdb@data$ADDRESS, popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, group = 'hdblayer', 
+                                 options = pathOptions(pane = "hdblayer"))
         } else {
             proxy %>% clearGroup('hdblayer')
         }
@@ -139,7 +139,8 @@ function(input, output, session) {
         proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
           addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
                     data = select_hdb@data$ADDRESS, popup = select_hdb@data$ADDRESS,
-                    group = 'hdbptlayer', options = popupOptions(closeButton = FALSE))
+                    group = 'hdbptlayer', 
+                    options = popupOptions(closeButton = FALSE))
       } else {
         proxy %>% clearGroup('hdbptlayer')
       }
@@ -155,7 +156,8 @@ function(input, output, session) {
 
             proxy %>% addMapPane(layer, zIndex = 410) %>%
                 addPolygons(fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
-                            data =iso(), group = layer, options = pathOptions(pane = layer))
+                            data =iso(), group = layer, 
+                            options = pathOptions(pane = layer))
         } else {
             proxy %>% clearGroup('isolayer') 
         }
@@ -199,7 +201,8 @@ function(input, output, session) {
         if (input$analysis=='Duration (Isochrone)') {
             proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>%
                 addPolygons(fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
-                            data =iso(), group = 'isolayer', options = pathOptions(pane = "isolayer"))
+                            data =iso(), group = 'isolayer', 
+                            options = pathOptions(pane = "isolayer"))
         }
 
         if (input$analysis=='Distance (Hansen)') {
@@ -217,8 +220,8 @@ function(input, output, session) {
 
         proxy %>% clearGroup('targetlayer') %>% addMapPane("targetlayer", zIndex = 430) %>%
             addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
-                       popup = curr_sch_name(), options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions(), 
-                       group = 'targetlayer', icon = schIcon) %>% 
+                       popup = curr_sch_name(), icon = schIcon, group = 'targetlayer', 
+                       options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions()) %>% 
             flyTo(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], zlevel)
     })
     
@@ -228,18 +231,17 @@ function(input, output, session) {
         pal <- colorFactor(color, domain)
         proxy %>% addMapPane(layer, zIndex = 412) %>%
             addCircles(lng = rds@coords[,1], lat = rds@coords[,2], 
-                        radius = sqrt(domain)*10, color = pal(domain), 
-                        fillOpacity = 0.8, label = lapply(rds@data[[lab]], htmltools::HTML),
-                        group = layer, options = pathOptions(pane = layer)) 
+                        fillOpacity = 0.8, label = lapply(rds@data[[lab]], htmltools::HTML), color = pal(domain), 
+                        group = layer, radius = sqrt(domain)*10, 
+                        options = pathOptions(pane = layer)) 
     }
 
     # function for the below
     assessibility_measures_analysis_legend <- function(proxy, rds, column, lab, color) {
         domain <- rds@data[[column]]
         colorpal <- colorBin(color, domain, reverse = TRUE)
-        proxy %>% addLegend(position="topright", pal = colorpal, values = domain, opacity = 0.8, 
-                            labFormat = labelFormat(transform = function(domain) sort(domain, decreasing = TRUE)),
-                            title=paste0(lab, curr_sch_name()))
+        proxy %>% addLegend(title=paste0(lab, curr_sch_name(), position="topright", pal = colorpal, values = domain, 
+                            labFormat=labelFormat(transform = function(domain) sort(domain, decreasing = TRUE)), opacity = 0.8))
     }
 
     # add legends for all analysis and displays
@@ -249,9 +251,8 @@ function(input, output, session) {
 
         if (input$analysis=='Duration (Isochrone)') {
             count = iso()@data$blocks
-            proxy %>% addLegend(position="topright", colors=rev(c("lightskyblue","greenyellow","gold","orange","tomato")),
-                                labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')), opacity = 0.8,
-                                title=paste0("Duration from ", curr_sch_name()))
+            proxy %>% addLegend(title=paste0("Duration from ", curr_sch_name()), position="topright", colors=rev(c("lightskyblue","greenyellow","gold","orange","tomato")),
+                                labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')), opacity = 0.8)
         }
         
         if (input$analysis == 'Distance (Hansen)') {
@@ -268,13 +269,15 @@ function(input, output, session) {
         }
         
         if (show_all_hdb()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('#E4CD05')), labels=rev(c("HDB")), opacity = 0.8)
+            proxy %>% addLegend(position="topright", colors=rev(c('#E4CD05')), 
+                                labels=rev(c("HDB")), opacity = 0.8)
         } else {
             proxy %>% clearGroup('hdblayer')
         }
         
         if (show_all_sch()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('black')), labels=rev(c("school")), opacity = 0.8)
+            proxy %>% addLegend(position="topright", colors=rev(c('black')), 
+                                labels=rev(c("school")), opacity = 0.8)
         } else {
             proxy %>% clearGroup('schlayer')
         }

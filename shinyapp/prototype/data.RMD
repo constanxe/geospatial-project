@@ -55,14 +55,14 @@ dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 jc_data <- read.csv(dp_a_jc)
 zip_data <- read.csv(dp_a_zip)
 
+
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
     dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
 
-hdb <- zip_data%>%
+hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
-
 
 # CRS
 crsobj = CRS("+init=EPSG:3414")
@@ -328,8 +328,8 @@ for (x in 1:19){
 For 1 school
 ```{r}
 read_rds <- function(prefix) { 
-        readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
-    }
+    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+}
   
 hansen = read_rds(dp_h_prefix)
 
@@ -340,19 +340,34 @@ boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
 
 (HELPPP!!!) For many regions
 ```{r}
+
+hdb_sf <- st_as_sf(hdb, crs=3414, coords=c('longtitude','latitude'))
+```
+```{r}
+mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+mpsz_sf <- st_as_sf(mpsz, crs=3414)
+mpsz_svy21 <- st_transform(mpsz_sf, 3414)
+
 read_rds <- function(prefix) { 
-        readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
-    }
+    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+}
   
 hansen = read_rds(dp_h_prefix)
 
-mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
-mpsz_svy21 <- st_transform(mpsz, 3414)
+hansen_sf <- st_as_sf(hansen, crs=3414)
+hansen_svy21 <- st_transform(hansen_sf, 3414)
+hansen_mpsz <- st_join(hansen_svy21, mpsz_svy21, join = st_intersects)
+hansen_mpsz
+```
 
-hansen <- st_transform(hansen, 3414)
-hansen <- st_join(hansen, mpsz_svy21, join = st_intersects)
-
-boxplot(hansen@data$durationHansen, x_lab="school", y_lab="Hansen Duration")
-boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
+```{r}
+ggplot(data=hansen_mpsz, 
+       aes(y = hansen_mpsz$durationHansen, 
+           x= REGION_N)) +
+  geom_boxplot() +
+  geom_point(stat="summary", 
+             fun.y="mean", 
+             colour ="red", 
+             size=4)
 ```
 
