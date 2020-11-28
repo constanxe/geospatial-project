@@ -70,7 +70,7 @@ function(input, output, session) {
         hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
     })
     
-    output$hansenPlot <- renderPlot({
+    output$hansenDistancePlot <- renderPlot({
       acc_Hansen <- tbl_df(hansen())
       hdb_hansen<- left_join(hdb, acc_Hansen, by=c("ADDRESS"="address"))
 
@@ -90,7 +90,27 @@ function(input, output, session) {
       
       
     })
-    output$samPlot <- renderPlot({
+    output$hansenDurationPlot <- renderPlot({
+      acc_Hansen <- tbl_df(hansen())
+      hdb_hansen<- left_join(hdb, acc_Hansen, by=c("ADDRESS"="address"))
+      
+      hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+      hansen_svy21 <- st_transform(hansen_sf, 3414)
+      
+      hansen_mpsz <- st_join(hansen_svy21, mpsz, join = st_intersects)
+      
+      ggplot(data=hansen_mpsz, 
+             aes(y =durationHansen, 
+                 x= REGION_N)) +
+        geom_boxplot() +
+        geom_point(stat="summary", 
+                   fun.y="mean", 
+                   colour ="red", 
+                   size=4)
+      
+      
+    })
+    output$samDistancePlot <- renderPlot({
       acc_sam <- tbl_df(sam())
       hdb_sam<- left_join(hdb, acc_sam, by=c("ADDRESS"="address"))
       
@@ -101,6 +121,25 @@ function(input, output, session) {
       
       ggplot(data=sam_mpsz, 
              aes(y =distanceSam, 
+                 x= REGION_N)) +
+        geom_boxplot() +
+        geom_point(stat="summary", 
+                   fun.y="mean", 
+                   colour ="red", 
+                   size=4)
+      
+    })
+    output$samDurationPlot <- renderPlot({
+      acc_sam <- tbl_df(sam())
+      hdb_sam<- left_join(hdb, acc_sam, by=c("ADDRESS"="address"))
+      
+      sam_sf <- st_as_sf(hdb_sam, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+      sam_svy21 <- st_transform(sam_sf, 3414)
+      
+      sam_mpsz <- st_join(sam_svy21, mpsz, join = st_intersects)
+      
+      ggplot(data=sam_mpsz, 
+             aes(y =durationSam, 
                  x= REGION_N)) +
         geom_boxplot() +
         geom_point(stat="summary", 

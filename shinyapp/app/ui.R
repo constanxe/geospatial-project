@@ -121,7 +121,7 @@ dashboardPage(title=PAGE_TITLE,
                             "create" = TRUE,
                             "persist" = FALSE))),
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Duration Assessibility Measures'|| input.tabs == 'Distance Accessibility Measure'",
             selectInput("jc", "Junior College:", jc@data$SCHOOL)),
         conditionalPanel(
             condition = "input.tabs == 'Interactive Map'",
@@ -141,13 +141,20 @@ dashboardPage(title=PAGE_TITLE,
     dashboardBody(
         navbarPage("Explore", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("Assessibility Measures", 
+            tabPanel("Distance Accessibility Measure", 
                      fluidRow(
                         box(title="Hansen Boxplot", collapsible = TRUE,
-                            plotOutput("hansenPlot")),
+                            plotOutput("hansenDistancePlot")),
                         box(title="SAM Boxplot", collapsible = TRUE,
-                            plotOutput("samPlot")))
+                            plotOutput("samDistancePlot")))
              ),
+            tabPanel("Duration Assessibility Measures", 
+                     fluidRow(
+                         box(title="Hansen Boxplot", collapsible = TRUE,
+                             plotOutput("hansenDurationPlot")),
+                         box(title="SAM Boxplot", collapsible = TRUE,
+                             plotOutput("samDurationPlot")))
+            ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
             tabPanel(verbatimTextOutput("temp"), title="temp")))
