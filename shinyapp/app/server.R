@@ -314,7 +314,7 @@ function(input, output, session) {
       distances <- get_distances()
       output$overallPlot <- renderPlot({
         ggplot(data = distances, aes(x=distance, y=destination)) +
-          geom_boxplot()
+          geom_boxplot()+ ggtitle("Travel Distance from HDBs to Junior College")
       })
     }
     
@@ -322,7 +322,7 @@ function(input, output, session) {
       durations <- get_durations()
       output$overallPlot <- renderPlot({
         ggplot(data = durations, aes(x=duration, y=destination)) +
-          geom_boxplot()
+          geom_boxplot()+ ggtitle("Travel Duration from HDBs to Junior College")
       })
     }
     
