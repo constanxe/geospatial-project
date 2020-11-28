@@ -27,6 +27,7 @@ function(input, output, session) {
     iso = reactive( read_rds(dp_j_prefix) )
     hansen = reactive( read_rds(dp_h_prefix) )
     sam = reactive( read_rds(dp_s_prefix) )
+    matrix = reactive( read_rds(dp_m_prefix) )
 
     
     # conditions for show options
@@ -42,6 +43,55 @@ function(input, output, session) {
         !is.null(input$postal) && 
         ("Show chosen HDB point" %in% input$hdbpts)
     })
+    
+    to_listen <- reactive({
+      list(input$overall,input$metric)
+    })
+    
+    
+    
+    #get distances
+    get_distances <- function() {
+      
+      # Get first school
+      schName = jc@data[1,'SCHOOL']
+      res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
+      distances <- res %>%
+        dplyr::select(destination, distance)
+      
+      # Get the rest of the schools
+      for (x in 2:19){
+        schName = jc@data[x,'SCHOOL']
+        res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
+        
+        dist <- res %>%
+          dplyr::select(destination, distance)
+        distances <- bind_rows(distances, dist)
+      }
+      return(distances)
+    }
+    
+    #get durations
+    get_durations <- function() {
+      
+      # Get first school
+      schName = jc@data[1,'SCHOOL']
+      res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
+      durations <- res %>%
+        dplyr::select(destination, duration)
+      
+      # Get the rest of the schools
+      for (x in 2:19){
+        schName = jc@data[x,'SCHOOL']
+        res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
+        
+        dura <- res %>%
+          dplyr::select(destination, duration)
+        durations <- bind_rows(durations, dura)
+      }
+      return(durations)
+    }
+    
     
     #get hansen mpsz
     
@@ -109,6 +159,17 @@ function(input, output, session) {
     
     observeEvent(input$metric,{
       if (input$metric == "Distance"){
+        
+        output$schPlot <- renderPlotly({
+          print(
+            plotly::ggplotly(
+              ggplot(matrix(), aes(x=distance)) + 
+            geom_histogram(breaks=c(seq(0, 70, by=2)),
+                           color="black", 
+                           fill="lightskyblue")+ ggtitle(paste0("Travel Distance from HDBs to ",input$jc))))
+           
+        })
+        
         hansen_mpsz<-get_hansen_mpsz()
         sam_mpsz<-get_sam_mpsz()
         
@@ -160,6 +221,16 @@ function(input, output, session) {
         })
         
       }else{
+        output$schPlot <- renderPlotly({
+          print(
+            plotly::ggplotly(
+              ggplot(matrix(), aes(x=duration)) + 
+                geom_histogram(breaks=c(seq(0, 200, by=5)),
+                               color="black", 
+                               fill="mediumpurple") + ggtitle(paste0("Travel Duration from HDBs to ",input$jc)))) 
+          
+        })
+        
         hansen_mpsz<-get_hansen_mpsz()
         sam_mpsz<-get_sam_mpsz()
         #Hansen duration plot
@@ -214,6 +285,27 @@ function(input, output, session) {
         })
       }
     })
+    
+    # show overall distribution boxplot for all schools
+    observeEvent(to_listen(), {
+      if(input$overall && input$metric == "Distance"){
+          distances <- get_distances()
+          output$overallPlot <- renderPlot({
+            ggplot(data = distances, aes(x=distance, y=destination)) +
+              geom_boxplot()
+          })
+        }
+      
+      else if (input$overall && input$metric == "Duration") {
+          durations <- get_durations()
+          output$overallPlot <- renderPlot({
+            ggplot(data = durations, aes(x=duration, y=destination)) +
+              geom_boxplot()
+          })
+      }
+      
+    })
+    
 
     # update selectinput based on user"s region selection input
     observeEvent(input$region, {

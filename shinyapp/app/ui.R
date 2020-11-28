@@ -118,14 +118,14 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || input.tabs == 'JCs EDA'",
             selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             "plugins" = list("remove_button"),
                             "create" = TRUE,
                             "persist" = FALSE))),
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
             selectInput("jc", "Junior College:", jc@data$SCHOOL)),
         conditionalPanel(
             condition = "input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
@@ -142,7 +142,10 @@ dashboardPage(title=PAGE_TITLE,
             conditionalPanel(
                 condition = "input.hdbpts.includes('Show chosen HDB point')",
                 searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
-            selectInput("maptype", "Map Theme:", names(providers)))
+            selectInput("maptype", "Map Theme:", names(providers))),
+        conditionalPanel(
+            condition = "input.tabs == 'JCs EDA'",
+            checkboxInput("overall", "Show Overall Distribution"))
     ),
     
     dashboardBody(
@@ -163,9 +166,10 @@ dashboardPage(title=PAGE_TITLE,
             tabPanel("JCs EDA", 
                      fluidRow(
                          box(title="", collapsible = TRUE, width=12,
-                             plotOutput("")),
-                         box(title="", collapsible = TRUE, width=12,
-                             plotOutput(""))
+                             plotlyOutput("schPlot")),
+                         conditionalPanel(condition = "input.overall == 1"
+                             ,box(title="", collapsible = TRUE, width=12,
+                             plotOutput("overallPlot")))
                      )
             ),
             tabPanel("JCs Details", DTOutput("jcTable")),
