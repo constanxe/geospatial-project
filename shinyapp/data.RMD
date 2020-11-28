@@ -421,7 +421,7 @@ ggbetweenstats(data = hansen_mpsz,
 Get first school
 ```{r}
 schName = jc@data[1,'SCHOOL']
-res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
+res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
 
 distances <- res %>%
   dplyr::select(destination, distance)
@@ -437,7 +437,7 @@ Loop to get other schools
 
 for (x in 2:19){
     schName = jc@data[x,'SCHOOL']
-    res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
+    res = readRDS(paste0(dp_m_prefix,toupper(schName),'.rds'))
     
     dist <- res %>%
       dplyr::select(destination, distance)
@@ -459,3 +459,4 @@ Boxplot of Travel Duration from HDB blocks to Schools
 ```{r}
 ggplot(data = durations, aes(x=duration, y=destination)) + geom_boxplot()
 ```
+

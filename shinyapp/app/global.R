@@ -9,7 +9,8 @@ packages = c("shiny",
              "sp", 
              "sf",
              "tmap",
-             "ggstatsplot"
+             "ggstatsplot",
+             "plotly"
             )
 
 for (p in packages){
@@ -46,9 +47,11 @@ jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data
 jc <- jc_data%>% 
     dplyr::select("SCHOOL"="SEARCHVAL", "POSTAL", "LATITUDE", "LONGITUDE", "X", "Y", "ROAD_NAME","ADDRESS")
-jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
-jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
-jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
+
+jc$SCHOOL <- snakecase::to_any_case(tolower(jc$SCHOOL), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+jc$ADDRESS <- snakecase::to_any_case(tolower(jc$ADDRESS), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+jc$ROAD_NAME <- snakecase::to_any_case(tolower(jc$ROAD_NAME), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+
 jc_sf <- st_as_sf(jc, crs=3414, coords=c("X", "Y"), sf_column_name="geometry")
 jc_svy21 <- st_transform(jc_sf, 3414)
 
@@ -61,12 +64,13 @@ jc_mpsz <- jc_mpsz %>%
 
 jc <- jc_mpsz
 
-jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
+jc$REGION<- snakecase::to_any_case(tolower(jc$REGION), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
 
 hdb <- zip_data %>%
     dplyr::select("ADDRESS" = "address", "POSTAL"="postal", "LATITUDE" = "latitude", "LONGITUDE" = "longtitude", "ROAD_NAME" = "road_name")
-hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
-hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
+
+hdb$ADDRESS<- snakecase::to_any_case(tolower(hdb$ADDRESS), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+hdb$ROAD_NAME<- snakecase::to_any_case(tolower(hdb$ROAD_NAME), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
 
 
 # CRS
