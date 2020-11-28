@@ -1,4 +1,4 @@
-# R Packages (comment out at deployment)
+# R Packages
 packages = c("shiny",
              "shinydashboard",
              "shinyWidgets",
@@ -7,8 +7,8 @@ packages = c("shiny",
              "tidyverse",
              "knitr",
              "sp", 
-             "tmap",
              "sf",
+             "tmap",
              "ggstatsplot"
             )
 
@@ -19,7 +19,7 @@ for (p in packages){
     library(p, character.only = T) 
 }
 
-memory.limit(size=56000)
+# memory.limit(size=56000)
 
 # Folder Paths
 dp_a_prefix = "data/aspatial/" 
@@ -38,7 +38,7 @@ jc_data <- read.csv(dp_a_jc)
 zip_data <- read.csv(dp_a_zip)
 mpsz_data <- st_read(dp_g_prefix, layer = "MP14_SUBZONE_WEB_PL")
 
-mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
+mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c("X_ADDR", "Y_ADDR"), sf_column_name="geometry")
 mpsz <- st_transform(mpsz, 3414)
 
 # Data Wrangling
@@ -49,7 +49,7 @@ jc <- jc_data%>%
 jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
 jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
 jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
-jc_sf <- st_as_sf(jc, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+jc_sf <- st_as_sf(jc, crs=3414, coords=c("X", "Y"), sf_column_name="geometry")
 jc_svy21 <- st_transform(jc_sf, 3414)
 
 jc_mpsz <- st_join(jc_svy21, mpsz, join = st_intersects)
@@ -57,7 +57,7 @@ jc_mpsz <- st_join(jc_svy21, mpsz, join = st_intersects)
 jc_mpsz$REGION_N <- sub(" REGION", "", jc_mpsz$REGION_N)
 
 jc_mpsz <- jc_mpsz %>%
-    dplyr::select("SCHOOL", 'POSTAL', 'LATITUDE', 'LONGITUDE', 'ROAD_NAME','ADDRESS', "REGION"='REGION_N')
+    dplyr::select("SCHOOL", "POSTAL", "LATITUDE", "LONGITUDE", "ROAD_NAME","ADDRESS", "REGION"="REGION_N")
 
 jc <- jc_mpsz
 
@@ -88,11 +88,3 @@ hdb_df$Y <- coordinates_val[,2]
 
 hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
 hdb<-hdb_df
-
-
-# UI
-schIcon <- makeIcon(
-    iconUrl = "schIcon.png",
-    iconWidth = 20, iconHeight = 30,
-    iconAnchorX = 10, iconAnchorY = 30,
-)
