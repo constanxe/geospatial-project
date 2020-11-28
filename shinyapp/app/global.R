@@ -25,6 +25,7 @@ dp_j_prefix = "data/geojson/"
 dp_m_prefix = "data/distancematrix/" 
 dp_h_prefix = "data/hansen/" 
 dp_s_prefix = "data/sam/" 
+dp_g_prefix = "data/geospatial/" 
 
 # Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
@@ -33,6 +34,7 @@ dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
 # Data variables
 jc_data <- read.csv(dp_a_jc)
 zip_data <- read.csv(dp_a_zip)
+mpsz_data <- st_read(dp_g_prefix, layer = "MP14_SUBZONE_WEB_PL")
 
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
@@ -49,15 +51,30 @@ hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
 hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
 
 
+mpsz <- st_as_sf(mpsz_data, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
+mpsz <- st_transform(mpsz, 3414)
+
+
 # CRS
 crsobj = CRS("+init=EPSG:3414")
 
 coordinates(jc)<-~LONGITUDE+LATITUDE
 proj4string(jc) = crsobj
 
-coordinates(hdb)<-~LONGITUDE+LATITUDE
-proj4string(hdb) = crsobj
+coordinates(hdb) <-~ LONGITUDE + LATITUDE
+proj4string(hdb) <- CRS("+proj=longlat +datum=WGS84")
 
+p <- spTransform(hdb, CRS("+init=epsg:3414"))
+hdb_df<- tbl_df(hdb)
+
+#add x and y coordinates for hdb
+coordinates_val<-coordinates(p)
+colnames(hdb_df)[6] <- "X"
+colnames(hdb_df)[7] <- "Y"
+hdb_df$X <- coordinates_val[,2]
+hdb_df$Y <- coordinates_val[,1]
+
+hdb<-hdb_df
 
 # UI
 schIcon <- makeIcon(

@@ -350,13 +350,8 @@ mpsz_svy21
 read_rds <- function(prefix) { 
     readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
 }
-
-read_rds <- function(prefix) { 
-    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
-}
   
 hansen = read_rds(dp_h_prefix)
-
 
 hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
@@ -366,16 +361,15 @@ proj4string(hdb) <- CRS("+proj=longlat +datum=WGS84")
 
 p <- spTransform(hdb, CRS("+init=epsg:3414"))
 
-hdb_proj <- coordinates(p)
-colnames(hdb_proj) <- c('x', 'y')
-
-
 hdb_df<- tbl_df(hdb)
 
 coordinates_val<-coordinates(p)
+colnames(hdb_df)[6] <- "X"
+colnames(hdb_df)[7] <- "Y"
+hdb_df$X <- coordinates_val[,2]
+hdb_df$Y <- coordinates_val[,1]
 
-hdb_df$LATITUDE <- coordinates_val[,2]
-hdb_df$LONGITUDE <- coordinates_val[,1]
+hdb<-hdb_df
 
 acc_Hansen <- tbl_df(hansen)
 
@@ -383,10 +377,8 @@ hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=
 
 hdb_hansen<- left_join(hdb_df, acc_Hansen, by=c("ADDRESS"="address"))
 
-
 tbl_df(hdb_hansen)
-
-hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('LONGITUDE', 'LATITUDE'), sf_column_name="geometry")
+hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
 hansen_svy21 <- st_transform(hansen_sf, 3414)
 
 
