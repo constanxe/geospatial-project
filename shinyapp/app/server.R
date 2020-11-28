@@ -55,7 +55,7 @@ function(input, output, session) {
     
     output$jcTable <- renderDT(
         {
-            jc_table_data <- jc@data %>% dplyr::select(-X, -Y)
+            jc_table_data <- jc@data %>% dplyr::select(-LONGITUDE, -LATITUDE)
         
             # if regions selected, filter to chosen ones; else taken as all selected
             if (length(input$region) > 0) {

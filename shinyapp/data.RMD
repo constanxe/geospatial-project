@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 Setup:
 ```{r setup, include<-FALSE}
 knitr::opts_chunk$set(echo <- TRUE)
@@ -59,7 +60,7 @@ zip_data <- read.csv(dp_a_zip)
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
-    dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
+    dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS')
 
 hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
@@ -400,4 +401,53 @@ ggplot(data=hansen_mpsz,
              colour ="red", 
              size=4)
 ```
+
+
+
+
+
+```{r}
+jc_data <- read.csv(dp_a_jc)
+jc <- jc_data%>% 
+    dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS')
+jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
+jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
+jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
+
+
+
+#p <- spTransform(jc, CRS("+init=epsg:3414"))
+
+#jc_df<- tbl_df(jc)
+
+#coordinates_val<-coordinates(p)
+
+#colnames(jc_df)[5] <- "X"
+#colnames(jc_df)[6] <- "Y"
+#jc_df$X <- coordinates_val[,1]
+#jc_df$Y <- coordinates_val[,2]
+
+jc_sf <- st_as_sf(jc_df, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+jc_svy21 <- st_transform(jc_sf, 3414)
+
+jc_mpsz <- st_join(jc_svy21, mpsz_svy21, join = st_intersects)
+
+jc_mpsz$REGION_N <- sub(" REGION", "", jc_mpsz$REGION_N)
+
+jc_mpsz <- jc_mpsz %>%
+  dplyr::select("SCHOOL", 'POSTAL', 'LATITUDE', 'LONGITUDE', 'ROAD_NAME','ADDRESS', "REGION"='REGION_N')
+
+jc <- jc_mpsz
+
+jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
+
+jc <- sf:::as_Spatial(jc)
+
+#write.csv(jc,'app/data/aspatial/jc2.csv')
+
+#dp_a_jc = paste(dp_a_prefix, "jc2.csv", sep="")
+
+#jc_data <- read.csv(dp_a_jc)
+```
+
 

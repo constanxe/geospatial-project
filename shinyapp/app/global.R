@@ -38,11 +38,24 @@ mpsz_data <- st_read(dp_g_prefix, layer = "MP14_SUBZONE_WEB_PL")
 
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
+jc <- jc_data
 jc <- jc_data%>% 
-    dplyr::select("SCHOOL"="SEARCHVAL", "POSTAL", "LATITUDE", "LONGITUDE", "X", "Y", "ROAD_NAME","ADDRESS", "REGION")
+    dplyr::select("SCHOOL"="SEARCHVAL", "POSTAL", "LATITUDE", "LONGITUDE", "X", "Y", "ROAD_NAME","ADDRESS")
 jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
 jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
 jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
+jc_sf <- st_as_sf(jc_df, crs=3414, coords=c('X', 'Y'), sf_column_name="geometry")
+jc_svy21 <- st_transform(jc_sf, 3414)
+
+jc_mpsz <- st_join(jc_svy21, mpsz_svy21, join = st_intersects)
+
+jc_mpsz$REGION_N <- sub(" REGION", "", jc_mpsz$REGION_N)
+
+jc_mpsz <- jc_mpsz %>%
+    dplyr::select("SCHOOL", 'POSTAL', 'LATITUDE', 'LONGITUDE', 'ROAD_NAME','ADDRESS', "REGION"='REGION_N')
+
+jc <- jc_mpsz
+
 jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
 
 hdb <- zip_data %>%
@@ -56,10 +69,8 @@ mpsz <- st_transform(mpsz, 3414)
 
 
 # CRS
-crsobj = CRS("+init=EPSG:3414")
-
-coordinates(jc)<-~LONGITUDE+LATITUDE
-proj4string(jc) = crsobj
+jc <- spTransform(jc, CRS("+init=epsg:3414"))
+jc <- sf:::as_Spatial(jc)
 
 coordinates(hdb) <-~ LONGITUDE + LATITUDE
 proj4string(hdb) <- CRS("+proj=longlat +datum=WGS84")
