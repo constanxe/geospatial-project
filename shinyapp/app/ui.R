@@ -128,61 +128,65 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
 )
 
 dashboardPage(title=PAGE_TITLE,
-    dashboardHeader(title=div(img(src="logo.png", height = 50, align = "left", style="background-color: white;"), 
-                              p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
-    dashboardSidebar(
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details'",
-            selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
-                        multiple = TRUE, options = list(
-                            "plugins" = list("remove_button"),
-                            "create" = TRUE,
-                            "persist" = FALSE))),
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots'",
-            selectInput("jc", "Junior College:", jc@data$SCHOOL)),
-        conditionalPanel(
-            condition = "input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
-            selectInput("metric", "Metric:", c("Distance", "Duration"))),
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map'",
-            selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
-                                                   "Distance (Hansen)", 
-                                                   "Duration (Hansen)", 
-                                                   "Distance (SAM)",
-                                                   "Duration (SAM)")),
-            checkboxGroupInput("schs", "Display JC points:", c("Show all JC points")),
-            checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
-            conditionalPanel(
-                condition = "input.hdbpts.includes('Show chosen HDB point')",
-                searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
-            selectInput("maptype", "Map Theme:", names(providers)))
-    ),
-    
-    dashboardBody(
-        navbarPage("Explore", id="tabs", collapsible=TRUE,
-            tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("Accessibility Boxplots", 
-                     fluidRow(
-                        box(title="Hansen Boxplot", collapsible = TRUE,
-                            plotOutput("hansenPlot")),
-                        box(title="Hansen p-value Boxplot", collapsible = TRUE,
-                            plotOutput("hansenPvaluePlot")),
-                        box(title="SAM Boxplot", collapsible = TRUE,
-                            plotOutput("samPlot")),
-                        box(title="SAM p-value Boxplot", collapsible = TRUE,
-                            plotOutput("samPvaluePlot"))
-                     )
-             ),
-            tabPanel("JCs EDA", 
-                     fluidRow(
-                         box(title="", collapsible = TRUE, width=12,
-                             plotOutput("")),
-                         box(title="", collapsible = TRUE, width=12,
-                             plotOutput(""))
-                     )
-            ),
-            tabPanel("JCs Details", DTOutput("jcTable")),
-            tabPanel("HDBs Details", DTOutput("hdbTable")),
-            tabPanel(verbatimTextOutput("temp"), title="")))
+              dashboardHeader(title=div(img(src="logo.png", height = 50, align = "left", style="background-color: white;"), 
+                                        p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
+              dashboardSidebar(
+                  conditionalPanel(
+                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || input.tabs == 'JCs EDA'",
+                      selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
+                                     multiple = TRUE, options = list(
+                                         "plugins" = list("remove_button"),
+                                         "create" = TRUE,
+                                         "persist" = FALSE))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
+                      selectInput("jc", "Junior College:", jc@data$SCHOOL)),
+                  conditionalPanel(
+                      condition = "input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
+                      selectInput("metric", "Metric:", c("Distance", "Duration"))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'Interactive Map'",
+                      selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
+                                                             "Distance (Hansen)", 
+                                                             "Duration (Hansen)", 
+                                                             "Distance (SAM)",
+                                                             "Duration (SAM)")),
+                      checkboxGroupInput("schs", "Display JC points:", c("Show all JC points")),
+                      checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
+                      conditionalPanel(
+                          condition = "input.hdbpts.includes('Show chosen HDB point')",
+                          searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
+                      selectInput("maptype", "Map Theme:", names(providers))),
+                  conditionalPanel(
+                      condition = "input.tabs == 'JCs EDA'",
+                      checkboxInput("overall", "Show Overall Distribution"))
+              ),
+              
+              dashboardBody(
+                  navbarPage("Explore", id="tabs", collapsible=TRUE,
+                             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
+                             tabPanel("Accessibility Boxplots", 
+                                      fluidRow(
+                                          box(title="Hansen Boxplot", collapsible = TRUE,
+                                              plotOutput("hansenPlot")),
+                                          box(title="Hansen p-value Boxplot", collapsible = TRUE,
+                                              plotOutput("hansenPvaluePlot")),
+                                          box(title="SAM Boxplot", collapsible = TRUE,
+                                              plotOutput("samPlot")),
+                                          box(title="SAM p-value Boxplot", collapsible = TRUE,
+                                              plotOutput("samPvaluePlot"))
+                                      )
+                             ),
+                             tabPanel("JCs EDA", 
+                                      fluidRow(
+                                          box(title="", collapsible = TRUE, width=12,
+                                              plotlyOutput("schPlot")),
+                                          conditionalPanel(condition = "input.overall == 1"
+                                                           ,box(title="", collapsible = TRUE, width=12,
+                                                                plotOutput("overallPlot")))
+                                      )
+                             ),
+                             tabPanel("JCs Details", DTOutput("jcTable")),
+                             tabPanel("HDBs Details", DTOutput("hdbTable")),
+                             tabPanel(verbatimTextOutput("temp"), title="")))
 )

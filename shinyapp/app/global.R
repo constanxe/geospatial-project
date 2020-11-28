@@ -6,17 +6,16 @@ packages = c("shiny",
              "leaflet",
              "tidyverse",
              "knitr",
-             "sp", 
              "rgdal",
+             "sp", 
              "sf",
              "tmap",
              "ggstatsplot",
              "plotly"
-            )
+)
 
 for (p in packages){
     library(p, character.only = T) 
-    require(p,character.only = T)
 }
 
 # memory.limit(size=56000)
@@ -65,12 +64,11 @@ jc <- jc_mpsz
 
 jc$REGION<- snakecase::to_any_case(tolower(jc$REGION), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
 
-
 hdb <- zip_data %>%
     dplyr::select("ADDRESS" = "address", "POSTAL"="postal", "LATITUDE" = "latitude", "LONGITUDE" = "longtitude", "ROAD_NAME" = "road_name")
 hdb$ADDRESS <- iconv(hdb$ADDRESS, 'UTF-8', 'ASCII')
-hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
-hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
+hdb$ADDRESS<- snakecase::to_any_case(tolower(hdb$ADDRESS), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+hdb$ROAD_NAME<- snakecase::to_any_case(tolower(hdb$ROAD_NAME), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
 
 
 # CRS
