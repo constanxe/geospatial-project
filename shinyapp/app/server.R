@@ -1,5 +1,12 @@
 function(input, output, session) {
 
+    # JC school point markers
+    schIcon <- makeIcon(
+      iconUrl = "schIcon.png",
+      iconWidth = 20, iconHeight = 30,
+      iconAnchorX = 10, iconAnchorY = 30,
+    )
+  
     # zoom setting on map
     zoom_level = reactive({
         input$map_zoom

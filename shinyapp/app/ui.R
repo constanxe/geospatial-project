@@ -1,4 +1,4 @@
-PAGE_TITLE <- "Merge'R'Us: Find Junior Colleges Near You"
+PAGE_TITLE <- "Merge'R'Us: JCs Near You"
 NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: top;"
 
 NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", icon=icon("info-circle"),
@@ -114,7 +114,7 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures' || input.tabs == 'JCs Details'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Duration Assessibility Measures'|| input.tabs == 'Distance Accessibility Measure' || input.tabs == 'JCs Details'",
             selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             "plugins" = list("remove_button"),
@@ -168,5 +168,5 @@ dashboardPage(title=PAGE_TITLE,
             ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
-            tabPanel(verbatimTextOutput("temp"), title="temp")))
+            tabPanel(verbatimTextOutput("temp"), title="")))
 )
