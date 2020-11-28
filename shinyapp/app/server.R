@@ -130,7 +130,7 @@ function(input, output, session) {
         
         if (show_all_sch()) {
             proxy %>% addMapPane("schlayer", zIndex = 420) %>% 
-                addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
+                addMarkers(lng = jc@data$LONGITUDE, lat = jc@data$LATITUDE, 
                            data = jc@data$ADDRESS, popup = jc@data$ADDRESS, icon = schIcon, group = "schlayer", 
                            options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions())
         } else {
@@ -252,10 +252,10 @@ function(input, output, session) {
         }
 
         proxy %>% clearGroup("targetlayer") %>% addMapPane("targetlayer", zIndex = 430) %>%
-            addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
+            addMarkers(lng = jc@data$LONGITUDE[curr_sch_id()], lat = jc@data$LATITUDE[curr_sch_id()], 
                        popup = curr_sch_name(), icon = schIcon, group = "targetlayer", 
                        options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions()) %>% 
-            flyTo(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], zlevel)
+            flyTo(lng = jc@data$LONGITUDE[curr_sch_id()], lat = jc@data$LATITUDE[curr_sch_id()], zlevel)
     })
     
     # function for the above
