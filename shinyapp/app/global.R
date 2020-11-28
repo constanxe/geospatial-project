@@ -74,6 +74,7 @@ colnames(hdb_df)[7] <- "Y"
 hdb_df$X <- coordinates_val[,2]
 hdb_df$Y <- coordinates_val[,1]
 
+hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
 hdb<-hdb_df
 # UI
 schIcon <- makeIcon(
