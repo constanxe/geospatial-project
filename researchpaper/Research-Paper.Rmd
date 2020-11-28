@@ -128,10 +128,13 @@ To find out more about our application and how to use it, they may click the top
 ## Interactive Map
 On entering the application, users are brought to the “Interactive Map” tab first. A screenshot of this page is as follows.
 
+![Application Homepage](img/app-map.png)
 
 In the map tab, users may make use of the following filters to see the results they want: region(s) for the JCs, JC, type of analysis, options to display JC and/or HDB points and finally they may customise the map theme.
 
-The JC and type of analysis has to be chosen, and they are defaulted to the first options in the list. As the list might get quite long, they can make use of the region(s) input. By multi selecting the regions, it allows users to narrow their search for the JCs. This is convenient for users who wish to find JCs that are in their region. By default, all schools are displayed for selection. 
+The JC and type of analysis has to be chosen, and they are defaulted to the first options in the list. As the list might get quite long, they can make use of the region(s) input. By multi selecting the regions (see Figure _), it allows users to narrow their search for the JCs. This is convenient for users who wish to find JCs that are in their region. By default, all schools are displayed for selection. 
+
+![Application Map: Select Region](img/app-map-region.png)
 
 For analysis type, there are 5 different selections to choose from:
 
@@ -145,9 +148,11 @@ After selecting a specific JC and analysis, the application will pull out the re
 
 There are several options for users to display other points by ticking the respective checkboxes according to their preference.
 
+![Application Map: Show JC Points](img/app-map-jc.png)
 
 Selecting “Show all JC points” will display all JC points on the current map. JCs that are nearby will form clusters. The cluster size changes according to zoom level. Click on the cluster ball to view the schools within the cluster. Looking at the JC points can help to make the decision on amalgamation and relocation of schools as it allows easy comparison on the accessibility between schools. 
 
+![Application Map: Show HDB Point(s)](img/app-map-hdb.png)
 
 Selecting “Show all HDB points” will display all HDB points on the current map. Hovering over the points will provide the user with the address of each point.
 
