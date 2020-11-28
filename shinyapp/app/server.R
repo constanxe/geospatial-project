@@ -102,117 +102,117 @@ function(input, output, session) {
         hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)
     })
     
-    
-    #Hansen distance plot
-    output$hansenDistancePlot <- renderPlot({
-      hansen_mpsz<-get_hansen_mpsz()
-      ggplot(data=hansen_mpsz, 
-             aes(y =distanceHansen, 
-                 x= REGION_N)) +
-        geom_boxplot() +
-        geom_point(stat="summary", 
-                   fun.y="mean", 
-                   colour ="red", 
-                   size=4)
-    })
-    #Hansen distance plot (p-value)
-    output$hansenDistancePvaluePlot <- renderPlot({
-      hansen_mpsz<-get_hansen_mpsz()
-      hansen_mpsz$log_distanceHansen <- log(hansen_mpsz$distanceHansen)
-      ggbetweenstats(data = hansen_mpsz,
-                     x = REGION_N,
-                     y = log_distanceHansen,
-                     pairwise.comparisons = TRUE,
-                     p.adjust.method = "fdr",
-                     title = "Hansen's accessibility values by HDB location and by Region",
-                     caption = "Hansen's values"
-      )
-      
-    })
-    #Hansen duration plot
-    output$hansenDurationPlot <- renderPlot({
-      hansen_mpsz<-get_hansen_mpsz()
-      ggplot(data=hansen_mpsz, 
-             aes(y =durationHansen, 
-                 x= REGION_N)) +
-        geom_boxplot() +
-        geom_point(stat="summary", 
-                   fun.y="mean", 
-                   colour ="red", 
-                   size=4)
-    })
-    #Hansen duration plot (p-value)
-    output$hansenDurationPvaluePlot <- renderPlot({
-      hansen_mpsz<-get_hansen_mpsz()
-      hansen_mpsz$log_durationHansen <- log(hansen_mpsz$durationHansen)
-      ggbetweenstats(data = hansen_mpsz,
-                     x = REGION_N,
-                     y = log_durationHansen,
-                     pairwise.comparisons = TRUE,
-                     p.adjust.method = "fdr",
-                     title = "Hansen's accessibility values by HDB location and by Region",
-                     caption = "Hansen's values"
-      )
-      
-    })
-    #sam distance plot
-    output$samDistancePlot <- renderPlot({
-      sam_mpsz<-get_sam_mpsz()
-      ggplot(data=sam_mpsz, 
-             aes(y =distanceSam, 
-                 x= REGION_N)) +
-        geom_boxplot() +
-        geom_point(stat="summary", 
-                   fun.y="mean", 
-                   colour ="red", 
-                   size=4)
-      
-    })
-    #sam distance plot (p-value)
-    output$samDistancePvaluePlot <- renderPlot({
-      sam_mpsz<-get_sam_mpsz()
-      sam_mpsz$log_distanceSam <- log(sam_mpsz$distanceSam)
-      ggbetweenstats(data = sam_mpsz,
-                     x = REGION_N,
-                     y = log_distanceSam,
-                     pairwise.comparisons = TRUE,
-                     p.adjust.method = "fdr",
-                     title = "Sam's accessibility values by HDB location and by Region",
-                     caption = "Sam's values"
-      )
-      
-    })
-    #sam duration plot
-    output$samDurationPlot <- renderPlot({
-      sam_mpsz<-get_sam_mpsz()
-      ggplot(data=sam_mpsz, 
-             aes(y =durationSam, 
-                 x= REGION_N)) +
-        geom_boxplot() +
-        geom_point(stat="summary", 
-                   fun.y="mean", 
-                   colour ="red", 
-                   size=4)
-      
-    })
-    
-    #sam duration plot (p-value)
-    output$samDurationPvaluePlot <- renderPlot({
-      sam_mpsz<-get_sam_mpsz()
-      sam_mpsz$log_durationSam <- log(sam_mpsz$durationSam)
-      ggbetweenstats(data = sam_mpsz,
-                     x = REGION_N,
-                     y = log_durationSam,
-                     pairwise.comparisons = TRUE,
-                     p.adjust.method = "fdr",
-                     title = "Sam's accessibility values by HDB location and by Region",
-                     caption = "Sam's values"
-      )
-      
-    })
 
     output$temp <- renderPrint({
       print("")
+    })
+    
+    observeEvent(input$accessibility,{
+      if (input$accessibility == "distance"){
+        hansen_mpsz<-get_hansen_mpsz()
+        sam_mpsz<-get_sam_mpsz()
+        
+        output$hansenPlot <- renderPlot({
+          ggplot(data=hansen_mpsz, 
+                 aes(y =distanceHansen, 
+                     x= REGION_N)) +
+            geom_boxplot() +
+            geom_point(stat="summary", 
+                       fun.y="mean", 
+                       colour ="red", 
+                       size=4)
+        })
+        #Hansen distance plot (p-value)
+        output$hansenPvaluePlot <- renderPlot({
+          hansen_mpsz$log_distanceHansen <- log(hansen_mpsz$distanceHansen)
+          ggbetweenstats(data = hansen_mpsz,
+                         x = REGION_N,
+                         y = log_distanceHansen,
+                         pairwise.comparisons = TRUE,
+                         p.adjust.method = "fdr",
+                         title = "Hansen's accessibility (distance) values by HDB location and by Region",
+                         caption = "Hansen's values"
+          )
+        })
+        
+        #sam distance plot
+        output$samPlot <- renderPlot({
+          ggplot(data=sam_mpsz, 
+                 aes(y =distanceSam, 
+                     x= REGION_N)) +
+            geom_boxplot() +
+            geom_point(stat="summary", 
+                       fun.y="mean", 
+                       colour ="red", 
+                       size=4)
+        })
+        #sam distance plot (p-value)
+        output$samPvaluePlot <- renderPlot({
+          sam_mpsz$log_distanceSam <- log(sam_mpsz$distanceSam)
+          ggbetweenstats(data = sam_mpsz,
+                         x = REGION_N,
+                         y = log_distanceSam,
+                         pairwise.comparisons = TRUE,
+                         p.adjust.method = "fdr",
+                         title = "Sam's accessibility (distance) values by HDB location and by Region",
+                         caption = "Sam's values"
+          )
+        })
+        
+      }else{
+        hansen_mpsz<-get_hansen_mpsz()
+        sam_mpsz<-get_sam_mpsz()
+        #Hansen duration plot
+        output$hansenPlot <- renderPlot({
+          ggplot(data=hansen_mpsz, 
+                 aes(y =durationHansen, 
+                     x= REGION_N)) +
+            geom_boxplot() +
+            geom_point(stat="summary", 
+                       fun.y="mean", 
+                       colour ="red", 
+                       size=4)
+        })
+        #Hansen duration plot (p-value)
+        output$hansenPvaluePlot <- renderPlot({
+          hansen_mpsz$log_durationHansen <- log(hansen_mpsz$durationHansen)
+          ggbetweenstats(data = hansen_mpsz,
+                         x = REGION_N,
+                         y = log_durationHansen,
+                         pairwise.comparisons = TRUE,
+                         p.adjust.method = "fdr",
+                         title = "Hansen's accessibility (duration) values by HDB location and by Region",
+                         caption = "Hansen's values"
+          )
+          
+        })
+        #sam duration plot
+        output$samPlot <- renderPlot({
+          ggplot(data=sam_mpsz, 
+                 aes(y =durationSam, 
+                     x= REGION_N)) +
+            geom_boxplot() +
+            geom_point(stat="summary", 
+                       fun.y="mean", 
+                       colour ="red", 
+                       size=4)
+          
+        })
+        
+        #sam duration plot (p-value)
+        output$samPvaluePlot <- renderPlot({
+          sam_mpsz$log_durationSam <- log(sam_mpsz$durationSam)
+          ggbetweenstats(data = sam_mpsz,
+                         x = REGION_N,
+                         y = log_durationSam,
+                         pairwise.comparisons = TRUE,
+                         p.adjust.method = "fdr",
+                         title = "Sam's accessibility (duration) values by HDB location and by Region",
+                         caption = "Sam's values"
+          )
+          
+        })
+      }
     })
 
     # update selectinput based on user"s region selection input
