@@ -1,0 +1,379 @@
+Setup:
+```{r setup, include<-FALSE}
+knitr::opts_chunk$set(echo <- TRUE)
+```
+
+# Global.R Setup
+```{r}
+# R Packages
+packages = c('shiny', 
+            'shinydashboard', 
+            'shinyWidgets', 
+            'DT', 
+            'leaflet',
+            'tidyverse',
+            'knitr',
+            'stringr',
+            'httr',
+            'geojsonio', 
+            'sp', 
+            'dplyr', 
+            'SpatialAcc', 
+            'rgeos', 
+            'spdplyr', 
+            'KernSmooth', 
+            'raster',
+            'reshape2', 
+            'sf',
+            'rgdal',
+            'spdep',
+            'tmap'
+            )
+
+for (p in packages){
+    if(!require(p, character.only = T)){ 
+        install.packages(p)
+    }
+    library(p,character.only = T) 
+}
+
+memory.limit(size=56000)
+
+
+# Folder Paths
+dp_a_prefix = "../data/aspatial/" 
+dp_j_prefix = "../data/geojson/" 
+dp_m_prefix = "../data/distancematrix/" 
+dp_h_prefix = "../data/hansen/" 
+dp_s_prefix = "../data/sam/" 
+
+# Data Paths
+dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
+dp_a_zip = paste(dp_a_prefix, "sg_zipcode_mapper.csv", sep="")
+
+# Data variables
+jc_data <- read.csv(dp_a_jc)
+zip_data <- read.csv(dp_a_zip)
+
+
+# Data Wrangling
+jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
+jc <- jc_data%>% 
+    dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
+
+hdb <- zip_data %>%
+    dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+```
+```{r}
+# CRS
+crsobj = CRS("+init=EPSG:3414")
+
+coordinates(jc)<-~LONGITUDE+LATITUDE
+proj4string(jc) = crsobj
+
+coordinates(hdb)<-~LONGITUDE+LATITUDE
+proj4string(hdb) = crsobj
+```
+
+
+# Isochrone generation for all JC 
+
+function to get geojson
+```{r}
+library(httr)
+get_geojson<-function(lat,lng,filename){
+
+    current <- GET(
+        "http://localhost:8080/otp/routers/current/isochrone",
+        query = list(
+            fromPlace = paste(lat,lng,sep = ","), # latlong of place
+            mode = "WALK,TRANSIT", # modes we want the route planner to use
+            date = "05-11-2020",
+            time= "07:00am",
+            maxWalkDistance = 1600, # in metres
+            walkReluctance = 5,
+            minTransferTime = 60, # in secs
+            cutoffSec = 900,
+            cutoffSec = 1800,
+            cutoffSec = 2700,
+            cutoffSec = 3600
+        )
+    )
+    
+    current <- content(current, as = "text", encoding = "UTF-8")
+    write(current, file = paste0(dp_j_prefix, lsch, '.geojson'))
+}
+```
+
+
+saves the isochrone generation for each JC as .rds in data/geojson/
+Only run this code chunk if you want to generate the .rds files 
+```{r}
+for (i in 1:19){
+    lsch = jc@data[i,'SCHOOL']
+    print(lsch)
+    lat = jc@coords[i,2]
+    long = jc@coords[i,1]
+    print(lat)
+    print(long)
+    
+    get_geojson(lat, long, lsch)
+    sp = geojsonio::geojson_read(paste0(dp_j_prefix, lsch, '.geojson'), what = "sp")
+    proj4string(sp) = proj4string(hdb)
+    res = colSums(gContains(sp, hdb, byid = TRUE))
+    print(res)
+    res = tbl_df(res)
+    colnames(res) = 'blocks'
+    sp@data = bind_cols(sp@data, res)
+    saveRDS(sp, file = paste0(dp_j_prefix, lsch, '.rds'))
+}
+```
+
+
+# Generate distance matrix
+Get_dist function to get the data information of a trip with the fastest route.
+generate_dist function to generate the distance matrix and duration from all the residential data to each school.
+```{r}
+#Getting the data of a trip
+get_dist = function(fromLat, fromLong, toLat, toLong){
+        current <- GET(
+            "http://localhost:8080/otp/routers/default/plan",
+            query = list(
+                fromPlace = paste(fromLat,fromLong,sep = ","), # latlong of place
+                toPlace = paste(toLat,toLong,sep = ","),
+                mode = "WALK,TRANSIT", # modes we want the route planner to use
+                date = "05-11-2020",
+                time= "07:00am",
+                maxWalkDistance = 1600, # in metres
+                cutoffSec = 900,
+                cutoffSec = 1800,
+                cutoffSec = 2700,
+                cutoffSec = 3600
+            )
+        )
+
+        if (length(content(current)[["plan"]][["itineraries"]][[1]]) == 0){
+            return(NULL)
+        }else{
+            return(content(current)[["plan"]][["itineraries"]][[1]])
+        }
+}
+#Generating the dist and duration from all residential HDB and storing it for each school
+generate_dist <-function(hdb, destLat, destLong, schName){
+    result = data.frame(matrix(ncol = 6, nrow= 0))
+    colnames(result) = c('address', 'destination', 'latitude', 'longitude', 'duration', 'distance')
+    
+    for(i in 1: length(hdb@coords[,1])){
+        lat = as.double(hdb@coords[i,]['LATITUDE'])
+        long = as.double(hdb@coords[i,]['LONGITUDE'])
+        address = hdb@data[i,]$ADDRESS
+            info = get_dist(lat, long, destLat, destLong)
+            if (is.null(info)){
+                next()
+            }
+            total = 0
+            for (j in 1:length(info$legs)){
+                total = total + info$legs[[j]]$distance
+            }
+            
+            dist = total/1000 #convert to km
+            dur = info$duration/60
+            result[nrow(result)+1,] = list(address, schName, lat, long, dur, dist)
+            print(result)
+            
+    }
+    return(result)
+}
+```
+
+Run this code to generate the .rds files (distancematrix)
+```{r}
+    x=1 #input x
+    schName = jc@data[x,"SCHOOL"]
+    print(schName)
+    schLat = jc@coords[x,2]
+    schLong =    jc@coords[x,1]
+    result=generate_dist(hdb, schLat, schLong, schName)
+    saveRDS(result, file = paste0(dp_m_prefix, schName, '.rds'))
+```
+
+
+# Measure accessibility with Hansen
+
+Hansen function
+```{r}
+apply_hansen = function(res){
+    result = res %>% mutate(demand =100)
+    durationMatrix = result %>% dplyr::select('duration')
+    acc_hansen <- data.frame(ac(result$demand,
+                                                            c(10), 
+                                                            durationMatrix,
+                                                            power = 2, 
+                                                            family = "Hansen"))
+    result_duration = result
+    result_duration$durationHansen = acc_hansen[,1]
+    result_duration$durationHansen[is.na(result_duration$durationHansen)] = 0
+    
+    
+    distanceMatrix = result %>% dplyr::select('distance')
+    acc_hansen <- data.frame(ac(result$demand,
+                                                            c(10), 
+                                                            distanceMatrix,
+                                                            power =2, 
+                                                            family = "Hansen"))
+    result_final = result_duration
+    result_final$distanceHansen = acc_hansen[,1]
+    result_final$distanceHansen[is.na(result_final$distanceHansen)] = 0
+    return (result_final)
+}
+```
+
+Hansen Generation for each school distance matrix
+```{r}
+for (x in 1:19){
+    schName = jc@data[x,'SCHOOL']
+    print(schName)
+    res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
+    
+    result_acc = apply_hansen(res)
+    
+    result_acc<- result_acc%>%
+        mutate(durationHansen=durationHansen*10000) # for legend as it is too small to be meaningful
+    
+    result_acc$address <- rapportools::tocamel(tolower(result_acc$address), upper=TRUE, sep=" ")
+    result_acc <- result_acc %>% 
+        mutate(hansenDistLabel = paste(
+                "Distance Hansen Acessibility:","<b>",round(distanceHansen,4),
+                "</b><br/>","Address: ",address,
+                "</br>Distance to School: ","<b>",round(distance,4),"<b/> Kilometres"), 
+            hansenDuraLabel = paste(
+                "Duration Hansen Acessibility: ","<b>",round(durationHansen,4),
+                "</b><br/>Address:",address,
+                "</br>Duration to School: ","<b>",round(duration,4),"</b> Minutes"))
+    
+    result_acc_sf <- st_as_sf(result_acc, 
+    coords = c('longitude', 'latitude'),
+    crs = "+init=epsg:3414")
+
+    result_acc_sp <- sf:::as_Spatial(result_acc_sf)
+    
+    saveRDS(result_acc_sp, paste0(dp_h_prefix,schName,'.rds'))
+}
+```
+
+# Measure accessibility with SAM
+SAM function
+```{r}
+apply_sam = function(res){
+    result = res %>% mutate(demand =100)
+    durationMatrix = result %>% dplyr::select('duration')
+    acc_sam <- data.frame(ac(result$demand,
+                                                            c(10), 
+                                                            durationMatrix,
+                                                            power = 2, 
+                                                            family = "SAM"))
+    result_duration = result
+    result_duration$durationSam = acc_sam[,1]
+    result_duration$durationSam[is.na(result_duration$durationSam)] = 0
+    
+    
+    distanceMatrix = result %>% dplyr::select('distance')
+    acc_sam <- data.frame(ac(result$demand,
+                                                            c(10), 
+                                                            distanceMatrix,
+                                                            power =2, 
+                                                            family = "SAM"))
+    result_final = result_duration
+    result_final$distanceSam = acc_sam[,1]
+    result_final$distanceSam[is.na(result_final$distanceSam)] = 0
+    return (result_final)
+}
+```
+
+SAM Generation for each school distance matrix
+```{r}
+for (x in 1:19){
+    schName = jc@data[x,'SCHOOL']
+    print(schName)
+    res = readRDS(paste0(dp_m_prefix,schName,'.rds'))
+
+    result_acc = apply_sam(res)
+    
+    result_acc<- result_acc%>%
+        mutate(durationSam=durationSam*1000) # for legend as it is too small to be meaningful
+    
+    result_acc$address <- rapportools::tocamel(tolower(result_acc$address), upper=TRUE, sep=" ")
+    result_acc <- result_acc %>% 
+        mutate(samDistLabel = paste(
+                "Distance SAM Acessibility:","<b>",round(distanceSam,4),
+                "</b><br/>","Address: ",address,
+                "</br>Distance to School: ","<b>",round(distance,4),"<b/> Kilometres"), 
+            samDuraLabel = paste(
+                "Duration SAM Acessibility: ","<b>",round(durationSam,4),
+                "</b><br/>Address:",address,
+                "</br>Duration to School: ","<b>",round(duration,4),"</b> Minutes"))
+
+    result_acc_sf <- st_as_sf(result_acc, 
+    coords = c('longitude', 'latitude'),
+    crs = "+init=epsg:3414")
+
+    result_acc_sp <- sf:::as_Spatial(result_acc_sf)
+    
+    saveRDS(result_acc_sp, paste0(dp_s_prefix,schName,'.rds'))
+}
+```
+
+
+
+
+For 1 school
+```{r}
+read_rds <- function(prefix) { 
+    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+}
+  
+hansen = read_rds(dp_h_prefix)
+
+boxplot(hansen@data$durationHansen, x_lab="school", y_lab="Hansen Duration")
+boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
+```
+
+
+(HELPPP!!!) For many regions
+```{r}
+hansen
+```
+
+```{r}
+jc_sf <- st_as_sf(jc, crs=3414, coords=c('X','Y'))
+#jc_sf <- st_as_sf(jc, crs=3414, coords=c('LONGITUDE','LATITUDE'))
+#hdb_sf <- st_as_sf(hdb, crs=3414, coords=c('LONGITUDE','LATITUDE'))
+```
+```{r}
+mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+mpsz_sf <- st_as_sf(mpsz, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
+mpsz_svy21 <- st_transform(mpsz_sf, 3414)
+
+read_rds <- function(prefix) { 
+    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+}
+  
+hansen = read_rds(dp_h_prefix)
+
+hansen_sf <- st_as_sf(hansen, crs=3414)
+hansen_svy21 <- st_transform(hansen_sf, 3414)
+hansen_mpsz <- st_join(hansen_svy21, mpsz_svy21, join = st_intersects)
+hansen_mpsz
+```
+
+```{r}
+ggplot(data=hansen_mpsz, 
+       aes(y = hansen_mpsz$durationHansen, 
+           x= REGION_N)) +
+  geom_boxplot() +
+  geom_point(stat="summary", 
+             fun.y="mean", 
+             colour ="red", 
+             size=4)
+```
+

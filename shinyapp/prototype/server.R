@@ -15,7 +15,7 @@ function(input, output, session) {
 
     # read the rds file of the school selected for the specified analysis type
     read_rds <- function(prefix) { 
-        readRDS(file=paste0(prefix, toupper(curr_sch_name()),'.rds')) 
+        readRDS(file=paste0(prefix, toupper(curr_sch_name()),".rds")) 
     }
     iso = reactive( read_rds(dp_j_prefix) )
     hansen = reactive( read_rds(dp_h_prefix) )
@@ -25,15 +25,15 @@ function(input, output, session) {
     # conditions for show options
     show_all_sch = reactive({
         !is.null(input$schs) && 
-        ('Show all school points' %in% input$schs)
+        ("Show all school points" %in% input$schs)
     })
     show_all_hdb = reactive({
         !is.null(input$hdbpts) && 
-        ('Show all HDB points' %in% input$hdbpts)
+        ("Show all HDB points" %in% input$hdbpts)
     })
     show_postal = reactive({
         !is.null(input$postal) && 
-        ('Show chosen HDB point' %in% input$hdbpts)
+        ("Show chosen HDB point" %in% input$hdbpts)
     })
 
     
@@ -82,7 +82,7 @@ function(input, output, session) {
     })
 
 
-    # update selectinput based on user's region selection input
+    # update selectinput based on user"s region selection input
     observeEvent(input$region, {
         if (length(input$region) > 0) {
             updateSelectInput(session, "jc", "Junior College", jc@data$SCHOOL[jc@data$REGION %in% input$region])
@@ -98,14 +98,14 @@ function(input, output, session) {
         if (show_all_sch()) {
             proxy %>% addMapPane("schlayer", zIndex = 420) %>% 
                 addMarkers(lng = jc@coords[,1], lat = jc@coords[,2], 
-                           data = jc@data$ADDRESS, popup = jc@data$ADDRESS, icon = schIcon, group = 'schlayer', 
+                           data = jc@data$ADDRESS, popup = jc@data$ADDRESS, icon = schIcon, group = "schlayer", 
                            options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions())
         } else {
-            proxy %>% clearGroup('schlayer')
+            proxy %>% clearGroup("schlayer")
         }
 
         if (!show_postal()) {
-            proxy %>% clearGroup('hdbptlayer')    
+            proxy %>% clearGroup("hdbptlayer")    
             updateSearchInput(session, "postal", value="")
         }
     })
@@ -117,20 +117,20 @@ function(input, output, session) {
         if (show_all_hdb()) {
             proxy %>% addMapPane("hdblayer", zIndex = 420) %>% 
                 addCircleMarkers(lng = hdb@coords[,1], lat = hdb@coords[,2], 
-                                 opacity = 0.5, fillOpacity = 0.5, fillColor = '#E4CD05', color = '#000', weight = 0.5, radius= 2,
-                                 data = hdb@data$ADDRESS, popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, group = 'hdblayer', 
+                                 opacity = 0.5, fillOpacity = 0.5, fillColor = "#E4CD05", color = "#000", weight = 0.5, radius= 2,
+                                 data = hdb@data$ADDRESS, popup = hdb@data$ADDRESS, label = hdb@data$ADDRESS, group = "hdblayer", 
                                  options = pathOptions(pane = "hdblayer"))
         } else {
-            proxy %>% clearGroup('hdblayer')
+            proxy %>% clearGroup("hdblayer")
         }
 
         if (!show_postal()) {
-            proxy %>% clearGroup('hdbptlayer')
+            proxy %>% clearGroup("hdbptlayer")
             updateSearchInput(session, "postal", value="")
         }
     })
     
-    # display hdb popup based on user's searchinput (look at the selected display and add the layer in if checked)
+    # display hdb popup based on user"s searchinput (look at the selected display and add the layer in if checked)
     observeEvent(input$postal, {
       proxy <- leafletProxy("mapPlot")
       
@@ -139,10 +139,10 @@ function(input, output, session) {
         proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
           addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
                     data = select_hdb@data$ADDRESS, popup = select_hdb@data$ADDRESS,
-                    group = 'hdbptlayer', 
+                    group = "hdbptlayer", 
                     options = popupOptions(closeButton = FALSE))
       } else {
-        proxy %>% clearGroup('hdbptlayer')
+        proxy %>% clearGroup("hdbptlayer")
       }
     })
     
@@ -151,39 +151,39 @@ function(input, output, session) {
     observeEvent(input$analysis, {
         proxy <- leafletProxy("mapPlot")
 
-        if (input$analysis=='Duration (Isochrone)') {
+        if (input$analysis=="Duration (Isochrone)") {
             layer <- "isolayer"
 
             proxy %>% addMapPane(layer, zIndex = 410) %>%
-                addPolygons(fillOpacity = 0.8, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
+                addPolygons(fillOpacity = 0.8, fillColor =c("cyan","gold","tomato","red"), color="black", weight=0.5, 
                             data =iso(), group = layer, 
                             options = pathOptions(pane = layer))
         } else {
-            proxy %>% clearGroup('isolayer') 
+            proxy %>% clearGroup("isolayer") 
         }
      
-        if (input$analysis=='Distance (Hansen)') {
+        if (input$analysis=="Distance (Hansen)") {
             assessibility_measures_analysis_map(proxy, hansen(), "hansendistlayer", "distanceHansen", "hansenDistLabel", "Blues")
         } else {
-            proxy %>% clearGroup('hansendistlayer')
+            proxy %>% clearGroup("hansendistlayer")
         }
 
-        if (input$analysis=='Duration (Hansen)') {
+        if (input$analysis=="Duration (Hansen)") {
             assessibility_measures_analysis_map(proxy, hansen(), "hansenduralayer", "durationHansen", "hansenDuraLabel", "Purples")
         } else {
-            proxy %>% clearGroup('hansenduralayer')
+            proxy %>% clearGroup("hansenduralayer")
         }
         
-        if (input$analysis=='Distance (SAM)') {
+        if (input$analysis=="Distance (SAM)") {
             assessibility_measures_analysis_map(proxy, sam(), "samdistlayer", "distanceSam", "samDistLabel", "Blues")
         } else {
-            proxy %>% clearGroup('samdistlayer')
+            proxy %>% clearGroup("samdistlayer")
         }
         
-        if (input$analysis=='Duration (SAM)') {
+        if (input$analysis=="Duration (SAM)") {
             assessibility_measures_analysis_map(proxy, sam(), "samduralayer", "durationSam", "samDuraLabel", "Purples")
         } else {
-            proxy %>% clearGroup('samduralayer')
+            proxy %>% clearGroup("samduralayer")
         }
     })
 
@@ -198,29 +198,29 @@ function(input, output, session) {
         
         proxy <- leafletProxy("mapPlot")
         
-        if (input$analysis=='Duration (Isochrone)') {
-            proxy %>% clearGroup('isolayer') %>% addMapPane("isolayer", zIndex = 410) %>%
-                addPolygons(fillOpacity = 0.6, fillColor =c('cyan','gold','tomato','red'), color="black", weight=0.5, 
-                            data =iso(), group = 'isolayer', 
+        if (input$analysis=="Duration (Isochrone)") {
+            proxy %>% clearGroup("isolayer") %>% addMapPane("isolayer", zIndex = 410) %>%
+                addPolygons(fillOpacity = 0.6, fillColor =c("cyan","gold","tomato","red"), color="black", weight=0.5, 
+                            data =iso(), group = "isolayer", 
                             options = pathOptions(pane = "isolayer"))
         }
 
-        if (input$analysis=='Distance (Hansen)') {
+        if (input$analysis=="Distance (Hansen)") {
             assessibility_measures_analysis_map(proxy, hansen(), "hansendistlayer", "distanceHansen", "hansenDistLabel", "Blues")
         }
-        if (input$analysis=='Duration (Hansen)') {
+        if (input$analysis=="Duration (Hansen)") {
             assessibility_measures_analysis_map(proxy, hansen(), "hansenduralayer", "durationHansen", "hansenDuraLabel", "Purples")
         }
-        if (input$analysis=='Distance (SAM)') {
+        if (input$analysis=="Distance (SAM)") {
             assessibility_measures_analysis_map(proxy, sam(), "samdistlayer", "distanceSam", "samDistLabel", "Blues")
         }
-        if (input$analysis=='Duration (SAM)') {
+        if (input$analysis=="Duration (SAM)") {
             assessibility_measures_analysis_map(proxy, sam(), "samduralayer", "durationSam", "samDuraLabel", "Purples")
         }
 
-        proxy %>% clearGroup('targetlayer') %>% addMapPane("targetlayer", zIndex = 430) %>%
+        proxy %>% clearGroup("targetlayer") %>% addMapPane("targetlayer", zIndex = 430) %>%
             addMarkers(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], 
-                       popup = curr_sch_name(), icon = schIcon, group = 'targetlayer', 
+                       popup = curr_sch_name(), icon = schIcon, group = "targetlayer", 
                        options = markerOptions(interactive = TRUE), clusterOptions = markerClusterOptions()) %>% 
             flyTo(lng = jc@coords[curr_sch_id(),1], lat = jc@coords[curr_sch_id(),2], zlevel)
     })
@@ -249,41 +249,41 @@ function(input, output, session) {
         proxy <- leafletProxy("mapPlot")
         proxy %>% clearControls()
 
-        if (input$analysis=='Duration (Isochrone)') {
+        if (input$analysis=="Duration (Isochrone)") {
             count = iso()@data$blocks
             proxy %>% addLegend(title=paste0("Duration from ", curr_sch_name()), position="topright", colors=rev(c("lightskyblue","greenyellow","gold","orange","tomato")),
-                                labels=rev(c('< 90 min', '< 60 min', '< 45 min', '< 30 min', '< 15 min')), opacity = 0.8)
+                                labels=rev(c("< 90 min", "< 60 min", "< 45 min", "< 30 min", "< 15 min")), opacity = 0.8)
         }
         
-        if (input$analysis == 'Distance (Hansen)') {
+        if (input$analysis == "Distance (Hansen)") {
             assessibility_measures_analysis_legend(proxy, hansen(), "distanceHansen", "Distance using Hansen from ", "Blues")
         }
-        if (input$analysis == 'Duration (Hansen)') {
+        if (input$analysis == "Duration (Hansen)") {
             assessibility_measures_analysis_legend(proxy, hansen(), "durationHansen", "Duration using Hansen from ", "Purples")
         }
-        if (input$analysis == 'Distance (SAM)') {
+        if (input$analysis == "Distance (SAM)") {
             assessibility_measures_analysis_legend(proxy, sam(), "distanceSam", "Distance using SAM from ", "Blues")
         }
-        if (input$analysis == 'Duration (SAM)') {
+        if (input$analysis == "Duration (SAM)") {
             assessibility_measures_analysis_legend(proxy, hansen(), "durationSam", "Duration using SAM from ", "Purples")
         }
         
         if (show_all_hdb()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('#E4CD05')), 
+            proxy %>% addLegend(position="topright", colors=rev(c("#E4CD05")), 
                                 labels=rev(c("HDB")), opacity = 0.8)
         } else {
-            proxy %>% clearGroup('hdblayer')
+            proxy %>% clearGroup("hdblayer")
         }
         
         if (show_all_sch()) {
-            proxy %>% addLegend(position="topright", colors=rev(c('black')), 
+            proxy %>% addLegend(position="topright", colors=rev(c("black")), 
                                 labels=rev(c("school")), opacity = 0.8)
         } else {
-            proxy %>% clearGroup('schlayer')
+            proxy %>% clearGroup("schlayer")
         }
         
         if (!show_postal()) {
-            proxy %>% clearGroup('hdbptlayer') 
+            proxy %>% clearGroup("hdbptlayer") 
             updateSearchInput(session, "postal", value="")
         }
     })

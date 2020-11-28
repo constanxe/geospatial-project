@@ -1,0 +1,12 @@
+name: mergerus
+title: mergerus
+username:
+account: mergerus
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3314088
+bundleId: 3914914
+url: https://mergerus.shinyapps.io/mergerus/
+when: 1606540037.61345
+asMultiple: FALSE
+asStatic: FALSE

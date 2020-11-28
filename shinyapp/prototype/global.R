@@ -1,23 +1,23 @@
 # R Packages
-packages = c('shiny', 
-             'shinydashboard', 
-             'shinyWidgets', 
-             'DT', 
-             'leaflet',
-             'tidyverse',
-             'knitr',
-             'sp', 
-             'tmap'
+packages = c("shiny",
+             "shinydashboard",
+             "shinyWidgets", 
+             "DT", 
+             "leaflet",
+             "tidyverse",
+             "knitr",
+             "sp", 
+             "tmap"
             )
 
 for (p in packages){
     if(!require(p, character.only = T)){ 
         install.packages(p)
     }
-    library(p,character.only = T) 
+    library(p, character.only = T) 
 }
 
-memory.limit(size=56000)
+#memory.limit(size=56000)
 
 # Folder Paths
 dp_a_prefix = "../data/aspatial/" 
@@ -37,14 +37,14 @@ zip_data <- read.csv(dp_a_zip)
 # Data Wrangling
 jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data%>% 
-    dplyr::select("SCHOOL"='SEARCHVAL', 'POSTAL', 'LATITUDE', 'LONGITUDE', 'X', 'Y', 'ROAD_NAME','ADDRESS', 'REGION')
+    dplyr::select("SCHOOL"="SEARCHVAL", "POSTAL", "LATITUDE", "LONGITUDE", "X", "Y", "ROAD_NAME","ADDRESS", "REGION")
 jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
 jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
 jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
 jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
 
 hdb <- zip_data %>%
-    dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+    dplyr::select("ADDRESS" = "address", "POSTAL"="postal", "LATITUDE" = "latitude", "LONGITUDE" = "longtitude", "ROAD_NAME" = "road_name")
 hdb$ADDRESS <- rapportools::tocamel(tolower(hdb$ADDRESS), upper=TRUE, sep=" ")
 hdb$ROAD_NAME <- rapportools::tocamel(tolower(hdb$ROAD_NAME), upper=TRUE, sep=" ")
 
