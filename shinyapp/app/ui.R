@@ -105,6 +105,10 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                "valid postal code that you may input",
                                                                tags$br(),
                                                                "after clicking the relevant checkbox.",
+                                                               tags$br(),
+                                                               "You may use 'HDB Details' tab to find",
+                                                               tags$br(),
+                                                               "the postal code for an address.",
                                                                
                                                                style=NOTI_ITEM_STYLE))
 )
@@ -114,15 +118,18 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Duration Assessibility Measures'|| input.tabs == 'Distance Accessibility Measure' || input.tabs == 'JCs Details'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Measures' || input.tabs == 'JCs Details'",
             selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             "plugins" = list("remove_button"),
                             "create" = TRUE,
                             "persist" = FALSE))),
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Duration Assessibility Measures'|| input.tabs == 'Distance Accessibility Measure'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Measures'",
             selectInput("jc", "Junior College:", jc@data$SCHOOL)),
+        conditionalPanel(
+            condition = "input.tabs == 'Accessibility Measures'",
+            selectInput("accessibility", "Metric:", c("Distance", "Duration"))),
         conditionalPanel(
             condition = "input.tabs == 'Interactive Map'",
             selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
@@ -130,7 +137,7 @@ dashboardPage(title=PAGE_TITLE,
                                                    "Duration (Hansen)", 
                                                    "Distance (SAM)",
                                                    "Duration (SAM)")),
-            checkboxGroupInput("schs", "Display school points:", c("Show all school points")),
+            checkboxGroupInput("schs", "Display JC points:", c("Show all JC points")),
             checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
             conditionalPanel(
                 condition = "input.hdbpts.includes('Show chosen HDB point')",
@@ -141,31 +148,18 @@ dashboardPage(title=PAGE_TITLE,
     dashboardBody(
         navbarPage("Explore", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("Distance Accessibility Measure", 
+            tabPanel("Accessibility Measures", 
                      fluidRow(
                         box(title="Hansen Boxplot", collapsible = TRUE,
-                            plotOutput("hansenDistancePlot")),
+                            plotOutput("hansenPlot")),
                         box(title="Hansen p-value Boxplot", collapsible = TRUE,
-                            plotOutput("hansenDistancePvaluePlot")),
+                            plotOutput("hansenPvaluePlot")),
                         box(title="SAM Boxplot", collapsible = TRUE,
-                            plotOutput("samDistancePlot")),
+                            plotOutput("samPlot")),
                         box(title="SAM p-value Boxplot", collapsible = TRUE,
-                            plotOutput("samDistancePvaluePlot"))
+                            plotOutput("samPvaluePlot"))
                      )
              ),
-            tabPanel("Duration Assessibility Measures", 
-                     fluidRow(
-                         box(title="Hansen Boxplot", collapsible = TRUE,
-                             plotOutput("hansenDurationPlot")),
-                         box(title="Hansen p-value Boxplot", collapsible = TRUE,
-                             plotOutput("hansenDurationPvaluePlot")),
-                         box(title="SAM Boxplot", collapsible = TRUE,
-                             plotOutput("samDurationPlot")),
-                     box(title="SAM p-value Boxplot", collapsible = TRUE,
-                         plotOutput("samDurationPvaluePlot"))
-                     )
-                     
-            ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
             tabPanel(verbatimTextOutput("temp"), title="")))

@@ -32,7 +32,7 @@ function(input, output, session) {
     # conditions for show options
     show_all_sch = reactive({
         !is.null(input$schs) && 
-        ("Show all school points" %in% input$schs)
+        ("Show all JC points" %in% input$schs)
     })
     show_all_hdb = reactive({
         !is.null(input$hdbpts) && 
