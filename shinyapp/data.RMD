@@ -366,11 +366,13 @@ hdb_df<- tbl_df(hdb)
 coordinates_val<-coordinates(p)
 colnames(hdb_df)[6] <- "X"
 colnames(hdb_df)[7] <- "Y"
-hdb_df$X <- coordinates_val[,2]
-hdb_df$Y <- coordinates_val[,1]
+hdb_df$X <- coordinates_val[,1]
+hdb_df$Y <- coordinates_val[,2]
 
 hdb<-hdb_df
 
+
+hdb_df
 acc_Hansen <- tbl_df(hansen)
 
 hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
@@ -390,7 +392,7 @@ hdb_df
 
 ```{r}
 ggplot(data=hansen_mpsz, 
-       aes(y =distanceHansen, 
+       aes(y =durationHansen, 
            x= REGION_N)) +
   geom_boxplot() +
   geom_point(stat="summary", 
