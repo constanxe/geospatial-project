@@ -10,7 +10,8 @@ packages = c("shiny",
              "rgdal",
              "sf",
              "tmap",
-             "ggstatsplot"
+             "ggstatsplot",
+             "plotly"
             )
 
 for (p in packages){
@@ -22,10 +23,10 @@ for (p in packages){
 
 # Folder Paths
 dp_a_prefix = "data/aspatial/" 
-dp_j_prefix = "data/geojson/" 
-dp_m_prefix = "data/distancematrix/" 
-dp_h_prefix = "data/hansen/" 
-dp_s_prefix = "data/sam/" 
+dp_j_prefix = "data/rds/isochrone/" 
+dp_m_prefix = "data/rds/distancematrix/" 
+dp_h_prefix = "data/rds/hansen/" 
+dp_s_prefix = "data/rds/sam/" 
 dp_g_prefix = "data/geospatial" 
 
 # Data Paths
@@ -45,9 +46,11 @@ jc_data$POSTAL <- as.numeric(jc_data$POSTAL)
 jc <- jc_data
 jc <- jc_data%>% 
     dplyr::select("SCHOOL"="SEARCHVAL", "POSTAL", "LATITUDE", "LONGITUDE", "X", "Y", "ROAD_NAME","ADDRESS")
-jc$SCHOOL <- rapportools::tocamel(tolower(jc$SCHOOL), upper=TRUE, sep=" ")
-jc$ADDRESS <- rapportools::tocamel(tolower(jc$ADDRESS), upper=TRUE, sep=" ")
-jc$ROAD_NAME <- rapportools::tocamel(tolower(jc$ROAD_NAME), upper=TRUE, sep=" ")
+
+jc$SCHOOL <- snakecase::to_any_case(tolower(jc$SCHOOL), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+jc$ADDRESS <- snakecase::to_any_case(tolower(jc$ADDRESS), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+jc$ROAD_NAME <- snakecase::to_any_case(tolower(jc$ROAD_NAME), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
+
 jc_sf <- st_as_sf(jc, crs=3414, coords=c("X", "Y"), sf_column_name="geometry")
 jc_svy21 <- st_transform(jc_sf, 3414)
 
@@ -60,7 +63,7 @@ jc_mpsz <- jc_mpsz %>%
 
 jc <- jc_mpsz
 
-jc$REGION <- rapportools::tocamel(tolower(jc$REGION), upper=TRUE, sep=" ")
+jc$REGION<- snakecase::to_any_case(tolower(jc$REGION), case = c('upper_camel'), sep_in = NULL, sep_out=" ")
 
 
 hdb <- zip_data %>%
