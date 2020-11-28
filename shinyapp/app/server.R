@@ -107,10 +107,14 @@ function(input, output, session) {
       print("")
     })
     
+    
     observeEvent(input$metric,{
       if (input$metric == "Distance"){
         hansen_mpsz<-get_hansen_mpsz()
         sam_mpsz<-get_sam_mpsz()
+        
+        hansen_mpsz$REGION_N <- sub(" REGION", "", hansen_mpsz$REGION_N)
+        sam_mpsz$REGION_N <- sub(" REGION", "", sam_mpsz$REGION_N)
         
         output$hansenPlot <- renderPlot({
           ggplot(data=hansen_mpsz, 
@@ -162,6 +166,10 @@ function(input, output, session) {
       }else{
         hansen_mpsz<-get_hansen_mpsz()
         sam_mpsz<-get_sam_mpsz()
+        
+        hansen_mpsz$REGION_N <- sub(" REGION", "", hansen_mpsz$REGION_N)
+        sam_mpsz$REGION_N <- sub(" REGION", "", sam_mpsz$REGION_N)
+        
         #Hansen duration plot
         output$hansenPlot <- renderPlot({
           ggplot(data=hansen_mpsz, 
