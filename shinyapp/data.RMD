@@ -41,11 +41,11 @@ memory.limit(size=56000)
 
 
 # Folder Paths
-dp_a_prefix = "../data/aspatial/" 
-dp_j_prefix = "../data/geojson/" 
-dp_m_prefix = "../data/distancematrix/" 
-dp_h_prefix = "../data/hansen/" 
-dp_s_prefix = "../data/sam/" 
+dp_a_prefix = "app/data/aspatial/" 
+dp_j_prefix = "app/data/geojson/" 
+dp_m_prefix = "app/data/distancematrix/" 
+dp_h_prefix = "app/data/hansen/" 
+dp_s_prefix = "app/data/sam/" 
 
 # Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
@@ -63,16 +63,18 @@ jc <- jc_data%>%
 
 hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+
 ```
 ```{r}
 # CRS
-crsobj = CRS("+init=EPSG:3414")
+crsobj =  CRS('+init=epsg:4326')
 
 coordinates(jc)<-~LONGITUDE+LATITUDE
 proj4string(jc) = crsobj
 
 coordinates(hdb)<-~LONGITUDE+LATITUDE
 proj4string(hdb) = crsobj
+
 ```
 
 
@@ -338,21 +340,16 @@ boxplot(hansen@data$durationHansen, x_lab="school", y_lab="Hansen Duration")
 boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
 ```
 
-
-(HELPPP!!!) For many regions
-```{r}
-hansen
-```
+To get Regions
 
 ```{r}
-jc_sf <- st_as_sf(jc, crs=3414, coords=c('X','Y'))
-#jc_sf <- st_as_sf(jc, crs=3414, coords=c('LONGITUDE','LATITUDE'))
-#hdb_sf <- st_as_sf(hdb, crs=3414, coords=c('LONGITUDE','LATITUDE'))
-```
-```{r}
-mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+mpsz = st_read(dsn = "app/data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
 mpsz_sf <- st_as_sf(mpsz, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
 mpsz_svy21 <- st_transform(mpsz_sf, 3414)
+mpsz_svy21
+read_rds <- function(prefix) { 
+    readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
+}
 
 read_rds <- function(prefix) { 
     readRDS(file=paste0(prefix, "ANDERSON SERANGOON JUNIOR COLLEGE",'.rds')) 
@@ -360,15 +357,46 @@ read_rds <- function(prefix) {
   
 hansen = read_rds(dp_h_prefix)
 
-hansen_sf <- st_as_sf(hansen, crs=3414)
+
+hdb <- zip_data %>%
+    dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
+
+coordinates(hdb) <-~ LONGITUDE + LATITUDE
+proj4string(hdb) <- CRS("+proj=longlat +datum=WGS84")
+
+p <- spTransform(hdb, CRS("+init=epsg:3414"))
+
+hdb_proj <- coordinates(p)
+colnames(hdb_proj) <- c('x', 'y')
+
+
+hdb_df<- tbl_df(hdb)
+
+coordinates_val<-coordinates(p)
+
+hdb_df$LATITUDE <- coordinates_val[,2]
+hdb_df$LONGITUDE <- coordinates_val[,1]
+
+acc_Hansen <- tbl_df(hansen)
+
+hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
+
+hdb_hansen<- left_join(hdb_df, acc_Hansen, by=c("ADDRESS"="address"))
+
+
+tbl_df(hdb_hansen)
+
+hansen_sf <- st_as_sf(hdb_hansen, crs=3414, coords=c('LONGITUDE', 'LATITUDE'), sf_column_name="geometry")
 hansen_svy21 <- st_transform(hansen_sf, 3414)
+
+
 hansen_mpsz <- st_join(hansen_svy21, mpsz_svy21, join = st_intersects)
 hansen_mpsz
 ```
 
 ```{r}
 ggplot(data=hansen_mpsz, 
-       aes(y = hansen_mpsz$durationHansen, 
+       aes(y =distanceHansen, 
            x= REGION_N)) +
   geom_boxplot() +
   geom_point(stat="summary", 
