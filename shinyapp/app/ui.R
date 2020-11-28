@@ -44,7 +44,7 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                tags$br(),
                                                                tags$br(),
                                                                
-                                                               tags$u("Hansen Accessibility (Hansen):"),
+                                                               tags$u("Hansen Accessibility Boxplots (Hansen):"),
                                                                tags$br(),
                                                                "potential that a person is willing",
                                                                tags$br(),
@@ -58,11 +58,11 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                tags$br(),
                                                                tags$br(),
                                                                
-                                                               tags$u("Spatial Accessibility Measure (SAM):"), 
+                                                               tags$u("Spatial Accessibility Boxplots Measure (SAM):"), 
                                                                tags$br(),
                                                                "considers population of HDB points",
                                                                tags$br(),
-                                                               "& supply of a JC. Accessibility rises",
+                                                               "& supply of a JC. Accessibility Boxplots rises",
                                                                tags$br(),
                                                                "with higher population nearby and",
                                                                tags$br(),
@@ -118,18 +118,18 @@ dashboardPage(title=PAGE_TITLE,
                               p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
     dashboardSidebar(
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Measures' || input.tabs == 'JCs Details'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details'",
             selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
                         multiple = TRUE, options = list(
                             "plugins" = list("remove_button"),
                             "create" = TRUE,
                             "persist" = FALSE))),
         conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Measures'",
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots'",
             selectInput("jc", "Junior College:", jc@data$SCHOOL)),
         conditionalPanel(
-            condition = "input.tabs == 'Accessibility Measures'",
-            selectInput("accessibility", "Metric:", c("Distance", "Duration"))),
+            condition = "input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs EDA'",
+            selectInput("metric", "Metric:", c("Distance", "Duration"))),
         conditionalPanel(
             condition = "input.tabs == 'Interactive Map'",
             selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
@@ -148,7 +148,7 @@ dashboardPage(title=PAGE_TITLE,
     dashboardBody(
         navbarPage("Explore", id="tabs", collapsible=TRUE,
             tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("Accessibility Measures", 
+            tabPanel("Accessibility Boxplots", 
                      fluidRow(
                         box(title="Hansen Boxplot", collapsible = TRUE,
                             plotOutput("hansenPlot")),
@@ -160,6 +160,14 @@ dashboardPage(title=PAGE_TITLE,
                             plotOutput("samPvaluePlot"))
                      )
              ),
+            tabPanel("JCs EDA", 
+                     fluidRow(
+                         box(title="", collapsible = TRUE, width=12,
+                             plotOutput("")),
+                         box(title="", collapsible = TRUE, width=12,
+                             plotOutput(""))
+                     )
+            ),
             tabPanel("JCs Details", DTOutput("jcTable")),
             tabPanel("HDBs Details", DTOutput("hdbTable")),
             tabPanel(verbatimTextOutput("temp"), title="")))

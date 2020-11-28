@@ -107,8 +107,8 @@ function(input, output, session) {
       print("")
     })
     
-    observeEvent(input$accessibility,{
-      if (input$accessibility == "distance"){
+    observeEvent(input$metric,{
+      if (input$metric == "distance"){
         hansen_mpsz<-get_hansen_mpsz()
         sam_mpsz<-get_sam_mpsz()
         
