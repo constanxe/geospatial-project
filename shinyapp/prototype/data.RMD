@@ -63,7 +63,8 @@ jc <- jc_data%>%
 
 hdb <- zip_data %>%
     dplyr::select('ADDRESS' = 'address', 'POSTAL'="postal", 'LATITUDE' = 'latitude', 'LONGITUDE' = 'longtitude', 'ROAD_NAME' = 'road_name')
-
+```
+```{r}
 # CRS
 crsobj = CRS("+init=EPSG:3414")
 
@@ -340,12 +341,17 @@ boxplot(hansen@data$distanceHansen, x_lab="school", y_lab="Hansen distance")
 
 (HELPPP!!!) For many regions
 ```{r}
+hansen
+```
 
-hdb_sf <- st_as_sf(hdb, crs=3414, coords=c('longtitude','latitude'))
+```{r}
+jc_sf <- st_as_sf(jc, crs=3414, coords=c('X','Y'))
+#jc_sf <- st_as_sf(jc, crs=3414, coords=c('LONGITUDE','LATITUDE'))
+#hdb_sf <- st_as_sf(hdb, crs=3414, coords=c('LONGITUDE','LATITUDE'))
 ```
 ```{r}
 mpsz = st_read(dsn = "../data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
-mpsz_sf <- st_as_sf(mpsz, crs=3414)
+mpsz_sf <- st_as_sf(mpsz, crs=3414, coords=c('X_ADDR', 'Y_ADDR'), sf_column_name="geometry")
 mpsz_svy21 <- st_transform(mpsz_sf, 3414)
 
 read_rds <- function(prefix) { 

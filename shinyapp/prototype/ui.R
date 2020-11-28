@@ -1,6 +1,52 @@
 PAGE_TITLE <- "Merge'R'Us: Find Junior Colleges Near You"
 
+dashboardPage(title=PAGE_TITLE,
+    dashboardHeader(title=div(img(src="logo.png", height = 50, align = "left", style="background-color: white;"), 
+                              p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")), NOTIFICATIONS),
+    dashboardSidebar(
+        conditionalPanel(
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures' || input.tabs == 'JCs Details'",
+            selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
+                        multiple = TRUE, options = list(
+                            'plugins' = list('remove_button'),
+                            'create' = TRUE,
+                            'persist' = FALSE))),
+        conditionalPanel(
+            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures'",
+            selectInput("jc", "Junior College:", jc@data$SCHOOL)),
+        conditionalPanel(
+            condition = "input.tabs == 'Interactive Map'",
+            selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
+                                                   "Distance (Hansen)", 
+                                                   "Duration (Hansen)", 
+                                                   "Distance (SAM)",
+                                                   "Duration (SAM)")),
+            checkboxGroupInput("schs", "Display school points:", c("Show all school points")),
+            checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
+            conditionalPanel(
+                condition = "input.hdbpts.includes('Show chosen HDB point')",
+                searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
+            selectInput("maptype", "Map Theme:", names(providers)))
+    ),
+    
+    dashboardBody(
+        navbarPage("Explore", id="tabs", collapsible=TRUE,
+            tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
+            tabPanel("Assessibility Measures", 
+                     fluidRow(
+                        box(title="Hansen Boxplot", collapsible = TRUE,
+                            plotOutput("hansenPlot")),
+                        box(title="SAM Boxplot", collapsible = TRUE,
+                            plotOutput("samPlot")))
+             ),
+            tabPanel("JCs Details", DTOutput("jcTable")),
+            tabPanel("HDBs Details", DTOutput("hdbTable")),
+            tabPanel(verbatimTextOutput('temp'), title="temp")))
+)
+
+
 NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: top;"
+
 NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", icon=icon("info-circle"),
                               notificationItem(icon=icon("info-circle"), status="primary",
                                                text = tags$div(tags$b("Using the map:"),
@@ -43,7 +89,7 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                "the higher the accessibility.",
                                                                tags$br(),
                                                                tags$br(),
-
+                                                               
                                                                tags$u("Hansen Accessibility (Hansen):"),
                                                                tags$br(),
                                                                "potential that a person is willing",
@@ -107,51 +153,4 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                "after clicking the relevant checkbox.",
                                                                
                                                                style=NOTI_ITEM_STYLE))
-)
-
-
-dashboardPage(title=PAGE_TITLE,
-    dashboardHeader(title=div(img(src="logo.png", height = 50, align = "left", style="background-color: white;"), 
-                              p(PAGE_TITLE, style="font-size:13px; font-family: 'Gill Sans MT';")),
-                    NOTIFICATIONS),
-    
-    dashboardSidebar(
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures' || input.tabs == 'JCs Details'",
-            selectizeInput("region", "Filter Region(s):", unique(jc@data$REGION),
-                        multiple = TRUE, options = list(
-                            'plugins' = list('remove_button'),
-                            'create' = TRUE,
-                            'persist' = FALSE))),
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map' || input.tabs == 'Assessibility Measures'",
-            selectInput("jc", "Junior College:", jc@data$SCHOOL)),
-        conditionalPanel(
-            condition = "input.tabs == 'Interactive Map'",
-            selectInput("analysis", "Analysis:", c("Duration (Isochrone)", 
-                                                   "Distance (Hansen)", 
-                                                   "Duration (Hansen)", 
-                                                   "Distance (SAM)",
-                                                   "Duration (SAM)")),
-            checkboxGroupInput("schs", "Display school points:", c("Show all school points")),
-            checkboxGroupInput("hdbpts", "Display HDB points:", choices=c("Show all HDB points", "Show chosen HDB point")),
-            conditionalPanel(
-                condition = "input.hdbpts.includes('Show chosen HDB point')",
-                searchInput("postal", "Postal Code:", btnSearch = icon("search"))),
-            selectInput("maptype", "Map Theme:", names(providers)))
-    ),
-    
-    dashboardBody(
-        navbarPage("Explore", id="tabs", collapsible=TRUE,
-            tabPanel("Interactive Map", tmapOutput("mapPlot"), width = "100%", height = "100%"),
-            tabPanel("Assessibility Measures", 
-                     fluidRow(
-                        box(title="Hansen Boxplot", collapsible = TRUE,
-                            plotOutput("hansenPlot")),
-                        box(title="SAM Boxplot", collapsible = TRUE,
-                            plotOutput("samPlot")))
-             ),
-            tabPanel("JCs Details", DTOutput("jcTable")),
-            tabPanel("HDBs Details", DTOutput("hdbTable")),
-            tabPanel(verbatimTextOutput('temp'), title="temp")))
 )
