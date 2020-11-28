@@ -87,6 +87,8 @@ hdb_df$Y <- coordinates_val[,2]
 
 hdb_df$ADDRESS <- rapportools::tocamel(tolower(hdb_df$ADDRESS), upper=TRUE, sep=" ")
 hdb<-hdb_df
+
+
 # UI
 schIcon <- makeIcon(
     iconUrl = "schIcon.png",

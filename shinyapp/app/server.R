@@ -149,7 +149,7 @@ function(input, output, session) {
         
         if (show_all_hdb()) {
             proxy %>% addMapPane("hdblayer", zIndex = 420) %>% 
-                addCircleMarkers(lng = hdb@coords[,1], lat = hdb@coords[,2], 
+                addCircleMarkers(lng = hdb$LONGITUDE, lat = hdb$LATITUDE, 
                                  opacity = 0.5, fillOpacity = 0.5, fillColor = "#E4CD05", color = "#000", weight = 0.5, radius= 2,
                                  data = hdb$ADDRESS, popup = hdb$ADDRESS, label = hdb$ADDRESS, group = "hdblayer", 
                                  options = pathOptions(pane = "hdblayer"))
@@ -170,7 +170,7 @@ function(input, output, session) {
       if (show_postal()) {
         select_hdb <- hdb[hdb$POSTAL==input$postal, ]
         proxy %>% addMapPane("hdbptlayer", zIndex = 420) %>% 
-          addPopups(lng = select_hdb@coords[,1], lat = select_hdb@coords[,2],
+          addPopups(lng = select_hdb$LONGITUDE, lat = select_hdb$LATITUDE,
                     data = select_hdb$ADDRESS, popup = select_hdb$ADDRESS,
                     group = "hdbptlayer", 
                     options = popupOptions(closeButton = FALSE))
