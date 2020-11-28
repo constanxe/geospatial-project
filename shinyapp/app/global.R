@@ -24,10 +24,10 @@ for (p in packages){
 
 # Folder Paths
 dp_a_prefix = "data/aspatial/" 
-dp_j_prefix = "data/geojson/" 
-dp_m_prefix = "data/distancematrix/" 
-dp_h_prefix = "data/hansen/" 
-dp_s_prefix = "data/sam/" 
+dp_j_prefix = "data/rds/isochrone/" 
+dp_m_prefix = "data/rds/distancematrix/" 
+dp_h_prefix = "data/rds/hansen/" 
+dp_s_prefix = "data/rds/sam/" 
 dp_g_prefix = "data/geospatial" 
 
 # Data Paths

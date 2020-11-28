@@ -165,11 +165,13 @@ dashboardPage(title=PAGE_TITLE,
              ),
             tabPanel("JCs EDA", 
                      fluidRow(
-                         box(title="", collapsible = TRUE, width=12,
+                         box(collapsible = TRUE, width=12,
                              plotlyOutput("schPlot")),
-                         conditionalPanel(condition = "input.overall == 1"
-                             ,box(title="", collapsible = TRUE, width=12,
-                             plotOutput("overallPlot")))
+                         conditionalPanel(
+                             condition = "input.overall == 1",
+                             box(collapsible = TRUE, width=12,
+                                 plotOutput("overallPlot"))
+                         )
                      )
             ),
             tabPanel("JCs Details", DTOutput("jcTable")),

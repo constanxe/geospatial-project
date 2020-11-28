@@ -43,10 +43,10 @@ memory.limit(size=56000)
 
 # Folder Paths
 dp_a_prefix = "app/data/aspatial/" 
-dp_j_prefix = "app/data/geojson/" 
-dp_m_prefix = "app/data/distancematrix/" 
-dp_h_prefix = "app/data/hansen/" 
-dp_s_prefix = "app/data/sam/" 
+dp_j_prefix = "app/data/rds/isochrone/" 
+dp_m_prefix = "app/data/rds/distancematrix/" 
+dp_h_prefix = "app/data/rds/hansen/" 
+dp_s_prefix = "app/data/rds/sam/" 
 
 # Data Paths
 dp_a_jc = paste(dp_a_prefix, "jc.csv", sep="")
@@ -109,7 +109,7 @@ get_geojson<-function(lat,lng,filename){
 ```
 
 
-saves the isochrone generation for each JC as .rds in data/geojson/
+saves the isochrone generation for each JC as .rds in app/data/isochrone/
 Only run this code chunk if you want to generate the .rds files 
 ```{r}
 for (i in 1:19){
