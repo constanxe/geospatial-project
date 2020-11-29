@@ -239,7 +239,9 @@ function(input, output, session) {
             ggplot(matrix(), aes(x=duration)) + 
               geom_histogram(breaks=c(seq(0, 200, by=5)),
                              color="black", 
-                             fill="mediumpurple") + ggtitle(paste0("Travel Duration from HDBs to ",input$jc)))) 
+                             fill="mediumpurple") + 
+              ggtitle(paste0("Travel Duration from HDBs to ",input$jc)) +
+              ylim(c(0,3500)))) 
         
       })
       
@@ -316,8 +318,7 @@ function(input, output, session) {
       durations <- get_durations()
       output$overallPlot <- renderPlot({
         ggplot(data = durations, aes(x=duration, y=destination)) +
-          geom_boxplot()+ ggtitle("Travel Duration from HDBs to Junior College") +
-          ylim(c(0,3500))
+          geom_boxplot()+ ggtitle("Travel Duration from HDBs to Junior College")
       })
     }
     
