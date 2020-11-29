@@ -18,78 +18,94 @@ output:
     self_contained: false
 bibliography: packages.bib
 ---
-
+ 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
-
-# Introduction
-
-The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges.
-
-This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students.
-
-## **Project Objectives**
-In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students.
-
-Mainly, we wish to create an isochrone map and visualise the modelling results of Hansen accessibility model and Spatial Accessibility Measure.
-
-We will then analyse and interpret the output. We are also interested in identifying the affected residential areas which require more attention and comment on potential amalgamation by doing evaluations and stating the challenges.
-
-## **Project Motivation**
-
-Many families have been impacted in terms of accessibility due to the policy, with some moving houses or being inconvenienced. We wish to explore the extent of this as well as identify the areas impacted. Did the decisions meet its aim, or did it do more harm than good? We are curious about this, and regardless, if any area was impacted adversely, it would be good for measures to be implemented by the government to assist the families affected.
-
-While the initial announcement was a few years back, this situation remains prevalent. There are still future plans for relocation, for example Yusof Ishak Secondary School from an area where demand for school places is falling to Punggol in 2021 to meet the growing demand [@relocation]. While this is grounded, we wonder about the sustainability of moving schools everytime the demand falls. As the downward trend in Singapore's population growth continues, there might be more of such cases to come, which is a cause for concern.
-
-At the same time, the rather recent lavish national expenditure on the building of the new Eunoia JC raised many eyebrows. Many questioned if the move was called for in light of the closures and mergers of the other schools [@commentary], and this is an interesting issue that we can look into on the side. 
-
-Moreover, this topic is close to home as we have members whose JC was merged. Hence, we wish to visualise the and analyse the impact, and perhaps allow insight to be derived on the ideal locations of schools. 
-
-
-# Methods
-
-
+ 
+# Issues and Problems
+Since 2014, the Ministry of Education of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as Junior Colleges. This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. The Ministry then found the mergers necessary as low enrolment impacts the quality of learning opportunities provided to students [@moe].  As a result, there is an adverse impact on accessibility for some students due to the relocation of schools.
+ 
+ 
+# Motivation
+ 
+Many families have been impacted in terms of accessibility due to the policy, with some moving houses or being inconvenienced. We wish to explore the extent of this and identify the areas impacted. Did the decisions meet its aim, or did it do more harm than good? We are curious about this, and regardless, if any area was impacted adversely, it would be good for measures to be implemented by the government for assistance.
+ 
+This is hard to solve because while the initial announcement was a few years back, this situation remains prevalent. There are still future plans for relocation, for example Yusof Ishak Secondary School from an area where demand for school places is falling to Punggol in 2021 to meet the growing demand [@relocation]. While this is grounded, we wonder about the sustainability of moving schools everytime the demand falls. As the downward trend in Singapore's population growth continues, there might be more of such cases to come, which is a cause for concern.
+ 
+# Approach
+Calculations of HDB to Junior college
+ 
+- Get distance and duration from HDB to nearest public transport with API
+- Get the distance and duration of the public transport of the HDB to the nearest public transport of the respective Junior College
+ 
+Accessibility Maps
+ 
+- Isochrone Mapping used to measure accessibility based on the duration taken to travel from a certain point to the JC
+- Shorter duration, higher accessibility of school from HDB
+ 
+Used Hansen’s Potential Model and Spatial Accessibility Measure
+ 
+- Calculate the accessibility values of both Hansen and SAM 
+- Compare the accessibility values using box plots and histograms
+- Use Comparison Analysis on the Hansen and SAM boxplots observations
+ 
 # Results
-
-You can reference tables like so: Table \@ref(tab:mytable). 
-
-```{r mytable, out.width='80%'}
-knitr::kable(iris[1:10, 1:4], caption = 'Table caption.',align = 'c',"html")
-```
-
-Or with figures: Figure \@ref(fig:standard-plot), or Figure \@ref(fig:morefigs).
-
-```{r standard-plot, out.width='80%', fig.align='center', fig.cap='Great figure!', fig.height=5}
-plot(mtcars[1:2])
-```
-
-```{r morefigs, out.width='80%', echo=TRUE, fig.cap='Amazing, right?!', fig.height=5}
-data <- iris
-
-plot(x = data$Sepal.Length, 
-     y = data$Sepal.Width, 
-     col = data$Species,
-     pch = 19, 
-     xlab = "Sepal Length (cm)",
-     ylab = "Sepal Width (cm)")
-
-```
-
-# Next Steps
-
-
+ 
+Accessibility Boxplots
+ 
+- Compare the distribution of Hansen and SAM by planning region
+- Saint Andrew’s JC analyse for distance as shortest travel distance
+- Distance: highest accessibility in Central, very low in North, East, West
+- Lower spread but higher values for SAM distance to Hansen Distance
+- Saint Andrew’s JC analyse for duration as shortest travel duration
+- Same result on comparison for Hansen and SAM
+ <center>
+![](img/acc-hansen-sajc.png){width=75%}
+ </center>
+ <center>
+![](img/acc-hansen-pval-sajc.png){width=75%}
+ </center>
+ 
+Map
+ 
+- Isochrone for Tampines Meridian JC reflected outliers 
+- Catholic and Saint Joseph’s JC are left-skewed with travel time between 15 to 60 minutes as reflected on Isochrone
+- Isochrone shows that the travel time to Millennia Institute is 60 to 90 minutes. The school is blocked by non-industrial areas, leads to small HDB population and long travel duration.
+- Cluster of JCs in Central, strategized by government
+- Through Hansen maps, Saint Andrew’s JC accessible to most HDB points while Millennia Institute is accessible mainly in the West
+- Hansen Distance reflects lower accessibility for Saint Andrew’s JC but higher accessibility for Millennia Institute VS Hansen Duration
+ 
+![](img/app-map.png)
+ 
+# Future Work
+ 
+- Analyse demand and supply of Junior colleges
+- Conduct spatio-temporal analysis to compare the effect of the merger 
+- Use of buffers and considering more forms of transportation 
+- Explore different types of distance measures
+- Use more recent dataset if possible
+- Improve the usability of our application
+ 
 # Conclusion
-
+Isochrone, Hansen and SAM accessibility models led us to learn that there are many neighbourhood housing developments that have low or no access to Junior Colleges. To cater for those students who are affected by the amalgamation due to the fewer Junior Colleges worldwide, local authorities can use our application to visualise the areas which have low access to Junior Colleges. Our application has also pointed out the region, West, and the Junior College, Millennia Institute, with the lowest accessibility. More development like increasing the number of public transport from those HDB locations in the West region as well as the accessibility from Millennia Institute to improve the accessibility of JCs.
+ 
 ```{r, include=FALSE}
 knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
 ```
-
+ 
 # References
-
-
+ 
 ---
 references:
+- id: moe
+  title: Why is the Ministry of Education merging some schools?
+  author:
+  - given: Lianne
+  issued:
+    year: 2017
+    month: 4
+  URL: https://www.gov.sg/article/why-is-the-ministry-of-education-merging-some-schools
 - id: relocation
   title: MOE to relocate Yusof Ishak Secondary from Bukit Batok to Punggol
   author:
@@ -98,42 +114,5 @@ references:
   issued:
     year: 2018
   URL: https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654
-- id: commentary
-  title: Look beyond state-of-the-art campuses for what matters in education
-  author:
-  - family: Tee
-    given: Karen
-  issued:
-    year: 2020
-  URL: https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726
-- id: burp
-  title: Balancing Urban Residential Plannings (BURP), Visualising the Public Schools Accessibility to Residential Housings.
-  author: 
-  - family: Tan
-    given: Peng Chong
-  - family: Brendo
-    given: Austin
-  - family: Goh
-    given: Rebecca
-  issued:
-    year: 2019
-- id: sas
-  title: Is there a Space for SAS® Viya® in Healthcare?
-  author:
-  - family: Lim
-    given: Evelyn
-  issued:
-    year: 2019
-- id: kernel
-  title: An extended kernel density two-step floating catchment area method to analyze access to health care 
-  author:
-  - family: Polzin
-    given: Pierre
-  - family: Borges
-    given: José
-  - family: Coelho
-    given: António
-  issued:
-    year: 2014
-  URL: https://journals-sagepub-com.libproxy.smu.edu.sg/doi/pdf/10.1068/b120050p
 ...
+

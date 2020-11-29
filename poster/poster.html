@@ -26,69 +26,7 @@ Google fonts api stuff
 <script src="poster_files/anchor-sections-1.0/anchor-sections.js"></script>
 
 
-<style type="text/css">code.sourceCode > span { display: inline-block; line-height: 1.25; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */</style>
+
 
 <style>
 @page {
@@ -359,220 +297,76 @@ font-size: 20pt;
 
 <div class='poster_body_wrap'>
 <div class='poster_body'>
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
-<p>The Ministry of Education (MOE) of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as junior colleges.</p>
-<p>This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. As a result, there is an adverse impact on accessibility for some students.</p>
-<div id="project-objectives" class="section level2">
-<h2><strong>Project Objectives</strong></h2>
-<p>In our project, we will build an application to investigate the effect of the new locations of the affected schools on the spatial accessibility to Junior College (JC) students.</p>
-<p>Mainly, we wish to create an isochrone map and visualise the modelling results of Hansen accessibility model and Spatial Accessibility Measure.</p>
-<p>We will then analyse and interpret the output. We are also interested in identifying the affected residential areas which require more attention and comment on potential amalgamation by doing evaluations and stating the challenges.</p>
+<div id="issues-and-problems" class="section level1">
+<h1>Issues and Problems</h1>
+<p>Since 2014, the Ministry of Education of Singapore has called for the amalgamation and relocation of some schools, including primary schools, secondary schools as well as Junior Colleges. This is reported to be due to the fall in birth rate that led to lesser demand for education services and changes in geographical distribution of students. The Ministry then found the mergers necessary as low enrolment impacts the quality of learning opportunities provided to students <span class="citation">(2017)</span>. As a result, there is an adverse impact on accessibility for some students due to the relocation of schools.</p>
 </div>
-<div id="project-motivation" class="section level2">
-<h2><strong>Project Motivation</strong></h2>
-<p>Many families have been impacted in terms of accessibility due to the policy, with some moving houses or being inconvenienced. We wish to explore the extent of this as well as identify the areas impacted. Did the decisions meet its aim, or did it do more harm than good? We are curious about this, and regardless, if any area was impacted adversely, it would be good for measures to be implemented by the government to assist the families affected.</p>
-<p>While the initial announcement was a few years back, this situation remains prevalent. There are still future plans for relocation, for example Yusof Ishak Secondary School from an area where demand for school places is falling to Punggol in 2021 to meet the growing demand <span class="citation">(Chia 2018)</span>. While this is grounded, we wonder about the sustainability of moving schools everytime the demand falls. As the downward trend in Singapore’s population growth continues, there might be more of such cases to come, which is a cause for concern.</p>
-<p>At the same time, the rather recent lavish national expenditure on the building of the new Eunoia JC raised many eyebrows. Many questioned if the move was called for in light of the closures and mergers of the other schools <span class="citation">(Tee 2020)</span>, and this is an interesting issue that we can look into on the side.</p>
-<p>Moreover, this topic is close to home as we have members whose JC was merged. Hence, we wish to visualise the and analyse the impact, and perhaps allow insight to be derived on the ideal locations of schools.</p>
+<div id="motivation" class="section level1">
+<h1>Motivation</h1>
+<p>Many families have been impacted in terms of accessibility due to the policy, with some moving houses or being inconvenienced. We wish to explore the extent of this and identify the areas impacted. Did the decisions meet its aim, or did it do more harm than good? We are curious about this, and regardless, if any area was impacted adversely, it would be good for measures to be implemented by the government for assistance.</p>
+<p>This is hard to solve because while the initial announcement was a few years back, this situation remains prevalent. There are still future plans for relocation, for example Yusof Ishak Secondary School from an area where demand for school places is falling to Punggol in 2021 to meet the growing demand <span class="citation">(Chia 2018)</span>. While this is grounded, we wonder about the sustainability of moving schools everytime the demand falls. As the downward trend in Singapore’s population growth continues, there might be more of such cases to come, which is a cause for concern.</p>
 </div>
-</div>
-<div id="methods" class="section level1">
-<h1>Methods</h1>
+<div id="approach" class="section level1">
+<h1>Approach</h1>
+<p>Calculations of HDB to Junior college</p>
+<ul>
+<li>Get distance and duration from HDB to nearest public transport with API</li>
+<li>Get the distance and duration of the public transport of the HDB to the nearest public transport of the respective Junior College</li>
+</ul>
+<p>Accessibility Maps</p>
+<ul>
+<li>Isochrone Mapping used to measure accessibility based on the duration taken to travel from a certain point to the JC</li>
+<li>Shorter duration, higher accessibility of school from HDB</li>
+</ul>
+<p>Used Hansen’s Potential Model and Spatial Accessibility Measure</p>
+<ul>
+<li>Calculate the accessibility values of both Hansen and SAM</li>
+<li>Compare the accessibility values using box plots and histograms</li>
+<li>Use Comparison Analysis on the Hansen and SAM boxplots observations</li>
+</ul>
 </div>
 <div id="results" class="section level1">
 <h1>Results</h1>
-<p>You can reference tables like so: Table <a href="#tab:mytable">1</a>.</p>
-<table>
-<caption>
-<span id="tab:mytable">Table 1: </span>Table caption.
-</caption>
-<thead>
-<tr>
-<th style="text-align:center;">
-Sepal.Length
-</th>
-<th style="text-align:center;">
-Sepal.Width
-</th>
-<th style="text-align:center;">
-Petal.Length
-</th>
-<th style="text-align:center;">
-Petal.Width
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-5.1
-</td>
-<td style="text-align:center;">
-3.5
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.0
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.7
-</td>
-<td style="text-align:center;">
-3.2
-</td>
-<td style="text-align:center;">
-1.3
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.6
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.4
-</td>
-<td style="text-align:center;">
-3.9
-</td>
-<td style="text-align:center;">
-1.7
-</td>
-<td style="text-align:center;">
-0.4
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.3
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.4
-</td>
-<td style="text-align:center;">
-2.9
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.1
-</td>
-</tr>
-</tbody>
-</table>
-<p>Or with figures: Figure <a href="#fig:standard-plot">1</a>, or Figure <a href="#fig:morefigs">2</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:standard-plot"></span>
-<img src="poster_files/figure-html/standard-plot-1.png" alt="Great figure!" width="80%" />
-<p class="caption">
-Figure 1: Great figure!
-</p>
+<p>Accessibility Boxplots</p>
+<ul>
+<li>Compare the distribution of Hansen and SAM by planning region</li>
+<li>Saint Andrew’s JC analyse for distance as shortest travel distance</li>
+<li>Distance: highest accessibility in Central, very low in North, East, West</li>
+<li>Lower spread but higher values for SAM distance to Hansen Distance</li>
+<li>Saint Andrew’s JC analyse for duration as shortest travel duration</li>
+<li>Same result on comparison for Hansen and SAM
+<center>
+<img src="img/acc-hansen-sajc.PNG" style="width:75.0%" />
+</center>
+<center>
+<img src="img/acc-hansen-pval-sajc.PNG" style="width:75.0%" />
+</center></li>
+</ul>
+<p>Map</p>
+<ul>
+<li>Isochrone for Tampines Meridian JC reflected outliers</li>
+<li>Catholic and Saint Joseph’s JC are left-skewed with travel time between 15 to 60 minutes as reflected on Isochrone</li>
+<li>Isochrone shows that the travel time to Millennia Institute is 60 to 90 minutes. The school is blocked by non-industrial areas, leads to small HDB population and long travel duration.</li>
+<li>Cluster of JCs in Central, strategized by government</li>
+<li>Through Hansen maps, Saint Andrew’s JC accessible to most HDB points while Millennia Institute is accessible mainly in the West</li>
+<li>Hansen Distance reflects lower accessibility for Saint Andrew’s JC but higher accessibility for Millennia Institute VS Hansen Duration</li>
+</ul>
+<p><img src="img/app-map.png" /></p>
 </div>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>data &lt;-<span class="st"> </span>iris</span>
-<span id="cb1-2"><a href="#cb1-2"></a></span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw">plot</span>(<span class="dt">x =</span> data<span class="op">$</span>Sepal.Length, </span>
-<span id="cb1-4"><a href="#cb1-4"></a>     <span class="dt">y =</span> data<span class="op">$</span>Sepal.Width, </span>
-<span id="cb1-5"><a href="#cb1-5"></a>     <span class="dt">col =</span> data<span class="op">$</span>Species,</span>
-<span id="cb1-6"><a href="#cb1-6"></a>     <span class="dt">pch =</span> <span class="dv">19</span>, </span>
-<span id="cb1-7"><a href="#cb1-7"></a>     <span class="dt">xlab =</span> <span class="st">&quot;Sepal Length (cm)&quot;</span>,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>     <span class="dt">ylab =</span> <span class="st">&quot;Sepal Width (cm)&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:morefigs"></span>
-<img src="poster_files/figure-html/morefigs-1.png" alt="Amazing, right?!" width="80%" />
-<p class="caption">
-Figure 2: Amazing, right?!
-</p>
-</div>
-</div>
-<div id="next-steps" class="section level1">
-<h1>Next Steps</h1>
+<div id="future-work" class="section level1">
+<h1>Future Work</h1>
+<ul>
+<li>Analyse demand and supply of Junior colleges</li>
+<li>Conduct spatio-temporal analysis to compare the effect of the merger</li>
+<li>Use of buffers and considering more forms of transportation</li>
+<li>Explore different types of distance measures</li>
+<li>Use more recent dataset if possible</li>
+<li>Improve the usability of our application</li>
+</ul>
 </div>
 <div id="conclusion" class="section level1">
 <h1>Conclusion</h1>
+<p>Isochrone, Hansen and SAM accessibility models led us to learn that there are many neighbourhood housing developments that have low or no access to Junior Colleges. To cater for those students who are affected by the amalgamation due to the fewer Junior Colleges worldwide, local authorities can use our application to visualise the areas which have low access to Junior Colleges. Our application has also pointed out the region, West, and the Junior College, Millennia Institute, with the lowest accessibility. More development like increasing the number of public transport from those HDB locations in the West region as well as the accessibility from Millennia Institute to improve the accessibility of JCs.</p>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1>References</h1>
@@ -580,8 +374,8 @@ Figure 2: Amazing, right?!
 <div id="ref-relocation">
 <p>Chia, Lianne. 2018. “MOE to Relocate Yusof Ishak Secondary from Bukit Batok to Punggol.” <a href="https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654">https://www.channelnewsasia.com/news/singapore/yusof-ishak-secondary-bukit-batok-punggol-move-moe-10716654</a>.</p>
 </div>
-<div id="ref-commentary">
-<p>Tee, Karen. 2020. “Look Beyond State-of-the-Art Campuses for What Matters in Education.” <a href="https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726">https://www.channelnewsasia.com/news/commentary/eunoia-junior-college-new-campus-singapore-moe-budget-elitism-12249726</a>.</p>
+<div id="ref-moe">
+<p>Lianne. 2017. “Why Is the Ministry of Education Merging Some Schools?” <a href="https://www.gov.sg/article/why-is-the-ministry-of-education-merging-some-schools">https://www.gov.sg/article/why-is-the-ministry-of-education-merging-some-schools</a>.</p>
 </div>
 </div>
 </div>
