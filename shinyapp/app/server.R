@@ -256,8 +256,9 @@ function(input, output, session) {
       
       #Hansen duration plot
       output$hansenPlot <- renderPlot({
+        hansen_mpsz$log_durationHansen <- log(hansen_mpsz$durationHansen)
         ggplot(data=hansen_mpsz, 
-               aes(y =durationHansen, 
+               aes(y =log_durationHansen, 
                    x= REGION_N)) +
           geom_boxplot() +
           geom_point(stat="summary", 
@@ -280,8 +281,9 @@ function(input, output, session) {
       })
       #sam duration plot
       output$samPlot <- renderPlot({
+        sam_mpsz$log_durationSam <- log(sam_mpsz$durationSam)
         ggplot(data=sam_mpsz, 
-               aes(y =durationSam, 
+               aes(y =log_durationSam, 
                    x= REGION_N)) +
           geom_boxplot() +
           geom_point(stat="summary", 
