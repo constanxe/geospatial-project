@@ -11,6 +11,7 @@ library("sf")
 library("rgdal")
 library("tmap")
 library("ggstatsplot")
+library("plotly")
 
 PAGE_TITLE <- "Merge'R'Us: JCs Near You"
 NOTI_ITEM_STYLE <- "display: inline-block; vertical-align: top;"

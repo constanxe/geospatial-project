@@ -11,6 +11,7 @@ library("sf")
 library("rgdal")
 library("tmap")
 library("ggstatsplot")
+library("plotly")
 
 function(input, output, session) {
   
@@ -186,8 +187,9 @@ function(input, output, session) {
       sam_mpsz$REGION_N <- sub(" REGION", "", sam_mpsz$REGION_N)
       
       output$hansenPlot <- renderPlot({
+        hansen_mpsz$log_distanceHansen <- log(hansen_mpsz$distanceHansen)
         ggplot(data=hansen_mpsz, 
-               aes(y =distanceHansen, 
+               aes(y =log_distanceHansen, 
                    x= REGION_N)) +
           geom_boxplot() +
           geom_point(stat="summary", 
@@ -210,8 +212,9 @@ function(input, output, session) {
       
       #sam distance plot
       output$samPlot <- renderPlot({
+        sam_mpsz$log_distanceSam <- log(sam_mpsz$distanceSam)
         ggplot(data=sam_mpsz, 
-               aes(y =distanceSam, 
+               aes(y =log_distanceSam, 
                    x= REGION_N)) +
           geom_boxplot() +
           geom_point(stat="summary", 
