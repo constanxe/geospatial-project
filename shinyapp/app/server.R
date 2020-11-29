@@ -73,18 +73,16 @@ function(input, output, session) {
       setMaxBounds(lng1 = 103.4057919091, lat1 = 1.1648902351, lng2 = 104.2321161335, lat2 = 1.601881499)
   })
   
-  output$jcTable <- renderDT(
-    {
-      jc_table_data <- jc@data %>% dplyr::select(-LONGITUDE, -LATITUDE)
-      
-      # if regions selected, filter to chosen ones; else taken as all selected
-      if (length(input$region) > 0) {
-        jc_table_data <- jc_table_data %>% dplyr::filter(REGION %in% input$region)
-      }
-      
-      jc_table_data
-    }, options = list(lengthChange = FALSE)
-  )
+  output$jcTable <- renderDT({
+    jc_table_data <- jc@data %>% dplyr::select(-LONGITUDE, -LATITUDE)
+    
+    # if regions selected, filter to chosen ones; else taken as all selected
+    if (length(input$region) > 0) {
+      jc_table_data <- jc_table_data %>% dplyr::filter(REGION %in% input$region)
+    }
+    
+    jc_table_data
+  })
   
   output$hdbTable <- renderDT({
     hdb %>% dplyr::select(POSTAL, ROAD_NAME, ADDRESS)

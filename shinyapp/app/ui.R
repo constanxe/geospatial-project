@@ -146,7 +146,7 @@ dashboardPage(title=PAGE_TITLE,
                                         "create" = TRUE,
                                         "persist" = FALSE))),
                   conditionalPanel(
-                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || input.tabs == 'JCs Details' || (input.tabs == 'JCs EDA' && input.eda.includes('Show Chosen JC Distribution'))",
+                      condition = "input.tabs == 'Interactive Map' || input.tabs == 'Accessibility Boxplots' || (input.tabs == 'JCs EDA' && input.eda.includes('Show Chosen JC Distribution'))",
                       selectInput("jc", "Junior College:", jc@data$SCHOOL)),
                   
                   conditionalPanel(
