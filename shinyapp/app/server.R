@@ -520,7 +520,7 @@ function(input, output, session) {
       assessibility_measures_analysis_legend(proxy, sam(), "distanceSam", "Distance using SAM from ", "Blues")
     }
     if (input$analysis == "Duration (SAM)") {
-      assessibility_measures_analysis_legend(proxy, hansen(), "durationSam", "Duration using SAM from ", "Purples")
+      assessibility_measures_analysis_legend(proxy, sam(), "durationSam", "Duration using SAM from ", "Purples")
     }
     
     if (show_all_hdb()) {
