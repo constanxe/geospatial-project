@@ -59,7 +59,7 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                tags$br(),
                                                                tags$br(),
                                                                
-                                                               tags$u("Hansen Accessibility Boxplots (Hansen):"),
+                                                               tags$u("Hansen Accessibility (Hansen):"),
                                                                tags$br(),
                                                                "potential that a person is willing",
                                                                tags$br(),
@@ -73,11 +73,11 @@ NOTIFICATIONS <- dropdownMenu(type = "notifications", badgeStatus="primary", ico
                                                                tags$br(),
                                                                tags$br(),
                                                                
-                                                               tags$u("Spatial Accessibility Boxplots Measure (SAM):"), 
+                                                               tags$u("Spatial Accessibility Measure (SAM):"), 
                                                                tags$br(),
                                                                "considers population of HDB points",
                                                                tags$br(),
-                                                               "& supply of a JC. Accessibility Boxplots rises",
+                                                               "& supply of a JC. Accessibility rises",
                                                                tags$br(),
                                                                "with higher population nearby and",
                                                                tags$br(),
